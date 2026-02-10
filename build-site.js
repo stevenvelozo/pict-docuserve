@@ -119,9 +119,15 @@ if (libFS.existsSync(tmpOutputPath))
 }
 ensureDir(tmpOutputPath);
 
-// 1. Copy the entire dist/ folder contents as the base
+// 1. Copy only the required dist/ artifacts (minified bundles, css, index.html)
 console.log('  Copying dist/ build artifacts...');
-copyDir(tmpDistPath, tmpOutputPath);
+copyFile(libPath.join(tmpDistPath, 'index.html'), libPath.join(tmpOutputPath, 'index.html'));
+copyDir(libPath.join(tmpDistPath, 'css'), libPath.join(tmpOutputPath, 'css'));
+ensureDir(libPath.join(tmpOutputPath, 'js'));
+copyFile(libPath.join(tmpDistPath, 'js', 'pict.min.js'), libPath.join(tmpOutputPath, 'js', 'pict.min.js'));
+copyFile(libPath.join(tmpDistPath, 'js', 'pict.min.js.map'), libPath.join(tmpOutputPath, 'js', 'pict.min.js.map'));
+copyFile(libPath.join(tmpDistPath, 'pict-docuserve.min.js'), libPath.join(tmpOutputPath, 'pict-docuserve.min.js'));
+copyFile(libPath.join(tmpDistPath, 'pict-docuserve.min.js.map'), libPath.join(tmpOutputPath, 'pict-docuserve.min.js.map'));
 
 // 2. Copy markdown content files from docs/
 console.log('  Copying documentation markdown files...');

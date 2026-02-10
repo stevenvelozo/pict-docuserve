@@ -45,7 +45,11 @@
 			"to": "./dist/css/"
 		},
 		{
-			"from": "./node_modules/pict/dist/*",
+			"from": "./node_modules/pict/dist/pict.min.js",
+			"to": "./dist/js/"
+		},
+		{
+			"from": "./node_modules/pict/dist/pict.min.js.map",
 			"to": "./dist/js/"
 		}
 	]

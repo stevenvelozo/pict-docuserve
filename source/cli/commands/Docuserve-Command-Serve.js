@@ -60,7 +60,7 @@ class DocuserveCommandServe extends libCommandLineCommand
 		this.options.CommandKeyword = 'serve';
 		this.options.Description = 'Start a local HTTP server for a documentation folder.';
 
-		this.options.CommandArguments.push({ Name: '<docs-path>', Description: 'Path to the documentation folder containing markdown files.' });
+		this.options.CommandArguments.push({ Name: '[docs-path]', Description: 'Path to the documentation folder containing markdown files (defaults to ./docs/).' });
 
 		this.options.CommandOptions.push({ Name: '-p, --port [port]', Description: 'Port to serve on.', Default: '3333' });
 
@@ -69,7 +69,7 @@ class DocuserveCommandServe extends libCommandLineCommand
 
 	onRun()
 	{
-		let tmpDocsPath = libPath.resolve(this.ArgumentString || '.');
+		let tmpDocsPath = libPath.resolve(this.ArgumentString || './docs/');
 		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'dist');
 		let tmpPort = parseInt(this.CommandOptions.port, 10) || 3333;
 

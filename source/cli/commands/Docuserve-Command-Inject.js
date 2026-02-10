@@ -57,14 +57,14 @@ class DocuserveCommandInject extends libCommandLineCommand
 		this.options.CommandKeyword = 'inject';
 		this.options.Description = 'Copy docuserve app assets into a docs folder for static hosting.';
 
-		this.options.CommandArguments.push({ Name: '<docs-path>', Description: 'Target documentation folder to inject assets into.' });
+		this.options.CommandArguments.push({ Name: '[docs-path]', Description: 'Target documentation folder to inject assets into (defaults to ./docs/).' });
 
 		this.addCommand();
 	}
 
 	onRun()
 	{
-		let tmpDocsPath = libPath.resolve(this.ArgumentString || '.');
+		let tmpDocsPath = libPath.resolve(this.ArgumentString || './docs/');
 		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'dist');
 
 		if (!libFS.existsSync(tmpDocsPath))
@@ -72,6 +72,11 @@ class DocuserveCommandInject extends libCommandLineCommand
 			this.log.error(`Target folder not found at ${tmpDocsPath}`);
 			process.exit(1);
 		}
+
+		// Create .nojekyll for GitHub Pages compatibility (always, even if dist is missing)
+		libFS.writeFileSync(libPath.join(tmpDocsPath, '.nojekyll'), '');
+		this.log.info(`Created .nojekyll in ${tmpDocsPath}`);
+
 		if (!libFS.existsSync(tmpDistPath))
 		{
 			this.log.error(`dist/ folder not found at ${tmpDistPath}.  Run npm run build first.`);
@@ -94,28 +99,26 @@ class DocuserveCommandInject extends libCommandLineCommand
 			libPath.join(tmpDocsPath, 'css')
 		);
 
-		// Copy js/ folder (pict library)
-		copyDir(
-			libPath.join(tmpDistPath, 'js'),
-			libPath.join(tmpDocsPath, 'js')
+		// Copy minified pict library and source map
+		ensureDir(libPath.join(tmpDocsPath, 'js'));
+		copyFile(
+			libPath.join(tmpDistPath, 'js', 'pict.min.js'),
+			libPath.join(tmpDocsPath, 'js', 'pict.min.js')
+		);
+		copyFile(
+			libPath.join(tmpDistPath, 'js', 'pict.min.js.map'),
+			libPath.join(tmpDocsPath, 'js', 'pict.min.js.map')
 		);
 
-		// Copy all pict-docuserve bundle files (*.js and *.js.map)
-		let tmpDistEntries = libFS.readdirSync(tmpDistPath, { withFileTypes: true });
-		for (let i = 0; i < tmpDistEntries.length; i++)
-		{
-			let tmpEntry = tmpDistEntries[i];
-			if (tmpEntry.isFile() && tmpEntry.name.match(/^pict-docuserve\./))
-			{
-				copyFile(
-					libPath.join(tmpDistPath, tmpEntry.name),
-					libPath.join(tmpDocsPath, tmpEntry.name)
-				);
-			}
-		}
-
-		// Create .nojekyll for GitHub Pages compatibility
-		libFS.writeFileSync(libPath.join(tmpDocsPath, '.nojekyll'), '');
+		// Copy minified pict-docuserve bundle and source map
+		copyFile(
+			libPath.join(tmpDistPath, 'pict-docuserve.min.js'),
+			libPath.join(tmpDocsPath, 'pict-docuserve.min.js')
+		);
+		copyFile(
+			libPath.join(tmpDistPath, 'pict-docuserve.min.js.map'),
+			libPath.join(tmpDocsPath, 'pict-docuserve.min.js.map')
+		);
 
 		this.log.info('');
 		this.log.info('Injection complete!  The docs folder is now self-contained.');
