@@ -24,13 +24,13 @@
 	"license": "MIT",
 	"dependencies": {
 		"pict": "^1.0.343",
-		"pict-application": "^1.0.28",
+		"pict-application": "^1.0.30",
 		"pict-view": "^1.0.64",
-		"pict-provider": "^1.0.3",
+		"pict-provider": "^1.0.7",
 		"pict-service-commandlineutility": "^1.0.17"
 	},
 	"devDependencies": {
-		"quackage": "^1.0.41"
+		"quackage": "^1.0.46"
 	},
 	"copyFilesSettings": {
 		"whenFileExists": "overwrite"
