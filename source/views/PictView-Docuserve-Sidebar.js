@@ -15,6 +15,22 @@ const _ViewConfiguration =
 			border-right: 1px solid #e0e0e0;
 			padding: 1em 0;
 			height: 100%;
+			position: relative;
+		}
+		.docuserve-sidebar-close {
+			position: absolute;
+			top: 0.5em;
+			right: 0.5em;
+			background: none;
+			border: none;
+			color: #999;
+			font-size: 1.2em;
+			cursor: pointer;
+			padding: 0.2em 0.4em;
+			line-height: 1;
+		}
+		.docuserve-sidebar-close:hover {
+			color: #42b983;
 		}
 		.docuserve-sidebar-search {
 			padding: 0 1em 1em 1em;
@@ -133,6 +149,7 @@ const _ViewConfiguration =
 			Hash: "Docuserve-Sidebar-Template",
 			Template: /*html*/`
 <div class="docuserve-sidebar">
+	<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&times;</button>
 	<div class="docuserve-sidebar-home">
 		<a onclick="{~P~}.PictApplication.navigateTo('/Home')">Home</a>
 	</div>
@@ -288,6 +305,28 @@ class DocusserveSidebarView extends libPictView
 		tmpHTML += '</div>';
 
 		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', tmpHTML);
+	}
+
+	/**
+	 * Toggle the sidebar visibility and update the top bar hamburger button.
+	 */
+	toggleSidebar()
+	{
+		this.pict.AppData.Docuserve.SidebarVisible = !this.pict.AppData.Docuserve.SidebarVisible;
+
+		let tmpContainer = document.getElementById('Docuserve-Sidebar-Container');
+		let tmpToggle = document.getElementById('Docuserve-TopBar-Toggle');
+
+		if (this.pict.AppData.Docuserve.SidebarVisible)
+		{
+			if (tmpContainer) tmpContainer.style.display = '';
+			if (tmpToggle) tmpToggle.style.display = 'none';
+		}
+		else
+		{
+			if (tmpContainer) tmpContainer.style.display = 'none';
+			if (tmpToggle) tmpToggle.style.display = 'inline-block';
+		}
 	}
 
 	/**

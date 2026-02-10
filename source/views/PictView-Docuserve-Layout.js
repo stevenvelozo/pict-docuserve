@@ -13,7 +13,8 @@ const _ViewConfiguration =
 		#Docuserve-Application-Container {
 			display: flex;
 			flex-direction: column;
-			min-height: 100vh;
+			height: 100vh;
+			overflow: hidden;
 		}
 		#Docuserve-TopBar-Container {
 			flex-shrink: 0;
@@ -27,9 +28,6 @@ const _ViewConfiguration =
 			flex-shrink: 0;
 			width: 280px;
 			overflow-y: auto;
-			height: calc(100vh - 56px);
-			position: sticky;
-			top: 56px;
 		}
 		#Docuserve-Content-Container {
 			flex: 1;

@@ -45,6 +45,8 @@ class DocuserveApplication extends libPictApplication
 			CurrentGroup: '',
 			CurrentModule: '',
 			CurrentPath: '',
+			// Whether the sidebar is currently visible
+			SidebarVisible: true,
 			// Base URL for local docs (relative to where the app is served)
 			DocsBaseURL: '',
 			// URL for the catalog JSON

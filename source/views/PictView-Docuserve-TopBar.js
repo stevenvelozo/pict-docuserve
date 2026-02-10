@@ -69,6 +69,24 @@ const _ViewConfiguration =
 			background-color: #34495e;
 			color: #ecf0f1;
 		}
+		.docuserve-topbar-toggle {
+			display: none;
+			background: none;
+			border: none;
+			color: #bdc3c7;
+			font-size: 1.3em;
+			cursor: pointer;
+			padding: 0.3em 0.5em;
+			margin-left: 0.5em;
+			line-height: 1;
+		}
+		.docuserve-topbar-toggle:hover {
+			color: #fff;
+		}
+		.docuserve-topbar-right {
+			display: flex;
+			align-items: center;
+		}
 	`,
 
 	Templates:
@@ -79,7 +97,10 @@ const _ViewConfiguration =
 <div class="docuserve-topbar">
 	<a id="Docuserve-TopBar-Brand" class="docuserve-topbar-brand" href="#/Home"></a>
 	<div id="Docuserve-TopBar-Nav" class="docuserve-topbar-nav"></div>
-	<div id="Docuserve-TopBar-Links" class="docuserve-topbar-links"></div>
+	<div class="docuserve-topbar-right">
+		<div id="Docuserve-TopBar-Links" class="docuserve-topbar-links"></div>
+		<button id="Docuserve-TopBar-Toggle" class="docuserve-topbar-toggle" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&#9776;</button>
+	</div>
 </div>
 `
 		}
