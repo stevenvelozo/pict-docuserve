@@ -1,0 +1,26 @@
+{
+	"ProviderIdentifier": "Pict-Router",
+
+	"AutoInitialize": true,
+	"AutoInitializeOrdinal": 0,
+
+	"Routes":
+	[
+		{
+			"path": "/Home",
+			"template": "{~LV:Pict.PictApplication.showView(`Docuserve-Splash`)~}"
+		},
+		{
+			"path": "/doc/:group/:module",
+			"template": "{~LV:Pict.PictApplication.navigateToModule(Record.data.group,Record.data.module)~}"
+		},
+		{
+			"path": "/doc/:group/:module/:path",
+			"template": "{~LV:Pict.PictApplication.navigateToModulePath(Record.data.group,Record.data.module,Record.data.path)~}"
+		},
+		{
+			"path": "/page/:docpath",
+			"template": "{~LV:Pict.PictApplication.navigateToPage(Record.data.docpath)~}"
+		}
+	]
+}
