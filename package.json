@@ -30,7 +30,7 @@
 		"pict-service-commandlineutility": "^1.0.17"
 	},
 	"devDependencies": {
-		"quackage": "^1.0.46"
+		"quackage": "^1.0.47"
 	},
 	"copyFilesSettings": {
 		"whenFileExists": "overwrite"
