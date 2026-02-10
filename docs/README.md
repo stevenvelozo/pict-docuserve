@@ -38,20 +38,19 @@ npm install
 
 # Build the Pict application (to dist/)
 npm run build
-
-# Build a deployable site (to site/) using build-site.js
-npm run build-site
 ```
 
 ## How It Works
 
-Docuserve is a standard Pict application with three views and a documentation provider:
+Docuserve is a standard Pict application with views and a documentation provider:
 
 1. **Splash View** -- The landing page, driven by `cover.md` or inferred from the catalog
-2. **Sidebar View** -- Navigation tree, driven by `_sidebar.md` or inferred from the catalog
+2. **Sidebar View** -- Navigation tree with inline search, driven by `_sidebar.md` or inferred from the catalog
 3. **Content View** -- Renders fetched markdown as HTML in the main content area
+4. **Search View** -- Full-page search with ranked results (only available when a keyword index is present)
+5. **TopBar View** -- Navigation header with brand, links, and a search link
 
-The **Documentation Provider** handles all data loading: it fetches the module catalog, `cover.md`, and `_sidebar.md` at startup, then fetches and parses individual markdown documents on demand.
+The **Documentation Provider** handles all data loading: it fetches the module catalog, `cover.md`, `_sidebar.md`, `_topbar.md`, and `retold-keyword-index.json` at startup, then fetches and parses individual markdown documents on demand.
 
 ## Content Files
 
@@ -60,11 +59,13 @@ Docuserve looks for these files at the root of the served site:
 | File | Purpose | Required? |
 |------|---------|-----------|
 | `retold-catalog.json` | Module catalog from Indoctrinate | Recommended |
+| `retold-keyword-index.json` | Lunr search index from Indoctrinate | Optional |
 | `cover.md` | Splash screen content | Optional |
 | `_sidebar.md` | Sidebar navigation | Optional |
+| `_topbar.md` | Top bar navigation and links | Optional |
 | `*.md` | Documentation pages | Yes |
 
-If `cover.md` is missing, the splash screen shows cards for each catalog group. If `_sidebar.md` is missing, the sidebar is built from the catalog. If even the catalog is missing, you still get a working app -- it just won't have module navigation.
+If `cover.md` is missing, the splash screen shows cards for each catalog group. If `_sidebar.md` is missing, the sidebar is built from the catalog. If `retold-keyword-index.json` is missing, search UI does not appear. If even the catalog is missing, you still get a working app -- it just won't have module navigation.
 
 ## Example Applications
 

@@ -162,8 +162,12 @@ class DocuserveTopBarView extends libPictView
 			}
 			tmpNavEl.innerHTML = tmpNavHTML;
 
-			// External links (right side)
+			// External links (right side) — search link first if keyword index is available
 			let tmpLinksHTML = '';
+			if (tmpDocuserve.KeywordIndexLoaded)
+			{
+				tmpLinksHTML += '<a href="#/search/">Search</a>';
+			}
 			for (let i = 0; i < tmpTopBar.ExternalLinks.length; i++)
 			{
 				let tmpLink = tmpTopBar.ExternalLinks[i];
@@ -186,7 +190,7 @@ class DocuserveTopBarView extends libPictView
 
 			tmpBrandEl.textContent = tmpBrand;
 			tmpNavEl.innerHTML = '<a href="#/Home">Home</a>';
-			tmpLinksEl.innerHTML = '';
+			tmpLinksEl.innerHTML = tmpDocuserve.KeywordIndexLoaded ? '<a href="#/search/">Search</a>' : '';
 		}
 	}
 

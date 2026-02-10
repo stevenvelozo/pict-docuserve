@@ -22,19 +22,22 @@ Docuserve follows the standard Pict application pattern: a main application clas
 - **Catalog loading** -- Fetches `retold-catalog.json` and builds sidebar group data
 - **Cover loading** -- Fetches and parses `cover.md` into structured splash data
 - **Sidebar loading** -- Fetches and parses `_sidebar.md` into navigation groups
+- **Keyword index loading** -- Fetches `retold-keyword-index.json` and hydrates a lunr search index
 - **Document fetching** -- Retrieves markdown from local paths or raw GitHub URLs
 - **Markdown parsing** -- Converts markdown to HTML (headings, code blocks, tables, lists, links, etc.)
 - **Link conversion** -- Translates docsify-style paths to Docuserve hash routes
+- **Search** -- Queries the lunr index and returns ranked results with document metadata
 
 ### Views
 
 | View | File | Purpose |
 |------|------|---------|
 | Layout | `PictView-Docuserve-Layout.js` | Shell with top bar, sidebar, content containers |
-| TopBar | `PictView-Docuserve-TopBar.js` | Navigation header with brand and links |
-| Sidebar | `PictView-Docuserve-Sidebar.js` | Group/module navigation tree |
+| TopBar | `PictView-Docuserve-TopBar.js` | Navigation header with brand, nav links, and search |
+| Sidebar | `PictView-Docuserve-Sidebar.js` | Group/module navigation tree with inline search |
 | Splash | `PictView-Docuserve-Splash.js` | Landing page with title, highlights, actions |
 | Content | `PictView-Docuserve-Content.js` | Markdown content display area |
+| Search | `PictView-Docuserve-Search.js` | Dedicated full-page search with results |
 
 ### Router
 
@@ -43,6 +46,7 @@ Hash-based routing with these patterns:
 | Route | Action |
 |-------|--------|
 | `#/Home` | Show splash screen |
+| `#/search/:query` | Show search page with results |
 | `#/doc/:group/:module` | Load module README from GitHub |
 | `#/doc/:group/:module/*path` | Load specific doc from module |
 | `#/page/:docpath` | Load a local markdown page |
@@ -59,9 +63,12 @@ retold-catalog.json ──> AppData.Catalog
         └──> AppData.SidebarGroups ──> Sidebar View
                         │
                 _sidebar.md (overrides if present)
+
+retold-keyword-index.json ──> lunr Index ──> Search View / Sidebar Search
+                                              (only if index is available)
 ```
 
-The catalog always loads first and provides default sidebar data. Then `cover.md` and `_sidebar.md` load in parallel; if they succeed, they override the defaults.
+The catalog always loads first and provides default sidebar data. Then `cover.md`, `_sidebar.md`, `_topbar.md`, and `retold-keyword-index.json` load in parallel; if they succeed, they override the defaults. Search UI only appears when the keyword index is available.
 
 ## File Structure
 
@@ -77,19 +84,19 @@ pict-docuserve/
 │   │       ├── Docuserve-Command-Serve.js   # serve command
 │   │       └── Docuserve-Command-Inject.js  # inject command
 │   ├── providers/
-│   │   ├── Pict-Provider-Docuserve-Documentation.js
-│   │   └── PictRouter-Docuserve-Configuration.json
+│   │   └── Pict-Provider-Docuserve-Documentation.js
 │   └── views/
 │       ├── PictView-Docuserve-Layout.js
 │       ├── PictView-Docuserve-TopBar.js
 │       ├── PictView-Docuserve-Sidebar.js
 │       ├── PictView-Docuserve-Splash.js
-│       └── PictView-Docuserve-Content.js
+│       ├── PictView-Docuserve-Content.js
+│       └── PictView-Docuserve-Search.js
 ├── html/index.html
 ├── css/docuserve.css
-├── build-site.js
 ├── docs/                    # This documentation
-├── example_applications/    # Example doc sites
+├── example_applications/    # Example doc sites (markdown only)
+│   ├── build-examples.js   # Helper script to serve examples
 │   ├── todo-app/docs/
 │   ├── contacts-app/docs/
 │   └── sports-stats-api/docs/

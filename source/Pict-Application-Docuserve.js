@@ -9,6 +9,7 @@ const libViewTopBar = require('./views/PictView-Docuserve-TopBar.js');
 const libViewSidebar = require('./views/PictView-Docuserve-Sidebar.js');
 const libViewSplash = require('./views/PictView-Docuserve-Splash.js');
 const libViewContent = require('./views/PictView-Docuserve-Content.js');
+const libViewSearch = require('./views/PictView-Docuserve-Search.js');
 
 class DocuserveApplication extends libPictApplication
 {
@@ -25,6 +26,7 @@ class DocuserveApplication extends libPictApplication
 		this.pict.addView('Docuserve-Sidebar', libViewSidebar.default_configuration, libViewSidebar);
 		this.pict.addView('Docuserve-Splash', libViewSplash.default_configuration, libViewSplash);
 		this.pict.addView('Docuserve-Content', libViewContent.default_configuration, libViewContent);
+		this.pict.addView('Docuserve-Search', libViewSearch.default_configuration, libViewSearch);
 	}
 
 	onAfterInitializeAsync(fCallback)
@@ -42,6 +44,8 @@ class DocuserveApplication extends libPictApplication
 			TopBar: null,
 			ErrorPageLoaded: false,
 			ErrorPageHTML: null,
+			KeywordIndexLoaded: false,
+			KeywordDocumentCount: 0,
 			CurrentGroup: '',
 			CurrentModule: '',
 			CurrentPath: '',
@@ -80,6 +84,7 @@ class DocuserveApplication extends libPictApplication
 	 *
 	 * Route patterns:
 	 *   #/Home                         -> showView('Docuserve-Splash')
+	 *   #/search/<query>               -> navigateToSearch(query)
 	 *   #/page/<docpath>               -> navigateToPage(docpath)
 	 *   #/doc/<group>/<module>          -> navigateToModule(group, module)
 	 *   #/doc/<group>/<module>/<path>   -> navigateToModulePath(group, module, path)
@@ -95,6 +100,13 @@ class DocuserveApplication extends libPictApplication
 		}
 
 		let tmpParts = tmpHash.split('/');
+
+		if (tmpParts[0] === 'search')
+		{
+			let tmpQuery = decodeURIComponent(tmpParts.slice(1).join('/'));
+			this.navigateToSearch(tmpQuery);
+			return;
+		}
 
 		if (tmpParts[0] === 'page' && tmpParts.length >= 2)
 		{
@@ -206,9 +218,21 @@ class DocuserveApplication extends libPictApplication
 
 		tmpDocProvider.fetchDocument(tmpURL, (pError, pHTML) =>
 		{
-			// fetchDocument always provides displayable HTML in pHTML,
-			// even on error, so we can use it directly.
-			tmpContentView.displayContent(pHTML);
+			if (!pError)
+			{
+				tmpContentView.displayContent(pHTML);
+				return;
+			}
+
+			// Remote fetch failed — try a local fallback using the
+			// group/module/path as a relative path.  This handles cases
+			// where the catalog contains entries (e.g. example apps)
+			// that don't correspond to real GitHub repositories.
+			let tmpLocalPath = pGroup + '/' + pModule + '/' + (pPath || 'README.md');
+			tmpDocProvider.fetchLocalDocument(tmpLocalPath, (pLocalError, pLocalHTML) =>
+			{
+				tmpContentView.displayContent(pLocalHTML);
+			});
 		});
 	}
 
@@ -249,6 +273,30 @@ class DocuserveApplication extends libPictApplication
 			// even on error, so we can use it directly.
 			tmpContentView.displayContent(pHTML);
 		});
+	}
+
+	/**
+	 * Navigate to the search page with an optional query.
+	 *
+	 * @param {string} pQuery - The search query (may be empty for blank search page)
+	 */
+	navigateToSearch(pQuery)
+	{
+		let tmpSidebarView = this.pict.views['Docuserve-Sidebar'];
+		let tmpSearchView = this.pict.views['Docuserve-Search'];
+
+		// Update state
+		this.pict.AppData.Docuserve.CurrentGroup = '';
+		this.pict.AppData.Docuserve.CurrentModule = '';
+		this.pict.AppData.Docuserve.CurrentPath = '';
+
+		// Clear module-specific sidebar nav
+		tmpSidebarView.clearModuleNav();
+		tmpSidebarView.renderSidebarGroups();
+
+		// Render the search view with the query
+		tmpSearchView.render();
+		tmpSearchView.showSearch(pQuery || '');
 	}
 }
 

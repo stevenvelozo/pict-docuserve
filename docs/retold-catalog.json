@@ -1,0 +1,328 @@
+{
+	"Generated": "2026-02-10T22:48:11.813Z",
+	"GitHubOrg": "stevenvelozo",
+	"DefaultBranch": "master",
+	"Groups": [
+		{
+			"Name": "Dist",
+			"Key": "dist",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "css",
+					"Repo": "css",
+					"Group": "dist",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				},
+				{
+					"Name": "indoctrinate_content_staging",
+					"Repo": "indoctrinate_content_staging",
+					"Group": "dist",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				},
+				{
+					"Name": "js",
+					"Repo": "js",
+					"Group": "dist",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				}
+			]
+		},
+		{
+			"Name": "Docs",
+			"Key": "docs",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "css",
+					"Repo": "css",
+					"Group": "docs",
+					"Branch": "master",
+					"HasDocs": true,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": [
+						"css/docuserve.css"
+					]
+				},
+				{
+					"Name": "js",
+					"Repo": "js",
+					"Group": "docs",
+					"Branch": "master",
+					"HasDocs": true,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": [
+						"js/pict.min.js",
+						"js/pict.min.js.map"
+					]
+				}
+			]
+		},
+		{
+			"Name": "Example_applications",
+			"Key": "example_applications",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "contacts-app",
+					"Repo": "contacts-app",
+					"Group": "example_applications",
+					"Branch": "master",
+					"HasDocs": true,
+					"HasCover": true,
+					"Sidebar": [
+						{
+							"Title": "Getting Started",
+							"Children": [
+								{
+									"Title": "Quick Start",
+									"Path": "quick-start.md"
+								},
+								{
+									"Title": "Configuration",
+									"Path": "configuration.md"
+								}
+							]
+						},
+						{
+							"Title": "Data Model",
+							"Children": [
+								{
+									"Title": "Contacts",
+									"Path": "data-model.md"
+								},
+								{
+									"Title": "Relationships",
+									"Path": "relationships.md"
+								}
+							]
+						},
+						{
+							"Title": "API Reference",
+							"Path": "api.md"
+						}
+					],
+					"DocFiles": [
+						"README.md",
+						"_sidebar.md",
+						"_topbar.md",
+						"api.md",
+						"configuration.md",
+						"cover.md",
+						"data-model.md",
+						"errorpage.md",
+						"quick-start.md",
+						"relationships.md"
+					]
+				},
+				{
+					"Name": "sports-stats-api",
+					"Repo": "sports-stats-api",
+					"Group": "example_applications",
+					"Branch": "master",
+					"HasDocs": true,
+					"HasCover": true,
+					"Sidebar": [
+						{
+							"Title": "Getting Started",
+							"Children": [
+								{
+									"Title": "Quick Start",
+									"Path": "quick-start.md"
+								},
+								{
+									"Title": "Authentication",
+									"Path": "authentication.md"
+								}
+							]
+						},
+						{
+							"Title": "Data Model",
+							"Children": [
+								{
+									"Title": "Leagues & Teams",
+									"Path": "leagues-teams.md"
+								},
+								{
+									"Title": "Players",
+									"Path": "players.md"
+								},
+								{
+									"Title": "Games & Scores",
+									"Path": "games.md"
+								},
+								{
+									"Title": "Standings",
+									"Path": "standings.md"
+								}
+							]
+						},
+						{
+							"Title": "API Reference",
+							"Path": "api.md"
+						},
+						{
+							"Title": "Real-Time",
+							"Children": [
+								{
+									"Title": "WebSocket Feed",
+									"Path": "websocket.md"
+								}
+							]
+						}
+					],
+					"DocFiles": [
+						"README.md",
+						"_sidebar.md",
+						"_topbar.md",
+						"api.md",
+						"authentication.md",
+						"cover.md",
+						"errorpage.md",
+						"games.md",
+						"leagues-teams.md",
+						"players.md",
+						"quick-start.md",
+						"standings.md",
+						"websocket.md"
+					]
+				},
+				{
+					"Name": "todo-app",
+					"Repo": "todo-app",
+					"Group": "example_applications",
+					"Branch": "master",
+					"HasDocs": true,
+					"HasCover": true,
+					"Sidebar": [
+						{
+							"Title": "Getting Started",
+							"Children": [
+								{
+									"Title": "Quick Start",
+									"Path": "quick-start.md"
+								},
+								{
+									"Title": "Configuration",
+									"Path": "configuration.md"
+								}
+							]
+						},
+						{
+							"Title": "Core Concepts",
+							"Children": [
+								{
+									"Title": "Tasks",
+									"Path": "tasks.md"
+								},
+								{
+									"Title": "Lists",
+									"Path": "lists.md"
+								},
+								{
+									"Title": "Tags & Filters",
+									"Path": "tags.md"
+								}
+							]
+						},
+						{
+							"Title": "API Reference",
+							"Path": "api.md"
+						}
+					],
+					"DocFiles": [
+						"README.md",
+						"_sidebar.md",
+						"_topbar.md",
+						"api.md",
+						"configuration.md",
+						"cover.md",
+						"errorpage.md",
+						"lists.md",
+						"quick-start.md",
+						"tags.md",
+						"tasks.md"
+					]
+				}
+			]
+		},
+		{
+			"Name": "Site",
+			"Key": "site",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "css",
+					"Repo": "css",
+					"Group": "site",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				},
+				{
+					"Name": "js",
+					"Repo": "js",
+					"Group": "site",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				}
+			]
+		},
+		{
+			"Name": "Source",
+			"Key": "source",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "cli",
+					"Repo": "cli",
+					"Group": "source",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				},
+				{
+					"Name": "providers",
+					"Repo": "providers",
+					"Group": "source",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				},
+				{
+					"Name": "views",
+					"Repo": "views",
+					"Group": "source",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				}
+			]
+		}
+	]
+}

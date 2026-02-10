@@ -49,6 +49,49 @@ const _ViewConfiguration =
 		.docuserve-sidebar-search input:focus {
 			border-color: #42b983;
 		}
+		.docuserve-sidebar-search-results {
+			margin-top: 0.5em;
+		}
+		.docuserve-sidebar-search-results a {
+			display: block;
+			padding: 0.4em 0.5em;
+			color: #444;
+			text-decoration: none;
+			font-size: 0.82em;
+			border-radius: 3px;
+			transition: background-color 0.1s;
+			cursor: pointer;
+		}
+		.docuserve-sidebar-search-results a:hover {
+			background-color: #e9ecef;
+			color: #42b983;
+		}
+		.docuserve-sidebar-search-result-title {
+			font-weight: 600;
+			color: #333;
+		}
+		.docuserve-sidebar-search-results a:hover .docuserve-sidebar-search-result-title {
+			color: #42b983;
+		}
+		.docuserve-sidebar-search-result-meta {
+			font-size: 0.9em;
+			color: #999;
+		}
+		.docuserve-sidebar-search-all {
+			display: block;
+			padding: 0.4em 0.5em;
+			font-size: 0.82em;
+			color: #42b983;
+			text-decoration: none;
+			font-weight: 600;
+			cursor: pointer;
+			border-top: 1px solid #e9ecef;
+			margin-top: 0.25em;
+			padding-top: 0.5em;
+		}
+		.docuserve-sidebar-search-all:hover {
+			text-decoration: underline;
+		}
 		.docuserve-sidebar-home {
 			padding: 0.5em 1.25em;
 			font-weight: 600;
@@ -150,6 +193,10 @@ const _ViewConfiguration =
 			Template: /*html*/`
 <div class="docuserve-sidebar">
 	<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&times;</button>
+	<div id="Docuserve-Sidebar-Search" class="docuserve-sidebar-search" style="display:none;">
+		<input type="text" placeholder="Search docs..." id="Docuserve-Sidebar-Search-Input">
+		<div id="Docuserve-Sidebar-Search-Results" class="docuserve-sidebar-search-results"></div>
+	</div>
 	<div class="docuserve-sidebar-home">
 		<a onclick="{~P~}.PictApplication.navigateTo('/Home')">Home</a>
 	</div>
@@ -176,11 +223,37 @@ class DocusserveSidebarView extends libPictView
 	constructor(pFable, pOptions, pServiceHash)
 	{
 		super(pFable, pOptions, pServiceHash);
+
+		this._SidebarSearchDebounceTimer = null;
 	}
 
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.renderSidebarGroups();
+
+		// Conditionally show the search box if the keyword index is loaded
+		let tmpSearchContainer = document.getElementById('Docuserve-Sidebar-Search');
+		if (tmpSearchContainer && this.pict.AppData.Docuserve.KeywordIndexLoaded)
+		{
+			tmpSearchContainer.style.display = '';
+
+			let tmpInput = document.getElementById('Docuserve-Sidebar-Search-Input');
+			if (tmpInput)
+			{
+				tmpInput.addEventListener('input', () =>
+				{
+					if (this._SidebarSearchDebounceTimer)
+					{
+						clearTimeout(this._SidebarSearchDebounceTimer);
+					}
+
+					this._SidebarSearchDebounceTimer = setTimeout(() =>
+					{
+						this.performSidebarSearch(tmpInput.value);
+					}, 250);
+				});
+			}
+		}
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
 	}
@@ -305,6 +378,67 @@ class DocusserveSidebarView extends libPictView
 		tmpHTML += '</div>';
 
 		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', tmpHTML);
+	}
+
+	/**
+	 * Perform a sidebar search and render inline results.
+	 *
+	 * Shows up to 8 results as compact links.  If there are results, also
+	 * shows a "See all results" link to the dedicated search page.
+	 *
+	 * @param {string} pQuery - The search query
+	 */
+	performSidebarSearch(pQuery)
+	{
+		let tmpResultsEl = document.getElementById('Docuserve-Sidebar-Search-Results');
+		if (!tmpResultsEl)
+		{
+			return;
+		}
+
+		if (!pQuery || !pQuery.trim())
+		{
+			tmpResultsEl.innerHTML = '';
+			return;
+		}
+
+		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
+		let tmpResults = tmpDocProvider.search(pQuery);
+
+		if (tmpResults.length === 0)
+		{
+			tmpResultsEl.innerHTML = '<div style="padding: 0.4em 0.5em; font-size: 0.82em; color: #999;">No results found.</div>';
+			return;
+		}
+
+		let tmpMaxResults = 8;
+		let tmpHTML = '';
+
+		for (let i = 0; i < tmpResults.length && i < tmpMaxResults; i++)
+		{
+			let tmpResult = tmpResults[i];
+			let tmpMeta = '';
+			if (tmpResult.Group && tmpResult.Module)
+			{
+				tmpMeta = tmpResult.Group + ' / ' + tmpResult.Module;
+			}
+
+			tmpHTML += '<a href="' + tmpResult.Route + '">';
+			tmpHTML += '<div class="docuserve-sidebar-search-result-title">' + this.escapeHTML(tmpResult.Title) + '</div>';
+			if (tmpMeta)
+			{
+				tmpHTML += '<div class="docuserve-sidebar-search-result-meta">' + this.escapeHTML(tmpMeta) + '</div>';
+			}
+			tmpHTML += '</a>';
+		}
+
+		if (tmpResults.length > tmpMaxResults)
+		{
+			let tmpEncodedQuery = encodeURIComponent(pQuery);
+			tmpHTML += '<a class="docuserve-sidebar-search-all" href="#/search/' + tmpEncodedQuery + '">See all ' + tmpResults.length + ' results</a>';
+		}
+
+		tmpResultsEl.innerHTML = tmpHTML;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 # Deployment
 
-Docuserve provides two CLI commands for working with documentation folders, plus a `build-site.js` script for advanced site assembly.
+Docuserve provides two CLI commands for working with documentation folders.
 
 ## Serving Locally
 
@@ -43,7 +43,7 @@ After injection, the folder contains your markdown files alongside:
 docs/
 ├── index.html                    # Pict app entry point
 ├── pict-docuserve.min.js         # Bundled application
-├── pict-docuserve.compatible.min.js
+├── pict-docuserve.min.js.map     # Source map
 ├── css/
 │   └── docuserve.css             # Base styles
 ├── js/
@@ -70,19 +70,7 @@ git commit -m "Update documentation"
 git push
 ```
 
-### Option 2: gh-pages branch
-
-```bash
-npx pict-docuserve inject ./my-docs
-
-cd my-docs
-git init
-git add -A
-git commit -m "Deploy documentation"
-git push -f git@github.com:your/repo.git main:gh-pages
-```
-
-### Option 3: GitHub Actions
+### Option 2: GitHub Actions
 
 Create a workflow that builds and deploys on push:
 
@@ -107,24 +95,34 @@ jobs:
           publish_dir: ./docs
 ```
 
-## Advanced: build-site.js
+## Quackage Integration
 
-For cases where you want to assemble the Pict application build together with documentation content into a separate output folder, Docuserve includes `build-site.js`.
+If your project uses Quackage, these commands are available:
 
 ```bash
-# Build the Pict application first
-npm run build
+# Generate a catalog from module documentation (no inject)
+npx quack indoctrinate ./docs/ -d ./modules
 
-# Assemble dist/ + docs content into site/
-node build-site.js --docs-path ./my-docs --output-path ./my-site
+# Generate a keyword search index (no inject)
+npx quack indoctrinate-index ./docs/ -d ./modules
+
+# Do everything: catalog + keyword index + inject assets
+npx quack prepare-docs ./docs/ -d ./modules
+
+# Serve docs locally
+npx quack docuserve-serve ./docs/
 ```
 
-The script copies the entire `dist/` folder as the base, then overlays all `.md` files, `retold-catalog.json`, and `retold-keyword-index.json` from the docs source. It also creates a `.nojekyll` marker.
+## Example Applications
+
+The `example_applications/` folder contains sample documentation sites. These folders contain only markdown -- no injected assets. Serve any example with:
 
 ```bash
-# Build everything (app + site) in one step
-npm run build-site
+npx pict-docuserve serve ./example_applications/todo-app/docs
+```
 
-# Build with the example applications
-npm run build-examples
+Or use the helper script:
+
+```bash
+node example_applications/build-examples.js serve todo-app
 ```

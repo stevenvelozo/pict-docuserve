@@ -1,56 +1,79 @@
 {
-	"name": "pict-docuserve",
-	"version": "0.0.4",
-	"description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
-	"main": "source/Pict-Application-Docuserve.js",
-	"bin": {
-		"pict-docuserve": "source/cli/Docuserve-CLI-Run.js"
-	},
-	"files": [
-		"source/",
-		"dist/",
-		"css/",
-		"html/",
-		"build-site.js"
-	],
-	"scripts": {
-		"start": "node source/Pict-Application-Docuserve.js",
-		"build": "npx quack build && npx quack copy",
-		"build-site": "npx quack build && npx quack copy && node build-site.js",
-		"build-examples": "npx quack build && npx quack copy && node build-site.js --docs-path example_applications/todo-app/docs --output-path example_applications/todo-app/site && node build-site.js --docs-path example_applications/contacts-app/docs --output-path example_applications/contacts-app/site && node build-site.js --docs-path example_applications/sports-stats-api/docs --output-path example_applications/sports-stats-api/site",
-		"test": "echo \"Error: no test specified\" && exit 0"
-	},
-	"author": "steven velozo <steven@velozo.com>",
-	"license": "MIT",
-	"dependencies": {
-		"pict": "^1.0.343",
-		"pict-application": "^1.0.30",
-		"pict-view": "^1.0.64",
-		"pict-provider": "^1.0.7",
-		"pict-service-commandlineutility": "^1.0.17"
-	},
-	"devDependencies": {
-		"quackage": "^1.0.47"
-	},
-	"copyFilesSettings": {
-		"whenFileExists": "overwrite"
-	},
-	"copyFiles": [
-		{
-			"from": "./html/*",
-			"to": "./dist/"
-		},
-		{
-			"from": "./css/**",
-			"to": "./dist/css/"
-		},
-		{
-			"from": "./node_modules/pict/dist/pict.min.js",
-			"to": "./dist/js/"
-		},
-		{
-			"from": "./node_modules/pict/dist/pict.min.js.map",
-			"to": "./dist/js/"
-		}
-	]
+    "name": "pict-docuserve",
+    "version": "0.0.5",
+    "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
+    "main": "source/Pict-Application-Docuserve.js",
+    "bin": {
+        "pict-docuserve": "source/cli/Docuserve-CLI-Run.js"
+    },
+    "files": [
+        "source/",
+        "dist/",
+        "css/",
+        "html/"
+    ],
+    "scripts": {
+        "start": "node source/Pict-Application-Docuserve.js",
+        "build": "npx quack build && npx quack copy",
+        "build-docs": "npx quack build && npx quack copy && node source/cli/Docuserve-CLI-Run.js inject ./docs && node example_applications/build-examples.js stage-docs",
+        "serve-docs": "node source/cli/Docuserve-CLI-Run.js serve ./docs",
+        "serve-examples": "node example_applications/build-examples.js",
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "tests": "npx mocha -u tdd --exit -R spec --grep",
+        "coverage": "npx nyc --reporter=lcov --reporter=text-lcov npx mocha -- -u tdd -R spec",
+        "docs": "npx quack prepare-docs ./docs -d ./modules",
+        "docs-serve": "npx quack docs-serve ./docs"
+    },
+    "author": "steven velozo <steven@velozo.com>",
+    "license": "MIT",
+    "dependencies": {
+        "lunr": "^2.3.9",
+        "pict": "^1.0.343",
+        "pict-application": "^1.0.30",
+        "pict-provider": "^1.0.7",
+        "pict-service-commandlineutility": "^1.0.17",
+        "pict-view": "^1.0.64"
+    },
+    "devDependencies": {
+        "quackage": "^1.0.47"
+    },
+    "copyFilesSettings": {
+        "whenFileExists": "overwrite"
+    },
+    "copyFiles": [
+        {
+            "from": "./html/*",
+            "to": "./dist/"
+        },
+        {
+            "from": "./css/**",
+            "to": "./dist/css/"
+        },
+        {
+            "from": "./node_modules/pict/dist/pict.min.js",
+            "to": "./dist/js/"
+        },
+        {
+            "from": "./node_modules/pict/dist/pict.min.js.map",
+            "to": "./dist/js/"
+        }
+    ],
+    "mocha": {
+        "diff": true,
+        "extension": [
+            "js"
+        ],
+        "package": "./package.json",
+        "reporter": "spec",
+        "slow": "75",
+        "timeout": "5000",
+        "ui": "tdd",
+        "watch-files": [
+            "source/**/*.js",
+            "test/**/*.js"
+        ],
+        "watch-ignore": [
+            "lib/vendor"
+        ]
+    }
 }

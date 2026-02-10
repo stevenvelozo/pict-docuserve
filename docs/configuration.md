@@ -31,6 +31,10 @@ The application initializes `AppData.Docuserve` with these properties:
 | `CatalogLoaded` | boolean | `false` | Whether the catalog loaded successfully |
 | `CoverLoaded` | boolean | `false` | Whether cover.md loaded successfully |
 | `SidebarLoaded` | boolean | `false` | Whether _sidebar.md loaded successfully |
+| `TopBarLoaded` | boolean | `false` | Whether _topbar.md loaded successfully |
+| `KeywordIndexLoaded` | boolean | `false` | Whether retold-keyword-index.json loaded |
+| `KeywordDocumentCount` | number | `0` | Number of documents in the keyword index |
+| `SidebarVisible` | boolean | `true` | Whether the sidebar is currently visible |
 | `CurrentGroup` | string | `""` | Currently viewed module group key |
 | `CurrentModule` | string | `""` | Currently viewed module name |
 | `CurrentPath` | string | `""` | Currently viewed document path |

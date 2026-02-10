@@ -1,4 +1,5 @@
 const libPictProvider = require('pict-provider');
+const libLunr = require('lunr');
 
 /**
  * Documentation Provider for Docuserve
@@ -55,8 +56,8 @@ class DocuserveDocumentationProvider extends libPictProvider
 					this.buildSidebarData(pCatalog);
 				}
 
-				// Now try to load cover.md, _sidebar.md, _topbar.md, and errorpage.md in parallel
-				let tmpPending = 4;
+				// Now try to load cover.md, _sidebar.md, _topbar.md, errorpage.md, and keyword index in parallel
+				let tmpPending = 5;
 				let tmpFinish = () =>
 				{
 					tmpPending--;
@@ -70,6 +71,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 				this.loadSidebar(tmpFinish);
 				this.loadTopbar(tmpFinish);
 				this.loadErrorPage(tmpFinish);
+				this.loadKeywordIndex(tmpFinish);
 			})
 			.catch((pError) =>
 			{
@@ -416,6 +418,171 @@ class DocuserveDocumentationProvider extends libPictProvider
 				this.log.warn(`Docuserve: Error loading errorpage.md: ${pError}`);
 				return tmpCallback();
 			});
+	}
+
+	/**
+	 * Load the keyword search index (retold-keyword-index.json).
+	 *
+	 * If the index file exists, hydrates a lunr.Index for client-side search
+	 * and stores the document metadata map.  If the file is not found, search
+	 * features will simply not appear in the UI.
+	 *
+	 * @param {Function} fCallback - Callback when done
+	 */
+	loadKeywordIndex(fCallback)
+	{
+		let tmpCallback = (typeof(fCallback) === 'function') ? fCallback : () => {};
+		let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
+
+		fetch(tmpDocsBase + 'retold-keyword-index.json')
+			.then((pResponse) =>
+			{
+				if (!pResponse.ok)
+				{
+					return null;
+				}
+				return pResponse.json();
+			})
+			.then((pIndexData) =>
+			{
+				if (!pIndexData || !pIndexData.LunrIndex || !pIndexData.Documents)
+				{
+					this.log.info('Docuserve: No keyword index found; search will be unavailable.');
+					return tmpCallback();
+				}
+
+				try
+				{
+					this._LunrIndex = libLunr.Index.load(pIndexData.LunrIndex);
+					this._KeywordDocuments = pIndexData.Documents;
+					this.pict.AppData.Docuserve.KeywordIndexLoaded = true;
+					this.pict.AppData.Docuserve.KeywordDocumentCount = pIndexData.DocumentCount || 0;
+					this.log.info(`Docuserve: Keyword index loaded (${pIndexData.DocumentCount || 0} documents).`);
+				}
+				catch (pError)
+				{
+					this.log.warn(`Docuserve: Error hydrating lunr index: ${pError}`);
+				}
+
+				return tmpCallback();
+			})
+			.catch((pError) =>
+			{
+				this.log.warn(`Docuserve: Error loading keyword index: ${pError}`);
+				return tmpCallback();
+			});
+	}
+
+	/**
+	 * Check whether a group/module pair exists in the loaded catalog.
+	 *
+	 * Used by search() to decide whether a result should route to
+	 * #/doc/ (catalog module → GitHub raw URL) or #/page/ (local doc).
+	 *
+	 * @param {string} pGroup - The group key (e.g. "fable")
+	 * @param {string} pModule - The module name (e.g. "fable")
+	 * @returns {boolean} True if the module is found in the catalog
+	 */
+	isModuleInCatalog(pGroup, pModule)
+	{
+		if (!this._Catalog || !this._Catalog.Groups)
+		{
+			return false;
+		}
+
+		for (let i = 0; i < this._Catalog.Groups.length; i++)
+		{
+			let tmpGroup = this._Catalog.Groups[i];
+			if (tmpGroup.Key !== pGroup)
+			{
+				continue;
+			}
+
+			for (let j = 0; j < tmpGroup.Modules.length; j++)
+			{
+				let tmpModule = tmpGroup.Modules[j];
+				if (tmpModule.Name === pModule)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Search the keyword index for documents matching a query.
+	 *
+	 * Returns an array of result objects sorted by relevance:
+	 *   [{ Key, Title, Group, Module, DocPath, Score, Route }]
+	 *
+	 * @param {string} pQuery - The search query
+	 * @returns {Array} Search results (empty if no index or no matches)
+	 */
+	search(pQuery)
+	{
+		if (!this._LunrIndex || !this._KeywordDocuments || !pQuery || !pQuery.trim())
+		{
+			return [];
+		}
+
+		let tmpResults = [];
+
+		try
+		{
+			let tmpLunrResults = this._LunrIndex.search(pQuery);
+
+			for (let i = 0; i < tmpLunrResults.length; i++)
+			{
+				let tmpRef = tmpLunrResults[i].ref;
+				let tmpScore = tmpLunrResults[i].score;
+				let tmpDoc = this._KeywordDocuments[tmpRef];
+
+				if (!tmpDoc)
+				{
+					continue;
+				}
+
+				// Build the hash route from the document key (group/module/docpath)
+				let tmpParts = tmpRef.split('/');
+				let tmpRoute = '';
+				if (tmpParts.length >= 2)
+				{
+					// Check whether this group/module exists in the catalog.
+					// If it does, route to #/doc/ which fetches from GitHub.
+					// If not, fall back to #/page/ which fetches locally.
+					let tmpGroup = tmpParts[0];
+					let tmpModule = tmpParts[1];
+
+					if (this.isModuleInCatalog(tmpGroup, tmpModule))
+					{
+						tmpRoute = '#/doc/' + tmpRef;
+					}
+					else
+					{
+						// Local document — route via #/page/ using the full ref path
+						tmpRoute = '#/page/' + tmpRef;
+					}
+				}
+
+				tmpResults.push({
+					Key: tmpRef,
+					Title: tmpDoc.Title || tmpRef,
+					Group: tmpDoc.Group || '',
+					Module: tmpDoc.Module || '',
+					DocPath: tmpDoc.DocPath || '',
+					Score: tmpScore,
+					Route: tmpRoute
+				});
+			}
+		}
+		catch (pError)
+		{
+			this.log.warn(`Docuserve: Search error: ${pError}`);
+		}
+
+		return tmpResults;
 	}
 
 	/**
