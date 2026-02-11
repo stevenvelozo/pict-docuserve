@@ -1,6 +1,6 @@
 {
     "name": "pict-docuserve",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
     "main": "source/Pict-Application-Docuserve.js",
     "bin": {
@@ -20,9 +20,7 @@
         "serve-examples": "node example_applications/build-examples.js",
         "test": "echo \"Error: no test specified\" && exit 0",
         "tests": "npx mocha -u tdd --exit -R spec --grep",
-        "coverage": "npx nyc --reporter=lcov --reporter=text-lcov npx mocha -- -u tdd -R spec",
-        "docs": "npx quack prepare-docs ./docs -d ./modules",
-        "docs-serve": "npx quack docs-serve ./docs"
+        "coverage": "npx nyc --reporter=lcov --reporter=text-lcov npx mocha -- -u tdd -R spec"
     },
     "author": "steven velozo <steven@velozo.com>",
     "license": "MIT",

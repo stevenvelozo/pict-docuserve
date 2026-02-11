@@ -216,6 +216,7 @@ class DocuserveApplication extends libPictApplication
 			return;
 		}
 
+		let tmpDocPath = pPath || 'README.md';
 		tmpDocProvider.fetchDocument(tmpURL, (pError, pHTML) =>
 		{
 			if (!pError)
@@ -228,12 +229,12 @@ class DocuserveApplication extends libPictApplication
 			// group/module/path as a relative path.  This handles cases
 			// where the catalog contains entries (e.g. example apps)
 			// that don't correspond to real GitHub repositories.
-			let tmpLocalPath = pGroup + '/' + pModule + '/' + (pPath || 'README.md');
+			let tmpLocalPath = pGroup + '/' + pModule + '/' + tmpDocPath;
 			tmpDocProvider.fetchLocalDocument(tmpLocalPath, (pLocalError, pLocalHTML) =>
 			{
 				tmpContentView.displayContent(pLocalHTML);
-			});
-		});
+			}, pGroup, pModule, tmpDocPath);
+		}, pGroup, pModule, tmpDocPath);
 	}
 
 	/**

@@ -512,6 +512,32 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
+	 * Check whether a group key exists in the loaded catalog.
+	 *
+	 * Used to dynamically validate group keys instead of hardcoding them.
+	 *
+	 * @param {string} pGroupKey - The group key (e.g. "fable", "example_applications")
+	 * @returns {boolean} True if the group is found in the catalog
+	 */
+	isGroupInCatalog(pGroupKey)
+	{
+		if (!this._Catalog || !this._Catalog.Groups)
+		{
+			return false;
+		}
+
+		for (let i = 0; i < this._Catalog.Groups.length; i++)
+		{
+			if (this._Catalog.Groups[i].Key === pGroupKey)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Search the keyword index for documents matching a query.
 	 *
 	 * Returns an array of result objects sorted by relevance:
@@ -763,8 +789,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 		// Check if it's a module path (group/module)
 		if (tmpParts.length >= 2)
 		{
-			let tmpGroupKeys = ['fable', 'meadow', 'orator', 'pict', 'utility'];
-			if (tmpGroupKeys.indexOf(tmpParts[0]) >= 0)
+			if (this.isGroupInCatalog(tmpParts[0]))
 			{
 				return '#/doc/' + tmpPath;
 			}
@@ -925,8 +950,11 @@ class DocuserveDocumentationProvider extends libPictProvider
 	 *
 	 * @param {string} pURL - The URL to fetch
 	 * @param {Function} fCallback - Callback receiving (error, htmlContent)
+	 * @param {string} [pCurrentGroup] - The current group key for link resolution
+	 * @param {string} [pCurrentModule] - The current module name for link resolution
+	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
 	 */
-	fetchDocument(pURL, fCallback)
+	fetchDocument(pURL, fCallback, pCurrentGroup, pCurrentModule, pCurrentDocPath)
 	{
 		let tmpCallback = (typeof(fCallback) === 'function') ? fCallback : () => {};
 
@@ -957,7 +985,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					return tmpCallback('Document not found', this.getErrorPageHTML(pURL));
 				}
 
-				let tmpHTML = this.parseMarkdown(pMarkdown);
+				let tmpHTML = this.parseMarkdown(pMarkdown, pCurrentGroup, pCurrentModule, pCurrentDocPath);
 				this._ContentCache[pURL] = tmpHTML;
 				return tmpCallback(null, tmpHTML);
 			})
@@ -973,12 +1001,15 @@ class DocuserveDocumentationProvider extends libPictProvider
 	 *
 	 * @param {string} pPath - The relative path (e.g. 'architecture.md')
 	 * @param {Function} fCallback - Callback receiving (error, htmlContent)
+	 * @param {string} [pCurrentGroup] - The current group key for link resolution
+	 * @param {string} [pCurrentModule] - The current module name for link resolution
+	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
 	 */
-	fetchLocalDocument(pPath, fCallback)
+	fetchLocalDocument(pPath, fCallback, pCurrentGroup, pCurrentModule, pCurrentDocPath)
 	{
 		let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
 		let tmpURL = tmpDocsBase + pPath;
-		this.fetchDocument(tmpURL, fCallback);
+		this.fetchDocument(tmpURL, fCallback, pCurrentGroup, pCurrentModule, pCurrentDocPath);
 	}
 
 	/**
@@ -989,9 +1020,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 	 * lists, blockquotes, and horizontal rules.
 	 *
 	 * @param {string} pMarkdown - The raw markdown text
+	 * @param {string} [pCurrentGroup] - The current group key for link resolution
+	 * @param {string} [pCurrentModule] - The current module name for link resolution
+	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
 	 * @returns {string} The parsed HTML
 	 */
-	parseMarkdown(pMarkdown)
+	parseMarkdown(pMarkdown, pCurrentGroup, pCurrentModule, pCurrentDocPath)
 	{
 		if (!pMarkdown)
 		{
@@ -1035,7 +1069,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					}
 					if (tmpInBlockquote)
 					{
-						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n')) + '</blockquote>');
+						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
 						tmpInBlockquote = false;
 						tmpBlockquoteLines = [];
 					}
@@ -1094,7 +1128,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					}
 					if (tmpInBlockquote)
 					{
-						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n')) + '</blockquote>');
+						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
 						tmpInBlockquote = false;
 						tmpBlockquoteLines = [];
 					}
@@ -1131,7 +1165,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 			}
 			else if (tmpInBlockquote)
 			{
-				tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n')) + '</blockquote>');
+				tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
 				tmpInBlockquote = false;
 				tmpBlockquoteLines = [];
 			}
@@ -1158,7 +1192,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					tmpInList = false;
 				}
 				let tmpLevel = tmpHeadingMatch[1].length;
-				let tmpText = this.parseInline(tmpHeadingMatch[2]);
+				let tmpText = this.parseInline(tmpHeadingMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath);
 				let tmpID = tmpHeadingMatch[2].toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
 				tmpHTML.push('<h' + tmpLevel + ' id="' + tmpID + '">' + tmpText + '</h' + tmpLevel + '>');
 				continue;
@@ -1178,7 +1212,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					tmpInList = true;
 					tmpListType = 'ul';
 				}
-				tmpHTML.push('<li>' + this.parseInline(tmpULMatch[2]) + '</li>');
+				tmpHTML.push('<li>' + this.parseInline(tmpULMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</li>');
 				continue;
 			}
 
@@ -1196,7 +1230,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					tmpInList = true;
 					tmpListType = 'ol';
 				}
-				tmpHTML.push('<li>' + this.parseInline(tmpOLMatch[2]) + '</li>');
+				tmpHTML.push('<li>' + this.parseInline(tmpOLMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</li>');
 				continue;
 			}
 
@@ -1230,7 +1264,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 				tmpTableHTML += '<thead><tr>';
 				for (let h = 0; h < tmpHeaders.length; h++)
 				{
-					tmpTableHTML += '<th>' + this.parseInline(tmpHeaders[h].trim()) + '</th>';
+					tmpTableHTML += '<th>' + this.parseInline(tmpHeaders[h].trim(), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</th>';
 				}
 				tmpTableHTML += '</tr></thead>';
 
@@ -1246,7 +1280,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					tmpTableHTML += '<tr>';
 					for (let c = 0; c < tmpCells.length; c++)
 					{
-						tmpTableHTML += '<td>' + this.parseInline(tmpCells[c].trim()) + '</td>';
+						tmpTableHTML += '<td>' + this.parseInline(tmpCells[c].trim(), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</td>';
 					}
 					tmpTableHTML += '</tr>';
 				}
@@ -1256,7 +1290,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 			}
 
 			// Regular paragraph
-			tmpHTML.push('<p>' + this.parseInline(tmpLine) + '</p>');
+			tmpHTML.push('<p>' + this.parseInline(tmpLine, pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</p>');
 		}
 
 		// Close any trailing open elements
@@ -1266,7 +1300,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 		}
 		if (tmpInBlockquote)
 		{
-			tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n')) + '</blockquote>');
+			tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
 		}
 		if (tmpInCodeBlock)
 		{
@@ -1280,9 +1314,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 	 * Parse inline markdown elements (bold, italic, code, links, images).
 	 *
 	 * @param {string} pText - The text to parse
+	 * @param {string} [pCurrentGroup] - The current group key for link resolution
+	 * @param {string} [pCurrentModule] - The current module name for link resolution
+	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
 	 * @returns {string} HTML with inline elements
 	 */
-	parseInline(pText)
+	parseInline(pText, pCurrentGroup, pCurrentModule, pCurrentDocPath)
 	{
 		if (!pText)
 		{
@@ -1309,7 +1346,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 			// Convert internal doc links to hash routes
 			if (pHref.match(/^\//) || pHref.match(/^[^:]+\.md/))
 			{
-				let tmpRoute = this.convertDocLink(pHref);
+				let tmpRoute = this.convertDocLink(pHref, pCurrentGroup, pCurrentModule, pCurrentDocPath);
 				return '<a href="' + tmpRoute + '">' + pLinkText + '</a>';
 			}
 			return '<a href="' + pHref + '" target="_blank" rel="noopener">' + pLinkText + '</a>';
@@ -1329,27 +1366,51 @@ class DocuserveDocumentationProvider extends libPictProvider
 	/**
 	 * Convert a docsify-style internal link to a hash route for docuserve.
 	 *
+	 * When module context is provided, relative links (e.g. "api.md" or
+	 * "./settings-manager.md") are resolved within the current module and
+	 * document directory rather than falling back to the docs root.
+	 *
 	 * @param {string} pHref - The original link href
+	 * @param {string} [pCurrentGroup] - The current group key (e.g. "fable")
+	 * @param {string} [pCurrentModule] - The current module name (e.g. "fable")
+	 * @param {string} [pCurrentDocPath] - The current document path within the module (e.g. "services/README.md")
 	 * @returns {string} The converted hash route
 	 */
-	convertDocLink(pHref)
+	convertDocLink(pHref, pCurrentGroup, pCurrentModule, pCurrentDocPath)
 	{
+		// Strip leading ./ prefix for relative paths
+		let tmpPath = pHref.replace(/^\.\//, '');
 		// Remove leading slash
-		let tmpPath = pHref.replace(/^\//, '');
+		tmpPath = tmpPath.replace(/^\//, '');
 
-		// If it looks like a module path (group/module/), convert to our route format
+		// If it looks like an absolute module path (group/module/...), route directly
 		let tmpParts = tmpPath.split('/');
 		if (tmpParts.length >= 2)
 		{
-			// Check if first segment matches a known group key
-			let tmpGroupKeys = ['fable', 'meadow', 'orator', 'pict', 'utility'];
-			if (tmpGroupKeys.indexOf(tmpParts[0]) >= 0)
+			if (this.isGroupInCatalog(tmpParts[0]))
 			{
 				return '#/doc/' + tmpPath;
 			}
 		}
 
-		// Local doc page
+		// If we have module context, resolve relative to current document's directory
+		if (pCurrentGroup && pCurrentModule)
+		{
+			// Determine the directory of the current document
+			let tmpDocDir = '';
+			if (pCurrentDocPath)
+			{
+				let tmpDirParts = pCurrentDocPath.split('/');
+				if (tmpDirParts.length > 1)
+				{
+					tmpDirParts.pop(); // Remove filename
+					tmpDocDir = tmpDirParts.join('/') + '/';
+				}
+			}
+			return '#/doc/' + pCurrentGroup + '/' + pCurrentModule + '/' + tmpDocDir + tmpPath;
+		}
+
+		// Local doc page (no module context)
 		if (tmpPath.match(/\.md$/))
 		{
 			let tmpPageKey = tmpPath.replace(/\.md$/, '');
