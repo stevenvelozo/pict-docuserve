@@ -14,13 +14,16 @@ const _ViewConfiguration =
 			background-color: #f8f9fa;
 			border-right: 1px solid #e0e0e0;
 			padding: 1em 0;
+			padding-top: 0;
 			height: 100%;
 			position: relative;
 		}
+		.docuserve-sidebar-header {
+			display: flex;
+			justify-content: flex-end;
+			padding: 0.4em 0.5em 0;
+		}
 		.docuserve-sidebar-close {
-			position: absolute;
-			top: 0.5em;
-			right: 0.5em;
 			background: none;
 			border: none;
 			color: #999;
@@ -192,7 +195,9 @@ const _ViewConfiguration =
 			Hash: "Docuserve-Sidebar-Template",
 			Template: /*html*/`
 <div class="docuserve-sidebar">
-	<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&times;</button>
+	<div class="docuserve-sidebar-header">
+		<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&times;</button>
+	</div>
 	<div id="Docuserve-Sidebar-Search" class="docuserve-sidebar-search" style="display:none;">
 		<input type="text" placeholder="Search docs..." id="Docuserve-Sidebar-Search-Input">
 		<div id="Docuserve-Sidebar-Search-Results" class="docuserve-sidebar-search-results"></div>

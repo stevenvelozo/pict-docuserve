@@ -1001,27 +1001,29 @@ class DocuserveDocumentationProvider extends libPictProvider
 		let tmpLines = pMarkdown.split('\n');
 		let tmpHTML = [];
 		let tmpInCodeBlock = false;
+		let tmpCodeFenceLength = 0;
 		let tmpCodeLang = '';
 		let tmpCodeLines = [];
 		let tmpInList = false;
 		let tmpListType = '';
 		let tmpInBlockquote = false;
 		let tmpBlockquoteLines = [];
+		let tmpInMathBlock = false;
+		let tmpMathLines = [];
 
 		for (let i = 0; i < tmpLines.length; i++)
 		{
 			let tmpLine = tmpLines[i];
 
-			// Code blocks (fenced)
-			if (tmpLine.match(/^```/))
+			// Display math blocks ($$...$$) — skip if inside a code block
+			if (!tmpInCodeBlock && tmpLine.trim().match(/^\$\$/))
 			{
-				if (tmpInCodeBlock)
+				if (tmpInMathBlock)
 				{
-					// End code block
-					tmpHTML.push('<pre><code class="language-' + this.escapeHTML(tmpCodeLang) + '">' + this.escapeHTML(tmpCodeLines.join('\n')) + '</code></pre>');
-					tmpInCodeBlock = false;
-					tmpCodeLang = '';
-					tmpCodeLines = [];
+					// End math block
+					tmpHTML.push('<div class="docuserve-katex-display">' + tmpMathLines.join('\n') + '</div>');
+					tmpInMathBlock = false;
+					tmpMathLines = [];
 				}
 				else
 				{
@@ -1037,11 +1039,71 @@ class DocuserveDocumentationProvider extends libPictProvider
 						tmpInBlockquote = false;
 						tmpBlockquoteLines = [];
 					}
-					// Start code block
-					tmpCodeLang = tmpLine.replace(/^```/, '').trim();
-					tmpInCodeBlock = true;
+					tmpInMathBlock = true;
 				}
 				continue;
+			}
+
+			if (tmpInMathBlock)
+			{
+				tmpMathLines.push(tmpLine);
+				continue;
+			}
+
+			// Code blocks (fenced) — track fence length so ````x```` nests around ```y```
+			let tmpFenceMatch = tmpLine.match(/^(`{3,})/);
+			if (tmpFenceMatch)
+			{
+				let tmpFenceLen = tmpFenceMatch[1].length;
+
+				if (tmpInCodeBlock)
+				{
+					// Only close if the closing fence is at least as long as the opening
+					if (tmpFenceLen >= tmpCodeFenceLength && tmpLine.trim() === tmpFenceMatch[1])
+					{
+						// End code block
+						if (tmpCodeLang === 'mermaid')
+						{
+							// Mermaid diagrams: output raw content for client-side rendering
+							tmpHTML.push('<pre class="mermaid">' + tmpCodeLines.join('\n') + '</pre>');
+						}
+						else
+						{
+							tmpHTML.push('<pre><code class="language-' + this.escapeHTML(tmpCodeLang) + '">' + this.escapeHTML(tmpCodeLines.join('\n')) + '</code></pre>');
+						}
+						tmpInCodeBlock = false;
+						tmpCodeFenceLength = 0;
+						tmpCodeLang = '';
+						tmpCodeLines = [];
+						continue;
+					}
+					else
+					{
+						// Inner fence with fewer backticks — treat as content
+						tmpCodeLines.push(tmpLine);
+						continue;
+					}
+				}
+				else
+				{
+					// Close any open list or blockquote
+					if (tmpInList)
+					{
+						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
+						tmpInList = false;
+					}
+					if (tmpInBlockquote)
+					{
+						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n')) + '</blockquote>');
+						tmpInBlockquote = false;
+						tmpBlockquoteLines = [];
+					}
+					// Start code block — record fence length
+					tmpCodeFenceLength = tmpFenceLen;
+					tmpCodeLang = tmpLine.replace(/^`{3,}/, '').trim();
+					tmpInCodeBlock = true;
+					continue;
+				}
 			}
 
 			if (tmpInCodeBlock)
@@ -1231,6 +1293,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		// Inline code (backticks) - handle first to avoid interfering with other patterns
 		tmpResult = tmpResult.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+		// Inline LaTeX equations ($...$) — must be processed before other inline patterns
+		// Match single $ delimiters that aren't adjacent to spaces (to avoid false positives with currency)
+		tmpResult = tmpResult.replace(/\$([^\$\s][^\$]*?[^\$\s])\$/g, '<span class="docuserve-katex-inline">$1</span>');
+		// Also match single-character inline math like $x$
+		tmpResult = tmpResult.replace(/\$([^\$\s])\$/g, '<span class="docuserve-katex-inline">$1</span>');
 
 		// Images
 		tmpResult = tmpResult.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');

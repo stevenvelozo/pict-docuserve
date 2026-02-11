@@ -95,7 +95,8 @@ Docuserve's built-in parser handles the most common Markdown constructs:
 - **Bold** (`**text**` or `__text__`)
 - **Italic** (`*text*` or `_text_`)
 - **Inline code** (`` `code` ``)
-- **Fenced code blocks** with language annotation
+- **Fenced code blocks** with language annotation (including [Mermaid diagrams](diagrams.md))
+- **LaTeX equations** via [KaTeX](latex.md) (inline `$...$` and display `$$...$$`)
 - **Links** (`[text](url)`) with automatic internal link conversion
 - **Images** (`![alt](src)`)
 - **Unordered lists** (`-`, `*`, or `+`)
@@ -123,4 +124,3 @@ The built-in parser does not currently support:
 - Footnotes
 - Task lists / checkboxes
 - HTML pass-through
-- Mermaid diagrams (future enhancement)

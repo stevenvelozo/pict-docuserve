@@ -7,4 +7,6 @@
 
   - [Architecture](architecture.md)
   - [Content Authoring](content-authoring.md)
+  - [Diagrams](diagrams.md)
+  - [LaTeX Equations](latex.md)
   - [Configuration](configuration.md)

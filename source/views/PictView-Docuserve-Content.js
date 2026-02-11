@@ -128,6 +128,21 @@ const _ViewConfiguration =
 			max-width: 100%;
 			height: auto;
 		}
+		.docuserve-content pre.mermaid {
+			background: #fff;
+			color: #333;
+			text-align: center;
+			padding: 1em;
+		}
+		.docuserve-content .docuserve-katex-display {
+			text-align: center;
+			margin: 1em 0;
+			padding: 0.5em;
+			overflow-x: auto;
+		}
+		.docuserve-content .docuserve-katex-inline {
+			display: inline;
+		}
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
@@ -191,6 +206,93 @@ class DocuserveContentView extends libPictView
 		if (tmpContentContainer)
 		{
 			tmpContentContainer.scrollTop = 0;
+		}
+
+		// Post-render: initialize Mermaid diagrams if mermaid is available
+		this.renderMermaidDiagrams();
+
+		// Post-render: render KaTeX equations if katex is available
+		this.renderKaTeXEquations();
+	}
+
+	/**
+	 * Render any Mermaid diagram blocks in the content area.
+	 * Mermaid blocks are `<pre class="mermaid">` elements produced by parseMarkdown.
+	 */
+	renderMermaidDiagrams()
+	{
+		if (typeof mermaid === 'undefined')
+		{
+			return;
+		}
+
+		let tmpContentBody = document.getElementById('Docuserve-Content-Body');
+		if (!tmpContentBody)
+		{
+			return;
+		}
+
+		let tmpMermaidElements = tmpContentBody.querySelectorAll('pre.mermaid');
+		if (tmpMermaidElements.length < 1)
+		{
+			return;
+		}
+
+		// mermaid.run() will process all pre.mermaid elements in the container
+		try
+		{
+			mermaid.run({ nodes: tmpMermaidElements });
+		}
+		catch (pError)
+		{
+			this.log.error('Mermaid rendering error: ' + pError.message);
+		}
+	}
+
+	/**
+	 * Render KaTeX inline and display math elements in the content area.
+	 * Inline: `<span class="docuserve-katex-inline">`
+	 * Display: `<div class="docuserve-katex-display">`
+	 */
+	renderKaTeXEquations()
+	{
+		if (typeof katex === 'undefined')
+		{
+			return;
+		}
+
+		let tmpContentBody = document.getElementById('Docuserve-Content-Body');
+		if (!tmpContentBody)
+		{
+			return;
+		}
+
+		// Render inline math
+		let tmpInlineElements = tmpContentBody.querySelectorAll('.docuserve-katex-inline');
+		for (let i = 0; i < tmpInlineElements.length; i++)
+		{
+			try
+			{
+				katex.render(tmpInlineElements[i].textContent, tmpInlineElements[i], { throwOnError: false, displayMode: false });
+			}
+			catch (pError)
+			{
+				this.log.warn('KaTeX inline error: ' + pError.message);
+			}
+		}
+
+		// Render display math
+		let tmpDisplayElements = tmpContentBody.querySelectorAll('.docuserve-katex-display');
+		for (let i = 0; i < tmpDisplayElements.length; i++)
+		{
+			try
+			{
+				katex.render(tmpDisplayElements[i].textContent, tmpDisplayElements[i], { throwOnError: false, displayMode: true });
+			}
+			catch (pError)
+			{
+				this.log.warn('KaTeX display error: ' + pError.message);
+			}
 		}
 	}
 
