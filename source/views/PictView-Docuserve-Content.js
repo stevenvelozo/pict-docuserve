@@ -20,47 +20,47 @@ const _ViewConfiguration =
 			align-items: center;
 			justify-content: center;
 			min-height: 200px;
-			color: #999;
+			color: #8A7F72;
 			font-size: 1em;
 		}
 		.docuserve-content h1 {
 			font-size: 2em;
-			color: #2c3e50;
-			border-bottom: 1px solid #eee;
+			color: #3D3229;
+			border-bottom: 1px solid #DDD6CA;
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.docuserve-content h2 {
 			font-size: 1.5em;
-			color: #2c3e50;
-			border-bottom: 1px solid #f0f0f0;
+			color: #3D3229;
+			border-bottom: 1px solid #EAE3D8;
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.docuserve-content h3 {
 			font-size: 1.25em;
-			color: #333;
+			color: #3D3229;
 			margin-top: 1.25em;
 		}
 		.docuserve-content h4, .docuserve-content h5, .docuserve-content h6 {
-			color: #555;
+			color: #5E5549;
 			margin-top: 1em;
 		}
 		.docuserve-content p {
 			line-height: 1.7;
-			color: #444;
+			color: #423D37;
 			margin: 0.75em 0;
 		}
 		.docuserve-content a {
-			color: #42b983;
+			color: #2E7D74;
 			text-decoration: none;
 		}
 		.docuserve-content a:hover {
 			text-decoration: underline;
 		}
 		.docuserve-content pre {
-			background: #2c3e50;
-			color: #ecf0f1;
+			background: #3D3229;
+			color: #E8E0D4;
 			padding: 1.25em;
 			border-radius: 6px;
 			overflow-x: auto;
@@ -68,11 +68,11 @@ const _ViewConfiguration =
 			font-size: 0.9em;
 		}
 		.docuserve-content code {
-			background: #f4f4f5;
+			background: #F0ECE4;
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
-			color: #e74c3c;
+			color: #9E6B47;
 		}
 		.docuserve-content pre code {
 			background: none;
@@ -81,11 +81,11 @@ const _ViewConfiguration =
 			font-size: inherit;
 		}
 		.docuserve-content blockquote {
-			border-left: 4px solid #42b983;
+			border-left: 4px solid #2E7D74;
 			margin: 1em 0;
 			padding: 0.5em 1em;
-			background: #f9f9f9;
-			color: #666;
+			background: #F7F5F0;
+			color: #5E5549;
 		}
 		.docuserve-content blockquote p {
 			margin: 0.25em 0;
@@ -96,11 +96,11 @@ const _ViewConfiguration =
 		}
 		.docuserve-content li {
 			margin: 0.25em 0;
-			color: #444;
+			color: #423D37;
 		}
 		.docuserve-content hr {
 			border: none;
-			border-top: 1px solid #eee;
+			border-top: 1px solid #DDD6CA;
 			margin: 2em 0;
 		}
 		.docuserve-content table {
@@ -109,20 +109,20 @@ const _ViewConfiguration =
 			margin: 1em 0;
 		}
 		.docuserve-content table th {
-			background: #f5f7fa;
-			border: 1px solid #e0e0e0;
+			background: #F5F0E8;
+			border: 1px solid #DDD6CA;
 			padding: 0.6em 0.8em;
 			text-align: left;
 			font-weight: 600;
-			color: #2c3e50;
+			color: #3D3229;
 		}
 		.docuserve-content table td {
-			border: 1px solid #e0e0e0;
+			border: 1px solid #DDD6CA;
 			padding: 0.5em 0.8em;
-			color: #444;
+			color: #423D37;
 		}
 		.docuserve-content table tr:nth-child(even) {
-			background: #fafafa;
+			background: #F7F5F0;
 		}
 		.docuserve-content img {
 			max-width: 100%;
@@ -130,7 +130,7 @@ const _ViewConfiguration =
 		}
 		.docuserve-content pre.mermaid {
 			background: #fff;
-			color: #333;
+			color: #3D3229;
 			text-align: center;
 			padding: 1em;
 		}
@@ -146,19 +146,19 @@ const _ViewConfiguration =
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
-			color: #666;
+			color: #5E5549;
 		}
 		.docuserve-not-found h2 {
-			color: #999;
+			color: #8A7F72;
 			font-size: 1.5em;
 			border-bottom: none;
 		}
 		.docuserve-not-found code {
-			background: #f4f4f5;
+			background: #F0ECE4;
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
-			color: #e74c3c;
+			color: #9E6B47;
 		}
 	`,
 

@@ -11,8 +11,8 @@ const _ViewConfiguration =
 
 	CSS: /*css*/`
 		.docuserve-sidebar {
-			background-color: #f8f9fa;
-			border-right: 1px solid #e0e0e0;
+			background-color: #F5F0E8;
+			border-right: 1px solid #DDD6CA;
 			padding: 1em 0;
 			padding-top: 0;
 			height: 100%;
@@ -26,31 +26,31 @@ const _ViewConfiguration =
 		.docuserve-sidebar-close {
 			background: none;
 			border: none;
-			color: #999;
+			color: #8A7F72;
 			font-size: 1.2em;
 			cursor: pointer;
 			padding: 0.2em 0.4em;
 			line-height: 1;
 		}
 		.docuserve-sidebar-close:hover {
-			color: #42b983;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-search {
 			padding: 0 1em 1em 1em;
-			border-bottom: 1px solid #e9ecef;
+			border-bottom: 1px solid #EAE3D8;
 			margin-bottom: 0.5em;
 		}
 		.docuserve-sidebar-search input {
 			width: 100%;
 			padding: 0.5em 0.75em;
-			border: 1px solid #ddd;
+			border: 1px solid #D4CCBE;
 			border-radius: 4px;
 			font-size: 0.85em;
 			outline: none;
 			box-sizing: border-box;
 		}
 		.docuserve-sidebar-search input:focus {
-			border-color: #42b983;
+			border-color: #2E7D74;
 		}
 		.docuserve-sidebar-search-results {
 			margin-top: 0.5em;
@@ -58,7 +58,7 @@ const _ViewConfiguration =
 		.docuserve-sidebar-search-results a {
 			display: block;
 			padding: 0.4em 0.5em;
-			color: #444;
+			color: #423D37;
 			text-decoration: none;
 			font-size: 0.82em;
 			border-radius: 3px;
@@ -66,29 +66,29 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-sidebar-search-results a:hover {
-			background-color: #e9ecef;
-			color: #42b983;
+			background-color: #EAE3D8;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-search-result-title {
 			font-weight: 600;
-			color: #333;
+			color: #3D3229;
 		}
 		.docuserve-sidebar-search-results a:hover .docuserve-sidebar-search-result-title {
-			color: #42b983;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-search-result-meta {
 			font-size: 0.9em;
-			color: #999;
+			color: #8A7F72;
 		}
 		.docuserve-sidebar-search-all {
 			display: block;
 			padding: 0.4em 0.5em;
 			font-size: 0.82em;
-			color: #42b983;
+			color: #2E7D74;
 			text-decoration: none;
 			font-weight: 600;
 			cursor: pointer;
-			border-top: 1px solid #e9ecef;
+			border-top: 1px solid #EAE3D8;
 			margin-top: 0.25em;
 			padding-top: 0.5em;
 		}
@@ -103,13 +103,13 @@ const _ViewConfiguration =
 			letter-spacing: 0.03em;
 		}
 		.docuserve-sidebar-home a {
-			color: #666;
+			color: #5E5549;
 			text-decoration: none;
 			cursor: pointer;
 			user-select: none;
 		}
 		.docuserve-sidebar-home a:hover {
-			color: #42b983;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-group {
 			margin-top: 0.25em;
@@ -119,7 +119,7 @@ const _ViewConfiguration =
 			padding: 0.5em 1.25em;
 			font-weight: 600;
 			font-size: 0.85em;
-			color: #666;
+			color: #5E5549;
 			text-decoration: none;
 			text-transform: uppercase;
 			letter-spacing: 0.03em;
@@ -127,7 +127,7 @@ const _ViewConfiguration =
 			user-select: none;
 		}
 		.docuserve-sidebar-group-title:hover {
-			color: #42b983;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-modules {
 			list-style: none;
@@ -140,29 +140,29 @@ const _ViewConfiguration =
 		.docuserve-sidebar-modules a {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: #555;
+			color: #5E5549;
 			text-decoration: none;
 			font-size: 0.85em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-modules a:hover {
-			background-color: #e9ecef;
-			color: #42b983;
+			background-color: #EAE3D8;
+			color: #2E7D74;
 		}
 		.docuserve-sidebar-modules a.active {
-			color: #42b983;
+			color: #2E7D74;
 			font-weight: 600;
-			background-color: #e8f5e9;
+			background-color: #E0EDEB;
 		}
 		.docuserve-sidebar-modules .no-docs {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: #bbb;
+			color: #A39889;
 			font-size: 0.85em;
 		}
 		.docuserve-sidebar-module-nav {
-			border-top: 1px solid #e9ecef;
+			border-top: 1px solid #EAE3D8;
 			margin-top: 0.5em;
 			padding-top: 0.5em;
 		}
@@ -170,22 +170,22 @@ const _ViewConfiguration =
 			padding: 0.4em 1.25em;
 			font-weight: 600;
 			font-size: 0.8em;
-			color: #888;
+			color: #8A7F72;
 			text-transform: uppercase;
 			letter-spacing: 0.02em;
 		}
 		.docuserve-sidebar-module-nav a {
 			display: block;
 			padding: 0.25em 1.25em 0.25em 2.25em;
-			color: #555;
+			color: #5E5549;
 			text-decoration: none;
 			font-size: 0.82em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-module-nav a:hover {
-			background-color: #e9ecef;
-			color: #42b983;
+			background-color: #EAE3D8;
+			color: #2E7D74;
 		}
 	`,
 
@@ -272,7 +272,8 @@ class DocusserveSidebarView extends libPictView
 
 		if (!tmpGroups || tmpGroups.length < 1)
 		{
-			this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-Groups', '<p style="padding: 1em; color: #999; font-size: 0.85em;">Loading catalog...</p>');
+			// Empty sidebar -- don't show a permanent loading message
+			this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-Groups', '');
 			return;
 		}
 
@@ -412,7 +413,7 @@ class DocusserveSidebarView extends libPictView
 
 		if (tmpResults.length === 0)
 		{
-			tmpResultsEl.innerHTML = '<div style="padding: 0.4em 0.5em; font-size: 0.82em; color: #999;">No results found.</div>';
+			tmpResultsEl.innerHTML = '<div style="padding: 0.4em 0.5em; font-size: 0.82em; color: #8A7F72;">No results found.</div>';
 			return;
 		}
 

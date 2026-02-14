@@ -1,0 +1,46 @@
+{
+	"Name": "Catalog Test Project",
+	"Description": "A test project for catalog-driven documentation",
+	"GitHubOrg": "example-org",
+	"DefaultBranch": "main",
+	"Groups": [
+		{
+			"Key": "core",
+			"Name": "Core",
+			"Description": "Core modules providing the foundation",
+			"Modules": [
+				{
+					"Name": "core-lib",
+					"Repo": "core-lib",
+					"HasDocs": true,
+					"Branch": "main"
+				},
+				{
+					"Name": "core-utils",
+					"Repo": "core-utils",
+					"HasDocs": true,
+					"Branch": "main"
+				}
+			]
+		},
+		{
+			"Key": "plugins",
+			"Name": "Plugins",
+			"Description": "Extension modules",
+			"Modules": [
+				{
+					"Name": "plugin-auth",
+					"Repo": "plugin-auth",
+					"HasDocs": true,
+					"Branch": "main"
+				},
+				{
+					"Name": "plugin-cache",
+					"Repo": "plugin-cache",
+					"HasDocs": false,
+					"Branch": "main"
+				}
+			]
+		}
+	]
+}

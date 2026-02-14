@@ -1,0 +1,86 @@
+{
+	"LunrIndex": {
+		"version": "2.3.9",
+		"fields": ["title", "body"],
+		"fieldVectors": [
+			["title/overview", [0, 1.0]],
+			["body/overview", [1, 0.5, 2, 0.5, 3, 0.3, 4, 0.3]],
+			["title/architecture", [5, 1.0]],
+			["body/architecture", [3, 0.4, 6, 0.5, 7, 0.4, 8, 0.3]],
+			["title/installation", [9, 1.0]],
+			["body/installation", [10, 0.5, 11, 0.4]],
+			["title/configuration", [12, 1.0]],
+			["body/configuration", [13, 0.5, 14, 0.4, 15, 0.3]],
+			["title/api", [16, 1.0]],
+			["body/api", [17, 0.5, 18, 0.4, 19, 0.3]],
+			["title/cli", [20, 1.0]],
+			["body/cli", [21, 0.5, 22, 0.4, 23, 0.3]]
+		],
+		"invertedIndex": [
+			["overview", {"_index": 0, "title": {"overview": {}}, "body": {}}],
+			["pict", {"_index": 1, "title": {}, "body": {"overview": {}}}],
+			["docuserv", {"_index": 2, "title": {}, "body": {"overview": {}}}],
+			["compon", {"_index": 3, "title": {}, "body": {"overview": {}, "architecture": {}}}],
+			["featur", {"_index": 4, "title": {}, "body": {"overview": {}}}],
+			["architectur", {"_index": 5, "title": {"architecture": {}}, "body": {}}],
+			["browser", {"_index": 6, "title": {}, "body": {"architecture": {}}}],
+			["markdown", {"_index": 7, "title": {}, "body": {"architecture": {}}}],
+			["data", {"_index": 8, "title": {}, "body": {"architecture": {}}}],
+			["instal", {"_index": 9, "title": {"installation": {}}, "body": {}}],
+			["npm", {"_index": 10, "title": {}, "body": {"installation": {}}}],
+			["node", {"_index": 11, "title": {}, "body": {"installation": {}}}],
+			["configur", {"_index": 12, "title": {"configuration": {}}, "body": {}}],
+			["project", {"_index": 13, "title": {}, "body": {"configuration": {}}}],
+			["search", {"_index": 14, "title": {}, "body": {"configuration": {}}}],
+			["sidebar", {"_index": 15, "title": {}, "body": {"configuration": {}}}],
+			["api", {"_index": 16, "title": {"api": {}}, "body": {}}],
+			["creat", {"_index": 17, "title": {}, "body": {"api": {}}}],
+			["instanc", {"_index": 18, "title": {}, "body": {"api": {}}}],
+			["option", {"_index": 19, "title": {}, "body": {"api": {}}}],
+			["cli", {"_index": 20, "title": {"cli": {}}, "body": {}}],
+			["start", {"_index": 21, "title": {}, "body": {"cli": {}}}],
+			["build", {"_index": 22, "title": {}, "body": {"cli": {}}}],
+			["test", {"_index": 23, "title": {}, "body": {"cli": {}}}]
+		],
+		"pipeline": ["stemmer"]
+	},
+	"Documents": {
+		"overview": {
+			"Title": "Overview",
+			"Group": "",
+			"Module": "",
+			"DocPath": "overview.md"
+		},
+		"architecture": {
+			"Title": "Architecture",
+			"Group": "",
+			"Module": "",
+			"DocPath": "architecture.md"
+		},
+		"installation": {
+			"Title": "Installation",
+			"Group": "",
+			"Module": "",
+			"DocPath": "installation.md"
+		},
+		"configuration": {
+			"Title": "Configuration",
+			"Group": "",
+			"Module": "",
+			"DocPath": "configuration.md"
+		},
+		"api": {
+			"Title": "API Reference",
+			"Group": "",
+			"Module": "",
+			"DocPath": "api.md"
+		},
+		"cli": {
+			"Title": "CLI Reference",
+			"Group": "",
+			"Module": "",
+			"DocPath": "cli.md"
+		}
+	},
+	"DocumentCount": 6
+}

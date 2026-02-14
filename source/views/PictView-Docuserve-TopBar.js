@@ -14,11 +14,11 @@ const _ViewConfiguration =
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			background-color: #2c3e50;
-			color: #ecf0f1;
+			background-color: #3D3229;
+			color: #E8E0D4;
 			padding: 0 1.5em;
 			height: 56px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 			position: sticky;
 			top: 0;
 			z-index: 100;
@@ -27,7 +27,7 @@ const _ViewConfiguration =
 			font-size: 1.25em;
 			font-weight: 600;
 			letter-spacing: 0.02em;
-			color: #ecf0f1;
+			color: #E8E0D4;
 			text-decoration: none;
 			cursor: pointer;
 		}
@@ -40,7 +40,7 @@ const _ViewConfiguration =
 			gap: 0.25em;
 		}
 		.docuserve-topbar-nav a {
-			color: #bdc3c7;
+			color: #B5AA9A;
 			text-decoration: none;
 			padding: 0.5em 0.75em;
 			border-radius: 4px;
@@ -49,7 +49,7 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-topbar-nav a:hover {
-			background-color: #34495e;
+			background-color: #524438;
 			color: #fff;
 		}
 		.docuserve-topbar-links {
@@ -58,7 +58,7 @@ const _ViewConfiguration =
 			gap: 0.5em;
 		}
 		.docuserve-topbar-links a {
-			color: #95a5a6;
+			color: #8A7F72;
 			text-decoration: none;
 			font-size: 0.85em;
 			padding: 0.4em 0.6em;
@@ -66,14 +66,14 @@ const _ViewConfiguration =
 			transition: background-color 0.15s, color 0.15s;
 		}
 		.docuserve-topbar-links a:hover {
-			background-color: #34495e;
-			color: #ecf0f1;
+			background-color: #524438;
+			color: #E8E0D4;
 		}
 		.docuserve-topbar-toggle {
 			display: none;
 			background: none;
 			border: none;
-			color: #bdc3c7;
+			color: #B5AA9A;
 			font-size: 1.3em;
 			cursor: pointer;
 			padding: 0.3em 0.5em;

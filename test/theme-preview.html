@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pict-docuserve Theme Preview</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+	background: #f0f0f0;
+	padding: 1.5em;
+}
+h1.page-title {
+	text-align: center;
+	color: #333;
+	margin-bottom: 0.25em;
+	font-size: 1.6em;
+}
+p.page-subtitle {
+	text-align: center;
+	color: #777;
+	margin-bottom: 1.5em;
+	font-size: 0.95em;
+}
+.theme-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5em;
+	max-width: 1600px;
+	margin: 0 auto;
+}
+
+.theme-card {
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.theme-label {
+	text-align: center;
+	padding: 0.6em;
+	font-weight: 700;
+	font-size: 1.1em;
+	letter-spacing: 0.02em;
+}
+
+/* Mini layout: topbar + sidebar + content */
+.mini-layout {
+	display: flex;
+	flex-direction: column;
+	height: 520px;
+}
+.mini-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 1em;
+	height: 42px;
+	flex-shrink: 0;
+}
+.mini-topbar-brand {
+	font-weight: 600;
+	font-size: 0.95em;
+}
+.mini-topbar-nav {
+	display: flex;
+	gap: 0.15em;
+}
+.mini-topbar-nav span {
+	padding: 0.3em 0.6em;
+	border-radius: 3px;
+	font-size: 0.78em;
+	cursor: default;
+}
+.mini-body {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+}
+.mini-sidebar {
+	width: 180px;
+	flex-shrink: 0;
+	padding: 0.75em 0;
+	overflow-y: auto;
+	border-right-width: 1px;
+	border-right-style: solid;
+}
+.mini-sidebar-group {
+	padding: 0.4em 0.9em;
+	font-weight: 600;
+	font-size: 0.72em;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+.mini-sidebar-item {
+	padding: 0.25em 0.9em 0.25em 1.3em;
+	font-size: 0.78em;
+	cursor: default;
+}
+.mini-sidebar-item.active {
+	font-weight: 600;
+}
+.mini-sidebar-search {
+	padding: 0.5em 0.7em;
+	margin-bottom: 0.3em;
+}
+.mini-sidebar-search input {
+	width: 100%;
+	padding: 0.35em 0.5em;
+	border-radius: 3px;
+	font-size: 0.75em;
+	outline: none;
+}
+.mini-content {
+	flex: 1;
+	padding: 1.2em 1.5em;
+	overflow-y: auto;
+}
+.mini-content h1 {
+	font-size: 1.35em;
+	padding-bottom: 0.2em;
+	margin-bottom: 0.5em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+.mini-content h2 {
+	font-size: 1.05em;
+	margin-top: 0.8em;
+	margin-bottom: 0.3em;
+}
+.mini-content p {
+	font-size: 0.82em;
+	line-height: 1.65;
+	margin: 0.4em 0;
+}
+.mini-content a {
+	text-decoration: none;
+}
+.mini-content code.inline {
+	padding: 0.1em 0.3em;
+	border-radius: 3px;
+	font-size: 0.85em;
+	font-family: monospace;
+}
+.mini-content pre {
+	padding: 0.75em 1em;
+	border-radius: 5px;
+	font-size: 0.78em;
+	font-family: monospace;
+	line-height: 1.5;
+	overflow-x: auto;
+	margin: 0.5em 0;
+}
+.mini-content blockquote {
+	border-left-width: 3px;
+	border-left-style: solid;
+	margin: 0.5em 0;
+	padding: 0.4em 0.8em;
+	font-size: 0.82em;
+}
+.mini-content table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.78em;
+	margin: 0.5em 0;
+}
+.mini-content table th, .mini-content table td {
+	padding: 0.4em 0.6em;
+	text-align: left;
+}
+
+/* Splash section at bottom of each card */
+.mini-splash {
+	text-align: center;
+	padding: 1.2em 1em;
+}
+.mini-splash h2 {
+	font-size: 1.2em;
+	font-weight: 700;
+	margin-bottom: 0.15em;
+}
+.mini-splash .tagline {
+	font-size: 0.85em;
+	font-style: italic;
+	margin-bottom: 0.5em;
+}
+.mini-splash .btn {
+	display: inline-block;
+	padding: 0.45em 1em;
+	border-radius: 5px;
+	font-size: 0.82em;
+	font-weight: 600;
+	text-decoration: none;
+	margin: 0 0.25em;
+	cursor: default;
+}
+
+
+/* ============================================ */
+/* THEME 1: Desert Dusk                         */
+/* ============================================ */
+.desert-dusk .theme-label { background: #4A2C2A; color: #FAF3EB; }
+.desert-dusk .mini-topbar { background: #4A2C2A; color: #F2E6D9; }
+.desert-dusk .mini-topbar-brand { color: #F2E6D9; }
+.desert-dusk .mini-topbar-nav span { color: #C9B8A8; }
+.desert-dusk .mini-topbar-nav span:hover { background: #5E3B38; color: #fff; }
+.desert-dusk .mini-sidebar { background: #FAF3EB; border-right-color: #E5D9CB; }
+.desert-dusk .mini-sidebar-group { color: #6B5144; }
+.desert-dusk .mini-sidebar-item { color: #6B5F55; }
+.desert-dusk .mini-sidebar-item:hover { background: #F0E5D8; color: #C2703E; }
+.desert-dusk .mini-sidebar-item.active { color: #C2703E; background: #F5E6D8; }
+.desert-dusk .mini-sidebar-search input { border: 1px solid #D9CBBC; background: #fff; }
+.desert-dusk .mini-sidebar-search input:focus { border-color: #C2703E; }
+.desert-dusk .mini-content { background: #fff; }
+.desert-dusk .mini-content h1 { color: #4A2C2A; border-bottom-color: #E5D9CB; }
+.desert-dusk .mini-content h2 { color: #4A2C2A; }
+.desert-dusk .mini-content p { color: #4A4440; }
+.desert-dusk .mini-content a { color: #C2703E; }
+.desert-dusk .mini-content code.inline { background: #F5EDE4; color: #B5541A; }
+.desert-dusk .mini-content pre { background: #4A2C2A; color: #F2E6D9; }
+.desert-dusk .mini-content blockquote { border-left-color: #C2703E; background: #FBF6F0; color: #6B5F55; }
+.desert-dusk .mini-content table th { background: #FAF3EB; border: 1px solid #E5D9CB; color: #4A2C2A; }
+.desert-dusk .mini-content table td { border: 1px solid #E5D9CB; color: #4A4440; }
+.desert-dusk .mini-splash { background: linear-gradient(135deg, #FAF3EB 0%, #F5E6D8 100%); }
+.desert-dusk .mini-splash h2 { color: #4A2C2A; }
+.desert-dusk .mini-splash .tagline { color: #7A6B5D; }
+.desert-dusk .mini-splash .btn.primary { background: #C2703E; color: #fff; }
+.desert-dusk .mini-splash .btn.secondary { background: #fff; color: #4A2C2A; border: 1px solid #D9CBBC; }
+
+/* ============================================ */
+/* THEME 2: Turquoise & Clay                    */
+/* ============================================ */
+.turquoise-clay .theme-label { background: #6B3A2A; color: #F7F0E6; }
+.turquoise-clay .mini-topbar { background: #6B3A2A; color: #F0E2D4; }
+.turquoise-clay .mini-topbar-brand { color: #F0E2D4; }
+.turquoise-clay .mini-topbar-nav span { color: #C9AE9A; }
+.turquoise-clay .mini-topbar-nav span:hover { background: #7E4D3A; color: #fff; }
+.turquoise-clay .mini-sidebar { background: #F7F0E6; border-right-color: #E5D9CB; }
+.turquoise-clay .mini-sidebar-group { color: #6B5144; }
+.turquoise-clay .mini-sidebar-item { color: #5E564E; }
+.turquoise-clay .mini-sidebar-item:hover { background: #ECE3D6; color: #3A8C83; }
+.turquoise-clay .mini-sidebar-item.active { color: #3A8C83; background: #E0F0ED; }
+.turquoise-clay .mini-sidebar-search input { border: 1px solid #D9CBBC; background: #fff; }
+.turquoise-clay .mini-sidebar-search input:focus { border-color: #3A8C83; }
+.turquoise-clay .mini-content { background: #fff; }
+.turquoise-clay .mini-content h1 { color: #6B3A2A; border-bottom-color: #E5D9CB; }
+.turquoise-clay .mini-content h2 { color: #6B3A2A; }
+.turquoise-clay .mini-content p { color: #453D38; }
+.turquoise-clay .mini-content a { color: #3A8C83; }
+.turquoise-clay .mini-content code.inline { background: #F0EDE6; color: #C4563A; }
+.turquoise-clay .mini-content pre { background: #6B3A2A; color: #F0E2D4; }
+.turquoise-clay .mini-content blockquote { border-left-color: #3A8C83; background: #F5FAF9; color: #5E564E; }
+.turquoise-clay .mini-content table th { background: #F7F0E6; border: 1px solid #E5D9CB; color: #6B3A2A; }
+.turquoise-clay .mini-content table td { border: 1px solid #E5D9CB; color: #453D38; }
+.turquoise-clay .mini-splash { background: linear-gradient(135deg, #F7F0E6 0%, #E0F0ED 100%); }
+.turquoise-clay .mini-splash h2 { color: #6B3A2A; }
+.turquoise-clay .mini-splash .tagline { color: #6B7E7B; }
+.turquoise-clay .mini-splash .btn.primary { background: #3A8C83; color: #fff; }
+.turquoise-clay .mini-splash .btn.secondary { background: #fff; color: #6B3A2A; border: 1px solid #D9CBBC; }
+
+/* ============================================ */
+/* THEME 3: Sagebrush                           */
+/* ============================================ */
+.sagebrush .theme-label { background: #3D3229; color: #F5F0E8; }
+.sagebrush .mini-topbar { background: #3D3229; color: #E8E0D4; }
+.sagebrush .mini-topbar-brand { color: #E8E0D4; }
+.sagebrush .mini-topbar-nav span { color: #B5AA9A; }
+.sagebrush .mini-topbar-nav span:hover { background: #524438; color: #fff; }
+.sagebrush .mini-sidebar { background: #F5F0E8; border-right-color: #DDD6CA; }
+.sagebrush .mini-sidebar-group { color: #5E5549; }
+.sagebrush .mini-sidebar-item { color: #5E5549; }
+.sagebrush .mini-sidebar-item:hover { background: #EAE3D8; color: #2E7D74; }
+.sagebrush .mini-sidebar-item.active { color: #2E7D74; background: #E0EDEB; }
+.sagebrush .mini-sidebar-search input { border: 1px solid #D4CCBE; background: #fff; }
+.sagebrush .mini-sidebar-search input:focus { border-color: #2E7D74; }
+.sagebrush .mini-content { background: #fff; }
+.sagebrush .mini-content h1 { color: #3D3229; border-bottom-color: #DDD6CA; }
+.sagebrush .mini-content h2 { color: #3D3229; }
+.sagebrush .mini-content p { color: #423D37; }
+.sagebrush .mini-content a { color: #2E7D74; }
+.sagebrush .mini-content code.inline { background: #F0ECE4; color: #9E6B47; }
+.sagebrush .mini-content pre { background: #3D3229; color: #E8E0D4; }
+.sagebrush .mini-content blockquote { border-left-color: #2E7D74; background: #F7F5F0; color: #5E5549; }
+.sagebrush .mini-content table th { background: #F5F0E8; border: 1px solid #DDD6CA; color: #3D3229; }
+.sagebrush .mini-content table td { border: 1px solid #DDD6CA; color: #423D37; }
+.sagebrush .mini-splash { background: linear-gradient(135deg, #F5F0E8 0%, #E4EFED 100%); }
+.sagebrush .mini-splash h2 { color: #3D3229; }
+.sagebrush .mini-splash .tagline { color: #7A7568; }
+.sagebrush .mini-splash .btn.primary { background: #2E7D74; color: #fff; }
+.sagebrush .mini-splash .btn.secondary { background: #fff; color: #3D3229; border: 2px solid #2E7D74; }
+
+/* ============================================ */
+/* THEME 4: Canyon Sunset                       */
+/* ============================================ */
+.canyon-sunset .theme-label { background: #2E2346; color: #FBF5EE; }
+.canyon-sunset .mini-topbar { background: #2E2346; color: #E4DAF0; }
+.canyon-sunset .mini-topbar-brand { color: #E4DAF0; }
+.canyon-sunset .mini-topbar-nav span { color: #A99ABF; }
+.canyon-sunset .mini-topbar-nav span:hover { background: #3F3358; color: #fff; }
+.canyon-sunset .mini-sidebar { background: #FBF5EE; border-right-color: #E8DDD0; }
+.canyon-sunset .mini-sidebar-group { color: #6B5A4E; }
+.canyon-sunset .mini-sidebar-item { color: #5E554D; }
+.canyon-sunset .mini-sidebar-item:hover { background: #F2E8DC; color: #D4722A; }
+.canyon-sunset .mini-sidebar-item.active { color: #D4722A; background: #FAEADE; }
+.canyon-sunset .mini-sidebar-search input { border: 1px solid #DDD0C2; background: #fff; }
+.canyon-sunset .mini-sidebar-search input:focus { border-color: #D4722A; }
+.canyon-sunset .mini-content { background: #fff; }
+.canyon-sunset .mini-content h1 { color: #2E2346; border-bottom-color: #E8DDD0; }
+.canyon-sunset .mini-content h2 { color: #2E2346; }
+.canyon-sunset .mini-content p { color: #3E3845; }
+.canyon-sunset .mini-content a { color: #D4722A; }
+.canyon-sunset .mini-content code.inline { background: #F5EDE4; color: #C4502A; }
+.canyon-sunset .mini-content pre { background: #2E2346; color: #E4DAF0; }
+.canyon-sunset .mini-content blockquote { border-left-color: #D4722A; background: #FDF8F3; color: #5E554D; }
+.canyon-sunset .mini-content table th { background: #FBF5EE; border: 1px solid #E8DDD0; color: #2E2346; }
+.canyon-sunset .mini-content table td { border: 1px solid #E8DDD0; color: #3E3845; }
+.canyon-sunset .mini-splash { background: linear-gradient(135deg, #FBF5EE 0%, #EDE4F0 100%); }
+.canyon-sunset .mini-splash h2 { color: #2E2346; }
+.canyon-sunset .mini-splash .tagline { color: #7B6E88; }
+.canyon-sunset .mini-splash .btn.primary { background: #D4722A; color: #fff; }
+.canyon-sunset .mini-splash .btn.secondary { background: #fff; color: #2E2346; border: 1px solid #DDD0C2; }
+
+</style>
+</head>
+<body>
+
+<h1 class="page-title">pict-docuserve Southwestern Theme Preview</h1>
+<p class="page-subtitle">Each card shows a realistic mini-layout with topbar, sidebar, content, and splash page.</p>
+
+<div class="theme-grid">
+
+<!-- DESERT DUSK -->
+<div class="theme-card desert-dusk">
+<div class="theme-label">1. Desert Dusk — Sedona at golden hour</div>
+<div class="mini-layout">
+<div class="mini-topbar">
+	<span class="mini-topbar-brand">My Project</span>
+	<div class="mini-topbar-nav">
+		<span>Home</span>
+		<span>Docs</span>
+		<span>Search</span>
+		<span>GitHub</span>
+	</div>
+</div>
+<div class="mini-body">
+	<div class="mini-sidebar">
+		<div class="mini-sidebar-search"><input type="text" placeholder="Search docs..."></div>
+		<div class="mini-sidebar-group">Core</div>
+		<div class="mini-sidebar-item active">fable</div>
+		<div class="mini-sidebar-item">fable-log</div>
+		<div class="mini-sidebar-item">fable-uuid</div>
+		<div class="mini-sidebar-group">Data</div>
+		<div class="mini-sidebar-item">meadow</div>
+		<div class="mini-sidebar-item">foxhound</div>
+	</div>
+	<div class="mini-content">
+		<h1>Getting Started</h1>
+		<p>Welcome to the documentation. This guide will walk you through <a href="#">installation</a> and basic usage of the library.</p>
+		<h2>Installation</h2>
+		<pre>npm install my-library</pre>
+		<p>Then require it in your code using <code class="inline">require('my-library')</code> and create a new instance.</p>
+		<blockquote>Note: Requires Node.js 18 or later for full compatibility.</blockquote>
+		<table>
+			<tr><th>Option</th><th>Type</th><th>Default</th></tr>
+			<tr><td>name</td><td>string</td><td>"default"</td></tr>
+			<tr><td>debug</td><td>boolean</td><td>false</td></tr>
+		</table>
+	</div>
+</div>
+</div>
+<div class="mini-splash">
+	<h2>My Project</h2>
+	<div class="tagline">Build better things faster.</div>
+	<span class="btn primary">Get Started</span>
+	<span class="btn secondary">API Reference</span>
+</div>
+</div>
+
+<!-- TURQUOISE & CLAY -->
+<div class="theme-card turquoise-clay">
+<div class="theme-label">2. Turquoise & Clay — Santa Fe palette</div>
+<div class="mini-layout">
+<div class="mini-topbar">
+	<span class="mini-topbar-brand">My Project</span>
+	<div class="mini-topbar-nav">
+		<span>Home</span>
+		<span>Docs</span>
+		<span>Search</span>
+		<span>GitHub</span>
+	</div>
+</div>
+<div class="mini-body">
+	<div class="mini-sidebar">
+		<div class="mini-sidebar-search"><input type="text" placeholder="Search docs..."></div>
+		<div class="mini-sidebar-group">Core</div>
+		<div class="mini-sidebar-item active">fable</div>
+		<div class="mini-sidebar-item">fable-log</div>
+		<div class="mini-sidebar-item">fable-uuid</div>
+		<div class="mini-sidebar-group">Data</div>
+		<div class="mini-sidebar-item">meadow</div>
+		<div class="mini-sidebar-item">foxhound</div>
+	</div>
+	<div class="mini-content">
+		<h1>Getting Started</h1>
+		<p>Welcome to the documentation. This guide will walk you through <a href="#">installation</a> and basic usage of the library.</p>
+		<h2>Installation</h2>
+		<pre>npm install my-library</pre>
+		<p>Then require it in your code using <code class="inline">require('my-library')</code> and create a new instance.</p>
+		<blockquote>Note: Requires Node.js 18 or later for full compatibility.</blockquote>
+		<table>
+			<tr><th>Option</th><th>Type</th><th>Default</th></tr>
+			<tr><td>name</td><td>string</td><td>"default"</td></tr>
+			<tr><td>debug</td><td>boolean</td><td>false</td></tr>
+		</table>
+	</div>
+</div>
+</div>
+<div class="mini-splash">
+	<h2>My Project</h2>
+	<div class="tagline">Build better things faster.</div>
+	<span class="btn primary">Get Started</span>
+	<span class="btn secondary">API Reference</span>
+</div>
+</div>
+
+<!-- SAGEBRUSH -->
+<div class="theme-card sagebrush">
+<div class="theme-label">3. Sagebrush — High desert at dawn</div>
+<div class="mini-layout">
+<div class="mini-topbar">
+	<span class="mini-topbar-brand">My Project</span>
+	<div class="mini-topbar-nav">
+		<span>Home</span>
+		<span>Docs</span>
+		<span>Search</span>
+		<span>GitHub</span>
+	</div>
+</div>
+<div class="mini-body">
+	<div class="mini-sidebar">
+		<div class="mini-sidebar-search"><input type="text" placeholder="Search docs..."></div>
+		<div class="mini-sidebar-group">Core</div>
+		<div class="mini-sidebar-item active">fable</div>
+		<div class="mini-sidebar-item">fable-log</div>
+		<div class="mini-sidebar-item">fable-uuid</div>
+		<div class="mini-sidebar-group">Data</div>
+		<div class="mini-sidebar-item">meadow</div>
+		<div class="mini-sidebar-item">foxhound</div>
+	</div>
+	<div class="mini-content">
+		<h1>Getting Started</h1>
+		<p>Welcome to the documentation. This guide will walk you through <a href="#">installation</a> and basic usage of the library.</p>
+		<h2>Installation</h2>
+		<pre>npm install my-library</pre>
+		<p>Then require it in your code using <code class="inline">require('my-library')</code> and create a new instance.</p>
+		<blockquote>Note: Requires Node.js 18 or later for full compatibility.</blockquote>
+		<table>
+			<tr><th>Option</th><th>Type</th><th>Default</th></tr>
+			<tr><td>name</td><td>string</td><td>"default"</td></tr>
+			<tr><td>debug</td><td>boolean</td><td>false</td></tr>
+		</table>
+	</div>
+</div>
+</div>
+<div class="mini-splash">
+	<h2>My Project</h2>
+	<div class="tagline">Build better things faster.</div>
+	<span class="btn primary">Get Started</span>
+	<span class="btn secondary">API Reference</span>
+</div>
+</div>
+
+<!-- CANYON SUNSET -->
+<div class="theme-card canyon-sunset">
+<div class="theme-label">4. Canyon Sunset — Painted desert sky</div>
+<div class="mini-layout">
+<div class="mini-topbar">
+	<span class="mini-topbar-brand">My Project</span>
+	<div class="mini-topbar-nav">
+		<span>Home</span>
+		<span>Docs</span>
+		<span>Search</span>
+		<span>GitHub</span>
+	</div>
+</div>
+<div class="mini-body">
+	<div class="mini-sidebar">
+		<div class="mini-sidebar-search"><input type="text" placeholder="Search docs..."></div>
+		<div class="mini-sidebar-group">Core</div>
+		<div class="mini-sidebar-item active">fable</div>
+		<div class="mini-sidebar-item">fable-log</div>
+		<div class="mini-sidebar-item">fable-uuid</div>
+		<div class="mini-sidebar-group">Data</div>
+		<div class="mini-sidebar-item">meadow</div>
+		<div class="mini-sidebar-item">foxhound</div>
+	</div>
+	<div class="mini-content">
+		<h1>Getting Started</h1>
+		<p>Welcome to the documentation. This guide will walk you through <a href="#">installation</a> and basic usage of the library.</p>
+		<h2>Installation</h2>
+		<pre>npm install my-library</pre>
+		<p>Then require it in your code using <code class="inline">require('my-library')</code> and create a new instance.</p>
+		<blockquote>Note: Requires Node.js 18 or later for full compatibility.</blockquote>
+		<table>
+			<tr><th>Option</th><th>Type</th><th>Default</th></tr>
+			<tr><td>name</td><td>string</td><td>"default"</td></tr>
+			<tr><td>debug</td><td>boolean</td><td>false</td></tr>
+		</table>
+	</div>
+</div>
+</div>
+<div class="mini-splash">
+	<h2>My Project</h2>
+	<div class="tagline">Build better things faster.</div>
+	<span class="btn primary">Get Started</span>
+	<span class="btn secondary">API Reference</span>
+</div>
+</div>
+
+</div>
+</body>
+</html>

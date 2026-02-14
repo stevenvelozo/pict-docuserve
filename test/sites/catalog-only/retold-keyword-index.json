@@ -1,0 +1,47 @@
+{
+	"LunrIndex": {
+		"version": "2.3.9",
+		"fields": ["title", "body"],
+		"fieldVectors": [
+			["title/core/core-lib", [0, 1.0]],
+			["body/core/core-lib", [1, 0.5, 2, 0.3]],
+			["title/core/core-utils", [3, 1.0]],
+			["body/core/core-utils", [4, 0.5, 5, 0.3]],
+			["title/plugins/plugin-auth", [6, 1.0]],
+			["body/plugins/plugin-auth", [7, 0.5, 8, 0.3]]
+		],
+		"invertedIndex": [
+			["core", {"_index": 0, "title": {"core/core-lib": {}}, "body": {}}],
+			["librari", {"_index": 1, "title": {}, "body": {"core/core-lib": {}}}],
+			["foundat", {"_index": 2, "title": {}, "body": {"core/core-lib": {}}}],
+			["util", {"_index": 3, "title": {"core/core-utils": {}}, "body": {}}],
+			["helper", {"_index": 4, "title": {}, "body": {"core/core-utils": {}}}],
+			["format", {"_index": 5, "title": {}, "body": {"core/core-utils": {}}}],
+			["auth", {"_index": 6, "title": {"plugins/plugin-auth": {}}, "body": {}}],
+			["authent", {"_index": 7, "title": {}, "body": {"plugins/plugin-auth": {}}}],
+			["secur", {"_index": 8, "title": {}, "body": {"plugins/plugin-auth": {}}}]
+		],
+		"pipeline": ["stemmer"]
+	},
+	"Documents": {
+		"core/core-lib": {
+			"Title": "Core Library",
+			"Group": "core",
+			"Module": "core-lib",
+			"DocPath": "README.md"
+		},
+		"core/core-utils": {
+			"Title": "Core Utilities",
+			"Group": "core",
+			"Module": "core-utils",
+			"DocPath": "README.md"
+		},
+		"plugins/plugin-auth": {
+			"Title": "Authentication Plugin",
+			"Group": "plugins",
+			"Module": "plugin-auth",
+			"DocPath": "README.md"
+		}
+	},
+	"DocumentCount": 3
+}

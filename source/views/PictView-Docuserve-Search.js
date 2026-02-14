@@ -20,26 +20,26 @@ const _ViewConfiguration =
 		}
 		.docuserve-search-header h1 {
 			font-size: 1.75em;
-			color: #2c3e50;
+			color: #3D3229;
 			margin: 0 0 0.75em 0;
 		}
 		.docuserve-search-input {
 			width: 100%;
 			padding: 0.75em 1em;
 			font-size: 1.1em;
-			border: 2px solid #ddd;
+			border: 2px solid #D4CCBE;
 			border-radius: 6px;
 			outline: none;
 			box-sizing: border-box;
 			transition: border-color 0.15s;
 		}
 		.docuserve-search-input:focus {
-			border-color: #42b983;
+			border-color: #2E7D74;
 		}
 		.docuserve-search-status {
 			margin-top: 0.75em;
 			font-size: 0.9em;
-			color: #888;
+			color: #8A7F72;
 		}
 		.docuserve-search-results {
 			margin-top: 1em;
@@ -48,36 +48,36 @@ const _ViewConfiguration =
 			display: block;
 			padding: 1em 1.25em;
 			margin-bottom: 0.5em;
-			border: 1px solid #e9ecef;
+			border: 1px solid #EAE3D8;
 			border-radius: 6px;
 			text-decoration: none;
 			color: inherit;
 			transition: border-color 0.15s, box-shadow 0.15s;
 		}
 		.docuserve-search-result:hover {
-			border-color: #42b983;
-			box-shadow: 0 2px 8px rgba(66, 185, 131, 0.1);
+			border-color: #2E7D74;
+			box-shadow: 0 2px 8px rgba(46, 125, 116, 0.1);
 		}
 		.docuserve-search-result-title {
 			font-size: 1.05em;
 			font-weight: 600;
-			color: #42b983;
+			color: #2E7D74;
 			margin-bottom: 0.25em;
 		}
 		.docuserve-search-result-breadcrumb {
 			font-size: 0.8em;
-			color: #888;
+			color: #8A7F72;
 			margin-bottom: 0.2em;
 		}
 		.docuserve-search-result-path {
 			font-size: 0.8em;
-			color: #aaa;
+			color: #A39889;
 			font-family: monospace;
 		}
 		.docuserve-search-empty {
 			text-align: center;
 			padding: 3em 1em;
-			color: #999;
+			color: #8A7F72;
 			font-size: 1em;
 		}
 	`,

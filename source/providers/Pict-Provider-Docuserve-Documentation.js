@@ -34,12 +34,43 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		let tmpCatalogURL = this.pict.AppData.Docuserve.CatalogURL || 'retold-catalog.json';
 
+		let tmpLoadOptionalFiles = () =>
+		{
+			// Load cover.md, _sidebar.md, _topbar.md, errorpage.md and keyword index in parallel.
+			// When all are done, if we still have no sidebar data, try to auto-discover
+			// a README.md so the site works with plain markdown folders.
+			let tmpPending = 5;
+			let tmpFinish = () =>
+			{
+				tmpPending--;
+				if (tmpPending <= 0)
+				{
+					// If no sidebar data was populated by catalog or _sidebar.md,
+					// try to auto-discover a README.md to provide minimal navigation.
+					if (!this.pict.AppData.Docuserve.SidebarGroups || this.pict.AppData.Docuserve.SidebarGroups.length < 1)
+					{
+						this.autoDiscoverSidebar(tmpCallback);
+					}
+					else
+					{
+						return tmpCallback();
+					}
+				}
+			};
+
+			this.loadCover(tmpFinish);
+			this.loadSidebar(tmpFinish);
+			this.loadTopbar(tmpFinish);
+			this.loadErrorPage(tmpFinish);
+			this.loadKeywordIndex(tmpFinish);
+		};
+
 		fetch(tmpCatalogURL)
 			.then((pResponse) =>
 			{
 				if (!pResponse.ok)
 				{
-					this.log.warn(`Docuserve: Could not load catalog from [${tmpCatalogURL}].`);
+					this.log.info(`Docuserve: No catalog at [${tmpCatalogURL}]; running in standalone mode.`);
 					return null;
 				}
 				return pResponse.json();
@@ -56,26 +87,81 @@ class DocuserveDocumentationProvider extends libPictProvider
 					this.buildSidebarData(pCatalog);
 				}
 
-				// Now try to load cover.md, _sidebar.md, _topbar.md, errorpage.md, and keyword index in parallel
-				let tmpPending = 5;
-				let tmpFinish = () =>
-				{
-					tmpPending--;
-					if (tmpPending <= 0)
-					{
-						return tmpCallback();
-					}
-				};
-
-				this.loadCover(tmpFinish);
-				this.loadSidebar(tmpFinish);
-				this.loadTopbar(tmpFinish);
-				this.loadErrorPage(tmpFinish);
-				this.loadKeywordIndex(tmpFinish);
+				tmpLoadOptionalFiles();
 			})
 			.catch((pError) =>
 			{
-				this.log.warn(`Docuserve: Error loading catalog: ${pError}`);
+				this.log.info(`Docuserve: Catalog load error (${pError}); continuing in standalone mode.`);
+				tmpLoadOptionalFiles();
+			});
+	}
+
+	/**
+	 * Auto-discover sidebar content when no catalog or _sidebar.md is available.
+	 *
+	 * Attempts to fetch README.md from the docs root.  If found, creates a
+	 * minimal sidebar with a single "Docs" group containing a README entry.
+	 * This lets pict-docuserve work with nothing but a folder of markdown.
+	 *
+	 * @param {Function} fCallback - Callback when done
+	 */
+	autoDiscoverSidebar(fCallback)
+	{
+		let tmpCallback = (typeof(fCallback) === 'function') ? fCallback : () => {};
+		let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
+
+		fetch(tmpDocsBase + 'README.md')
+			.then((pResponse) =>
+			{
+				if (!pResponse.ok)
+				{
+					return null;
+				}
+				return pResponse.text();
+			})
+			.then((pMarkdown) =>
+			{
+				if (pMarkdown)
+				{
+					// Extract a title from the first heading in the README
+					let tmpTitleMatch = pMarkdown.match(/^#+\s+(.+)/m);
+					let tmpTitle = tmpTitleMatch ? tmpTitleMatch[1].trim() : 'Docs';
+
+					// Build a minimal sidebar group so the sidebar has something to show
+					this.pict.AppData.Docuserve.SidebarGroups =
+					[
+						{
+							Name: tmpTitle,
+							Key: 'docs',
+							Route: '#/page/README',
+							Modules: []
+						}
+					];
+
+					// Also set this as a fallback cover title if we have no cover
+					if (!this.pict.AppData.Docuserve.CoverLoaded)
+					{
+						this.pict.AppData.Docuserve.Cover =
+						{
+							Title: tmpTitle,
+							Tagline: '',
+							Description: '',
+							Highlights: [],
+							Actions: [{ Text: 'Read the Docs', Href: 'README.md' }]
+						};
+						this.pict.AppData.Docuserve.CoverLoaded = true;
+					}
+				}
+				else
+				{
+					this.log.info('Docuserve: No README.md found; sidebar will be empty.');
+				}
+
+				return tmpCallback();
+			})
+			.catch((pError) =>
+			{
+				this.log.info(`Docuserve: README.md discovery failed (${pError}).`);
 				return tmpCallback();
 			});
 	}

@@ -1,0 +1,9 @@
+- [Home](/)
+- Getting Started
+  - [Installation](installation.md)
+  - [Quick Start](quick-start.md)
+- Guides
+  - [Configuration](configuration.md)
+  - [Deployment](deployment.md)
+- API Reference
+  - [Core API](api/core.md)

@@ -18,23 +18,23 @@ const _ViewConfiguration =
 			min-height: calc(100vh - 56px);
 			padding: 3em 2em;
 			text-align: center;
-			background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+			background: linear-gradient(135deg, #F5F0E8 0%, #E4EFED 100%);
 		}
 		.docuserve-splash h1 {
 			font-size: 3em;
 			font-weight: 700;
-			color: #2c3e50;
+			color: #3D3229;
 			margin: 0 0 0.25em 0;
 		}
 		.docuserve-splash-tagline {
 			font-size: 1.25em;
-			color: #666;
+			color: #7A7568;
 			margin-bottom: 1.5em;
 			font-style: italic;
 		}
 		.docuserve-splash-description {
 			font-size: 1em;
-			color: #555;
+			color: #5E5549;
 			max-width: 600px;
 			line-height: 1.7;
 			margin-bottom: 2em;
@@ -49,7 +49,7 @@ const _ViewConfiguration =
 		}
 		.docuserve-splash-highlight-card {
 			background: #fff;
-			border: 1px solid #e0e0e0;
+			border: 1px solid #DDD6CA;
 			border-radius: 8px;
 			padding: 1.25em;
 			text-align: left;
@@ -57,16 +57,16 @@ const _ViewConfiguration =
 		}
 		.docuserve-splash-highlight-card:hover {
 			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-			border-color: #42b983;
+			border-color: #2E7D74;
 		}
 		.docuserve-splash-highlight-card h3 {
 			margin: 0 0 0.5em 0;
-			color: #2c3e50;
+			color: #3D3229;
 			font-size: 1em;
 		}
 		.docuserve-splash-highlight-card p {
 			margin: 0;
-			color: #777;
+			color: #7A7568;
 			font-size: 0.85em;
 			line-height: 1.5;
 		}
@@ -87,20 +87,20 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-splash-actions .primary {
-			background-color: #42b983;
+			background-color: #2E7D74;
 			color: #fff;
 		}
 		.docuserve-splash-actions .primary:hover {
-			background-color: #38a373;
+			background-color: #256861;
 		}
 		.docuserve-splash-actions .secondary {
 			background-color: #fff;
-			color: #2c3e50;
-			border: 1px solid #ddd;
+			color: #3D3229;
+			border: 2px solid #2E7D74;
 		}
 		.docuserve-splash-actions .secondary:hover {
-			border-color: #42b983;
-			color: #42b983;
+			border-color: #256861;
+			color: #2E7D74;
 		}
 	`,
 
@@ -212,8 +212,30 @@ class DocusserveSplashView extends libPictView
 	 */
 	renderFromCatalog(pDocuserve)
 	{
-		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Title', 'Retold');
-		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Tagline', 'Documentation');
+		// Derive the title from whatever data is available, falling back to the page title or 'Documentation'
+		let tmpTitle = 'Documentation';
+		let tmpTagline = '';
+
+		if (pDocuserve.CatalogLoaded && pDocuserve.Catalog && pDocuserve.Catalog.Name)
+		{
+			tmpTitle = pDocuserve.Catalog.Name;
+		}
+		else if (pDocuserve.TopBarLoaded && pDocuserve.TopBar && pDocuserve.TopBar.Brand)
+		{
+			tmpTitle = pDocuserve.TopBar.Brand;
+		}
+		else if (typeof document !== 'undefined' && document.title)
+		{
+			tmpTitle = document.title;
+		}
+
+		if (pDocuserve.CatalogLoaded && pDocuserve.Catalog && pDocuserve.Catalog.Description)
+		{
+			tmpTagline = pDocuserve.Catalog.Description;
+		}
+
+		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Title', this.escapeHTML(tmpTitle));
+		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Tagline', this.escapeHTML(tmpTagline));
 		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Description', '');
 
 		// Build highlight cards from catalog groups

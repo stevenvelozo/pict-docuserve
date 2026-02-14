@@ -87,7 +87,7 @@ class DocuserveCommandInject extends libCommandLineCommand
 		this.log.info(`  From: ${tmpDistPath}`);
 		this.log.info(`  Into: ${tmpDocsPath}`);
 
-		// Copy index.html
+		// Copy index.html (references pict and pict-docuserve JS via jsDelivr CDN)
 		copyFile(
 			libPath.join(tmpDistPath, 'index.html'),
 			libPath.join(tmpDocsPath, 'index.html')
@@ -99,30 +99,15 @@ class DocuserveCommandInject extends libCommandLineCommand
 			libPath.join(tmpDocsPath, 'css')
 		);
 
-		// Copy minified pict library and source map
-		ensureDir(libPath.join(tmpDocsPath, 'js'));
-		copyFile(
-			libPath.join(tmpDistPath, 'js', 'pict.min.js'),
-			libPath.join(tmpDocsPath, 'js', 'pict.min.js')
-		);
-		copyFile(
-			libPath.join(tmpDistPath, 'js', 'pict.min.js.map'),
-			libPath.join(tmpDocsPath, 'js', 'pict.min.js.map')
-		);
-
-		// Copy minified pict-docuserve bundle and source map
-		copyFile(
-			libPath.join(tmpDistPath, 'pict-docuserve.min.js'),
-			libPath.join(tmpDocsPath, 'pict-docuserve.min.js')
-		);
-		copyFile(
-			libPath.join(tmpDistPath, 'pict-docuserve.min.js.map'),
-			libPath.join(tmpDocsPath, 'pict-docuserve.min.js.map')
-		);
+		// NOTE: pict.min.js and pict-docuserve.min.js are loaded from jsDelivr CDN
+		// in the default index.html.  Use `pict-docuserve prepare-local` (or
+		// `npx quack prepare-local`) to copy local JS bundles for offline use.
 
 		this.log.info('');
-		this.log.info('Injection complete!  The docs folder is now self-contained.');
+		this.log.info('Injection complete!  JS dependencies load from jsDelivr CDN.');
 		this.log.info('Deploy to any static host (GitHub Pages, Netlify, etc.) or serve with any HTTP server.');
+		this.log.info('');
+		this.log.info('For offline/local development, run `pict-docuserve prepare-local` to copy JS bundles locally.');
 		this.log.info('');
 	}
 }
