@@ -1,6 +1,6 @@
 {
     "name": "pict-docuserve",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
     "main": "source/Pict-Application-Docuserve.js",
     "bin": {
@@ -18,7 +18,7 @@
         "build-docs": "npx quack build && npx quack copy && node source/cli/Docuserve-CLI-Run.js inject ./docs && node example_applications/build-examples.js stage-docs",
         "serve-docs": "node source/cli/Docuserve-CLI-Run.js serve ./docs",
         "serve-examples": "node example_applications/build-examples.js",
-        "test": "echo \"Error: no test specified\" && exit 0",
+        "test": "npx mocha -u tdd --exit -R spec",
         "tests": "npx mocha -u tdd --exit -R spec --grep",
         "coverage": "npx nyc --reporter=lcov --reporter=text-lcov npx mocha -- -u tdd -R spec"
     },
@@ -33,6 +33,8 @@
         "pict-view": "^1.0.64"
     },
     "devDependencies": {
+        "chai": "^6.2.2",
+        "mocha": "^11.7.5",
         "quackage": "^1.0.47"
     },
     "copyFilesSettings": {

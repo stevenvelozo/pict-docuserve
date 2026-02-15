@@ -995,6 +995,57 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
+	 * Resolve a GitHub repository URL to an internal hash route.
+	 *
+	 * If the URL matches a module in the loaded catalog, returns the
+	 * corresponding #/doc/ route so the link navigates within docuserve
+	 * instead of leaving to GitHub.
+	 *
+	 * @param {string} pURL - A GitHub URL (e.g. "https://github.com/stevenvelozo/fable")
+	 * @returns {string|null} The hash route (e.g. "#/doc/fable/fable") or null if not a catalog module
+	 */
+	resolveGitHubURLToRoute(pURL)
+	{
+		if (!this._Catalog || !this._Catalog.Groups || !pURL)
+		{
+			return null;
+		}
+
+		// Match https://github.com/{org}/{repo} with optional trailing path/slash
+		let tmpMatch = pURL.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)/);
+		if (!tmpMatch)
+		{
+			return null;
+		}
+
+		let tmpOrg = tmpMatch[1];
+		let tmpRepo = tmpMatch[2];
+
+		// Only resolve URLs that match the catalog's GitHub org
+		if (tmpOrg !== this._Catalog.GitHubOrg)
+		{
+			return null;
+		}
+
+		// Search catalog for a module with a matching Repo
+		for (let i = 0; i < this._Catalog.Groups.length; i++)
+		{
+			let tmpGroup = this._Catalog.Groups[i];
+
+			for (let j = 0; j < tmpGroup.Modules.length; j++)
+			{
+				let tmpModule = tmpGroup.Modules[j];
+				if (tmpModule.Repo === tmpRepo)
+				{
+					return '#/doc/' + tmpGroup.Key + '/' + tmpModule.Name;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the module-specific sidebar entries for a given group/module.
 	 *
 	 * @param {string} pGroup - The group key
@@ -1434,6 +1485,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 			{
 				let tmpRoute = this.convertDocLink(pHref, pCurrentGroup, pCurrentModule, pCurrentDocPath);
 				return '<a href="' + tmpRoute + '">' + pLinkText + '</a>';
+			}
+			// Check if this is a GitHub URL that matches a catalog module
+			let tmpCatalogRoute = this.resolveGitHubURLToRoute(pHref);
+			if (tmpCatalogRoute)
+			{
+				return '<a href="' + tmpCatalogRoute + '">' + pLinkText + '</a>';
 			}
 			return '<a href="' + pHref + '" target="_blank" rel="noopener">' + pLinkText + '</a>';
 		});
