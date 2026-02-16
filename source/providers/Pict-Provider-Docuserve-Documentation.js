@@ -1,5 +1,7 @@
 const libPictProvider = require('pict-provider');
 const libLunr = require('lunr');
+const libPictSectionContent = require('pict-section-content');
+const libPictContentProvider = libPictSectionContent.PictContentProvider;
 
 /**
  * Documentation Provider for Docuserve
@@ -16,6 +18,42 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		this._Catalog = null;
 		this._ContentCache = {};
+
+		// Create an instance of the content provider for markdown parsing
+		this._ContentProvider = this.pict.addProvider('Pict-Content', libPictContentProvider.default_configuration, libPictContentProvider);
+	}
+
+	/**
+	 * Create a link resolver closure for the content provider.
+	 *
+	 * Wraps docuserve-specific link resolution (catalog-aware routing,
+	 * GitHub URL matching) into a callback compatible with the
+	 * pict-section-content link resolver pattern.
+	 *
+	 * @param {string} [pCurrentGroup] - The current group key
+	 * @param {string} [pCurrentModule] - The current module name
+	 * @param {string} [pCurrentDocPath] - The current document path
+	 * @returns {Function} A link resolver callback
+	 */
+	_createLinkResolver(pCurrentGroup, pCurrentModule, pCurrentDocPath)
+	{
+		return (pHref, pLinkText) =>
+		{
+			// Convert internal doc links to hash routes
+			if (pHref.match(/^\//) || pHref.match(/^[^:]+\.md/))
+			{
+				let tmpRoute = this.convertDocLink(pHref, pCurrentGroup, pCurrentModule, pCurrentDocPath);
+				return { href: tmpRoute };
+			}
+			// Check if this is a GitHub URL that matches a catalog module
+			let tmpCatalogRoute = this.resolveGitHubURLToRoute(pHref);
+			if (tmpCatalogRoute)
+			{
+				return { href: tmpCatalogRoute };
+			}
+			// Use default behavior for other links
+			return null;
+		};
 	}
 
 	/**
@@ -495,7 +533,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					return tmpCallback();
 				}
 
-				this.pict.AppData.Docuserve.ErrorPageHTML = this.parseMarkdown(pMarkdown);
+				this.pict.AppData.Docuserve.ErrorPageHTML = this._ContentProvider.parseMarkdown(pMarkdown);
 				this.pict.AppData.Docuserve.ErrorPageLoaded = true;
 				return tmpCallback();
 			})
@@ -714,13 +752,13 @@ class DocuserveDocumentationProvider extends libPictProvider
 		if (this.pict.AppData.Docuserve.ErrorPageLoaded && this.pict.AppData.Docuserve.ErrorPageHTML)
 		{
 			// Replace the {{path}} placeholder with the actual requested path
-			return this.pict.AppData.Docuserve.ErrorPageHTML.replace(/\{\{path\}\}/g, this.escapeHTML(tmpPath));
+			return this.pict.AppData.Docuserve.ErrorPageHTML.replace(/\{\{path\}\}/g, this._ContentProvider.escapeHTML(tmpPath));
 		}
 
 		// Default fallback
 		return '<div class="docuserve-not-found">'
 			+ '<h2>Page Not Found</h2>'
-			+ '<p>The document <code>' + this.escapeHTML(tmpPath) + '</code> could not be loaded.</p>'
+			+ '<p>The document <code>' + this._ContentProvider.escapeHTML(tmpPath) + '</code> could not be loaded.</p>'
 			+ '<p><a href="#/Home">Return to the home page</a></p>'
 			+ '</div>';
 	}
@@ -1122,7 +1160,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					return tmpCallback('Document not found', this.getErrorPageHTML(pURL));
 				}
 
-				let tmpHTML = this.parseMarkdown(pMarkdown, pCurrentGroup, pCurrentModule, pCurrentDocPath);
+				let tmpHTML = this._ContentProvider.parseMarkdown(pMarkdown, this._createLinkResolver(pCurrentGroup, pCurrentModule, pCurrentDocPath));
 				this._ContentCache[pURL] = tmpHTML;
 				return tmpCallback(null, tmpHTML);
 			})
@@ -1147,363 +1185,6 @@ class DocuserveDocumentationProvider extends libPictProvider
 		let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
 		let tmpURL = tmpDocsBase + pPath;
 		this.fetchDocument(tmpURL, fCallback, pCurrentGroup, pCurrentModule, pCurrentDocPath);
-	}
-
-	/**
-	 * Parse a markdown string into HTML.
-	 *
-	 * This is a basic markdown parser that handles the most common constructs:
-	 * headings, paragraphs, code blocks, inline code, links, bold, italic,
-	 * lists, blockquotes, and horizontal rules.
-	 *
-	 * @param {string} pMarkdown - The raw markdown text
-	 * @param {string} [pCurrentGroup] - The current group key for link resolution
-	 * @param {string} [pCurrentModule] - The current module name for link resolution
-	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
-	 * @returns {string} The parsed HTML
-	 */
-	parseMarkdown(pMarkdown, pCurrentGroup, pCurrentModule, pCurrentDocPath)
-	{
-		if (!pMarkdown)
-		{
-			return '';
-		}
-
-		let tmpLines = pMarkdown.split('\n');
-		let tmpHTML = [];
-		let tmpInCodeBlock = false;
-		let tmpCodeFenceLength = 0;
-		let tmpCodeLang = '';
-		let tmpCodeLines = [];
-		let tmpInList = false;
-		let tmpListType = '';
-		let tmpInBlockquote = false;
-		let tmpBlockquoteLines = [];
-		let tmpInMathBlock = false;
-		let tmpMathLines = [];
-
-		for (let i = 0; i < tmpLines.length; i++)
-		{
-			let tmpLine = tmpLines[i];
-
-			// Display math blocks ($$...$$) — skip if inside a code block
-			if (!tmpInCodeBlock && tmpLine.trim().match(/^\$\$/))
-			{
-				if (tmpInMathBlock)
-				{
-					// End math block
-					tmpHTML.push('<div class="docuserve-katex-display">' + tmpMathLines.join('\n') + '</div>');
-					tmpInMathBlock = false;
-					tmpMathLines = [];
-				}
-				else
-				{
-					// Close any open list or blockquote
-					if (tmpInList)
-					{
-						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-						tmpInList = false;
-					}
-					if (tmpInBlockquote)
-					{
-						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
-						tmpInBlockquote = false;
-						tmpBlockquoteLines = [];
-					}
-					tmpInMathBlock = true;
-				}
-				continue;
-			}
-
-			if (tmpInMathBlock)
-			{
-				tmpMathLines.push(tmpLine);
-				continue;
-			}
-
-			// Code blocks (fenced) — track fence length so ````x```` nests around ```y```
-			let tmpFenceMatch = tmpLine.match(/^(`{3,})/);
-			if (tmpFenceMatch)
-			{
-				let tmpFenceLen = tmpFenceMatch[1].length;
-
-				if (tmpInCodeBlock)
-				{
-					// Only close if the closing fence is at least as long as the opening
-					if (tmpFenceLen >= tmpCodeFenceLength && tmpLine.trim() === tmpFenceMatch[1])
-					{
-						// End code block
-						if (tmpCodeLang === 'mermaid')
-						{
-							// Mermaid diagrams: output raw content for client-side rendering
-							tmpHTML.push('<pre class="mermaid">' + tmpCodeLines.join('\n') + '</pre>');
-						}
-						else
-						{
-							tmpHTML.push('<pre><code class="language-' + this.escapeHTML(tmpCodeLang) + '">' + this.escapeHTML(tmpCodeLines.join('\n')) + '</code></pre>');
-						}
-						tmpInCodeBlock = false;
-						tmpCodeFenceLength = 0;
-						tmpCodeLang = '';
-						tmpCodeLines = [];
-						continue;
-					}
-					else
-					{
-						// Inner fence with fewer backticks — treat as content
-						tmpCodeLines.push(tmpLine);
-						continue;
-					}
-				}
-				else
-				{
-					// Close any open list or blockquote
-					if (tmpInList)
-					{
-						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-						tmpInList = false;
-					}
-					if (tmpInBlockquote)
-					{
-						tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
-						tmpInBlockquote = false;
-						tmpBlockquoteLines = [];
-					}
-					// Start code block — record fence length
-					tmpCodeFenceLength = tmpFenceLen;
-					tmpCodeLang = tmpLine.replace(/^`{3,}/, '').trim();
-					tmpInCodeBlock = true;
-					continue;
-				}
-			}
-
-			if (tmpInCodeBlock)
-			{
-				tmpCodeLines.push(tmpLine);
-				continue;
-			}
-
-			// Blockquotes
-			if (tmpLine.match(/^>\s?/))
-			{
-				if (!tmpInBlockquote)
-				{
-					// Close any open list
-					if (tmpInList)
-					{
-						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-						tmpInList = false;
-					}
-					tmpInBlockquote = true;
-					tmpBlockquoteLines = [];
-				}
-				tmpBlockquoteLines.push(tmpLine.replace(/^>\s?/, ''));
-				continue;
-			}
-			else if (tmpInBlockquote)
-			{
-				tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
-				tmpInBlockquote = false;
-				tmpBlockquoteLines = [];
-			}
-
-			// Horizontal rule
-			if (tmpLine.match(/^(-{3,}|\*{3,}|_{3,})\s*$/))
-			{
-				if (tmpInList)
-				{
-					tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-					tmpInList = false;
-				}
-				tmpHTML.push('<hr>');
-				continue;
-			}
-
-			// Headings
-			let tmpHeadingMatch = tmpLine.match(/^(#{1,6})\s+(.+)/);
-			if (tmpHeadingMatch)
-			{
-				if (tmpInList)
-				{
-					tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-					tmpInList = false;
-				}
-				let tmpLevel = tmpHeadingMatch[1].length;
-				let tmpText = this.parseInline(tmpHeadingMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath);
-				let tmpID = tmpHeadingMatch[2].toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-				tmpHTML.push('<h' + tmpLevel + ' id="' + tmpID + '">' + tmpText + '</h' + tmpLevel + '>');
-				continue;
-			}
-
-			// Unordered list items
-			let tmpULMatch = tmpLine.match(/^(\s*)[-*+]\s+(.*)/);
-			if (tmpULMatch)
-			{
-				if (!tmpInList || tmpListType !== 'ul')
-				{
-					if (tmpInList)
-					{
-						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-					}
-					tmpHTML.push('<ul>');
-					tmpInList = true;
-					tmpListType = 'ul';
-				}
-				tmpHTML.push('<li>' + this.parseInline(tmpULMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</li>');
-				continue;
-			}
-
-			// Ordered list items
-			let tmpOLMatch = tmpLine.match(/^(\s*)\d+\.\s+(.*)/);
-			if (tmpOLMatch)
-			{
-				if (!tmpInList || tmpListType !== 'ol')
-				{
-					if (tmpInList)
-					{
-						tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-					}
-					tmpHTML.push('<ol>');
-					tmpInList = true;
-					tmpListType = 'ol';
-				}
-				tmpHTML.push('<li>' + this.parseInline(tmpOLMatch[2], pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</li>');
-				continue;
-			}
-
-			// Close list if we've left list items
-			if (tmpInList && tmpLine.trim() !== '')
-			{
-				tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-				tmpInList = false;
-			}
-
-			// Empty line
-			if (tmpLine.trim() === '')
-			{
-				continue;
-			}
-
-			// Table detection
-			if (tmpLine.match(/^\|/) && i + 1 < tmpLines.length && tmpLines[i + 1].match(/^\|[\s-:|]+\|/))
-			{
-				// Close any open list
-				if (tmpInList)
-				{
-					tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-					tmpInList = false;
-				}
-
-				let tmpTableHTML = '<table>';
-
-				// Header row
-				let tmpHeaders = tmpLine.split('|').filter((pCell) => { return pCell.trim() !== ''; });
-				tmpTableHTML += '<thead><tr>';
-				for (let h = 0; h < tmpHeaders.length; h++)
-				{
-					tmpTableHTML += '<th>' + this.parseInline(tmpHeaders[h].trim(), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</th>';
-				}
-				tmpTableHTML += '</tr></thead>';
-
-				// Skip separator row
-				i++;
-
-				// Body rows
-				tmpTableHTML += '<tbody>';
-				while (i + 1 < tmpLines.length && tmpLines[i + 1].match(/^\|/))
-				{
-					i++;
-					let tmpCells = tmpLines[i].split('|').filter((pCell) => { return pCell.trim() !== ''; });
-					tmpTableHTML += '<tr>';
-					for (let c = 0; c < tmpCells.length; c++)
-					{
-						tmpTableHTML += '<td>' + this.parseInline(tmpCells[c].trim(), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</td>';
-					}
-					tmpTableHTML += '</tr>';
-				}
-				tmpTableHTML += '</tbody></table>';
-				tmpHTML.push(tmpTableHTML);
-				continue;
-			}
-
-			// Regular paragraph
-			tmpHTML.push('<p>' + this.parseInline(tmpLine, pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</p>');
-		}
-
-		// Close any trailing open elements
-		if (tmpInList)
-		{
-			tmpHTML.push(tmpListType === 'ul' ? '</ul>' : '</ol>');
-		}
-		if (tmpInBlockquote)
-		{
-			tmpHTML.push('<blockquote>' + this.parseMarkdown(tmpBlockquoteLines.join('\n'), pCurrentGroup, pCurrentModule, pCurrentDocPath) + '</blockquote>');
-		}
-		if (tmpInCodeBlock)
-		{
-			tmpHTML.push('<pre><code>' + this.escapeHTML(tmpCodeLines.join('\n')) + '</code></pre>');
-		}
-
-		return tmpHTML.join('\n');
-	}
-
-	/**
-	 * Parse inline markdown elements (bold, italic, code, links, images).
-	 *
-	 * @param {string} pText - The text to parse
-	 * @param {string} [pCurrentGroup] - The current group key for link resolution
-	 * @param {string} [pCurrentModule] - The current module name for link resolution
-	 * @param {string} [pCurrentDocPath] - The current document path for link resolution
-	 * @returns {string} HTML with inline elements
-	 */
-	parseInline(pText, pCurrentGroup, pCurrentModule, pCurrentDocPath)
-	{
-		if (!pText)
-		{
-			return '';
-		}
-
-		let tmpResult = pText;
-
-		// Inline code (backticks) - handle first to avoid interfering with other patterns
-		tmpResult = tmpResult.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-		// Inline LaTeX equations ($...$) — must be processed before other inline patterns
-		// Match single $ delimiters that aren't adjacent to spaces (to avoid false positives with currency)
-		tmpResult = tmpResult.replace(/\$([^\$\s][^\$]*?[^\$\s])\$/g, '<span class="docuserve-katex-inline">$1</span>');
-		// Also match single-character inline math like $x$
-		tmpResult = tmpResult.replace(/\$([^\$\s])\$/g, '<span class="docuserve-katex-inline">$1</span>');
-
-		// Images
-		tmpResult = tmpResult.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
-
-		// Links
-		tmpResult = tmpResult.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (pMatch, pLinkText, pHref) =>
-		{
-			// Convert internal doc links to hash routes
-			if (pHref.match(/^\//) || pHref.match(/^[^:]+\.md/))
-			{
-				let tmpRoute = this.convertDocLink(pHref, pCurrentGroup, pCurrentModule, pCurrentDocPath);
-				return '<a href="' + tmpRoute + '">' + pLinkText + '</a>';
-			}
-			// Check if this is a GitHub URL that matches a catalog module
-			let tmpCatalogRoute = this.resolveGitHubURLToRoute(pHref);
-			if (tmpCatalogRoute)
-			{
-				return '<a href="' + tmpCatalogRoute + '">' + pLinkText + '</a>';
-			}
-			return '<a href="' + pHref + '" target="_blank" rel="noopener">' + pLinkText + '</a>';
-		});
-
-		// Bold
-		tmpResult = tmpResult.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-		tmpResult = tmpResult.replace(/__([^_]+)__/g, '<strong>$1</strong>');
-
-		// Italic
-		tmpResult = tmpResult.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-		tmpResult = tmpResult.replace(/_([^_]+)_/g, '<em>$1</em>');
-
-		return tmpResult;
 	}
 
 	/**
@@ -1563,25 +1244,6 @@ class DocuserveDocumentationProvider extends libPictProvider
 		return '#/page/' + tmpPath;
 	}
 
-	/**
-	 * Escape HTML special characters.
-	 *
-	 * @param {string} pText - The text to escape
-	 * @returns {string} The escaped text
-	 */
-	escapeHTML(pText)
-	{
-		if (!pText)
-		{
-			return '';
-		}
-		return pText
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#39;');
-	}
 }
 
 module.exports = DocuserveDocumentationProvider;

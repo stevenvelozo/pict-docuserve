@@ -678,16 +678,29 @@ suite
 
 		suite
 		(
-			'Markdown Parsing',
+			'Content Provider Integration',
 			function()
 			{
 				test
 				(
-					'parseMarkdown should handle headings.',
+					'The docuserve provider should have a content provider instance.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('# Hello World\n## Subheading');
+						Expect(tmpProvider._ContentProvider).to.be.an('object', 'Content provider should be available.');
+						Expect(tmpProvider._ContentProvider.parseMarkdown).to.be.a('function', 'parseMarkdown should be a function.');
+						Expect(tmpProvider._ContentProvider.parseInline).to.be.a('function', 'parseInline should be a function.');
+						Expect(tmpProvider._ContentProvider.escapeHTML).to.be.a('function', 'escapeHTML should be a function.');
+						fDone();
+					}
+				);
+				test
+				(
+					'parseMarkdown via content provider should handle headings.',
+					(fDone) =>
+					{
+						var tmpProvider = createProvider();
+						var tmpResult = tmpProvider._ContentProvider.parseMarkdown('# Hello World\n## Subheading');
 						Expect(tmpResult).to.contain('<h1');
 						Expect(tmpResult).to.contain('Hello World');
 						Expect(tmpResult).to.contain('<h2');
@@ -697,11 +710,11 @@ suite
 				);
 				test
 				(
-					'parseMarkdown should handle code blocks.',
+					'parseMarkdown via content provider should handle code blocks.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('```javascript\nvar x = 1;\n```');
+						var tmpResult = tmpProvider._ContentProvider.parseMarkdown('```javascript\nvar x = 1;\n```');
 						Expect(tmpResult).to.contain('<pre>');
 						Expect(tmpResult).to.contain('<code');
 						Expect(tmpResult).to.contain('language-javascript');
@@ -711,84 +724,17 @@ suite
 				);
 				test
 				(
-					'parseMarkdown should handle mermaid blocks.',
+					'parseMarkdown via content provider should handle tables.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('```mermaid\ngraph TD\n  A-->B\n```');
-						Expect(tmpResult).to.contain('<pre class="mermaid">');
-						Expect(tmpResult).to.contain('graph TD');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle unordered lists.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('- Item 1\n- Item 2\n- Item 3');
-						Expect(tmpResult).to.contain('<ul>');
-						Expect(tmpResult).to.contain('<li>');
-						Expect(tmpResult).to.contain('Item 1');
-						Expect(tmpResult).to.contain('Item 3');
-						Expect(tmpResult).to.contain('</ul>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle ordered lists.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('1. First\n2. Second\n3. Third');
-						Expect(tmpResult).to.contain('<ol>');
-						Expect(tmpResult).to.contain('<li>');
-						Expect(tmpResult).to.contain('First');
-						Expect(tmpResult).to.contain('</ol>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle blockquotes.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('> This is a quote');
-						Expect(tmpResult).to.contain('<blockquote>');
-						Expect(tmpResult).to.contain('This is a quote');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle horizontal rules.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseMarkdown('---')).to.contain('<hr>');
-						Expect(tmpProvider.parseMarkdown('***')).to.contain('<hr>');
-						Expect(tmpProvider.parseMarkdown('___')).to.contain('<hr>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle tables.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown(
+						var tmpResult = tmpProvider._ContentProvider.parseMarkdown(
 							'| Name | Type |\n'
 							+ '|------|------|\n'
 							+ '| foo  | bar  |'
 						);
 						Expect(tmpResult).to.contain('<table>');
 						Expect(tmpResult).to.contain('<th>');
-						Expect(tmpResult).to.contain('Name');
-						Expect(tmpResult).to.contain('<td>');
 						Expect(tmpResult).to.contain('foo');
 						Expect(tmpResult).to.contain('</table>');
 						fDone();
@@ -796,36 +742,13 @@ suite
 				);
 				test
 				(
-					'parseMarkdown should handle empty input.',
+					'escapeHTML via content provider should escape special characters.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseMarkdown('')).to.equal('');
-						Expect(tmpProvider.parseMarkdown(null)).to.equal('');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle math blocks.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('$$\nE = mc^2\n$$');
-						Expect(tmpResult).to.contain('docuserve-katex-display');
-						Expect(tmpResult).to.contain('E = mc^2');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseMarkdown should handle nested code fences.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseMarkdown('````\n```\ninner\n```\n````');
-						Expect(tmpResult).to.contain('<pre>');
-						Expect(tmpResult).to.contain('inner');
+						Expect(tmpProvider._ContentProvider.escapeHTML('<script>alert("xss")</script>')).to.equal('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+						Expect(tmpProvider._ContentProvider.escapeHTML("it's")).to.equal("it&#39;s");
+						Expect(tmpProvider._ContentProvider.escapeHTML('a & b')).to.equal('a &amp; b');
 						fDone();
 					}
 				);
@@ -834,60 +757,17 @@ suite
 
 		suite
 		(
-			'Inline Markdown Parsing',
+			'Link Resolver Integration',
 			function()
 			{
 				test
 				(
-					'parseInline should handle bold text.',
+					'_createLinkResolver should convert internal .md links to hash routes.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseInline('**bold**')).to.contain('<strong>bold</strong>');
-						Expect(tmpProvider.parseInline('__also bold__')).to.contain('<strong>also bold</strong>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseInline should handle italic text.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseInline('*italic*')).to.contain('<em>italic</em>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseInline should handle inline code.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseInline('use `npm install`')).to.contain('<code>npm install</code>');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseInline should handle images.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('![alt text](image.png)');
-						Expect(tmpResult).to.contain('<img');
-						Expect(tmpResult).to.contain('src="image.png"');
-						Expect(tmpResult).to.contain('alt="alt text"');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseInline should convert internal links to hash routes.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('[Architecture](/fable/fable/architecture.md)');
+						var tmpResolver = tmpProvider._createLinkResolver('fable', 'fable');
+						var tmpResult = tmpProvider._ContentProvider.parseInline('[Architecture](/fable/fable/architecture.md)', tmpResolver);
 						Expect(tmpResult).to.contain('#/doc/fable/fable/architecture.md');
 						Expect(tmpResult).to.not.contain('target="_blank"');
 						fDone();
@@ -895,11 +775,12 @@ suite
 				);
 				test
 				(
-					'parseInline should open external links in new tab.',
+					'_createLinkResolver should open external links in new tab.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('[NPM](https://npmjs.com/package/fable)');
+						var tmpResolver = tmpProvider._createLinkResolver();
+						var tmpResult = tmpProvider._ContentProvider.parseInline('[NPM](https://npmjs.com/package/fable)', tmpResolver);
 						Expect(tmpResult).to.contain('href="https://npmjs.com/package/fable"');
 						Expect(tmpResult).to.contain('target="_blank"');
 						fDone();
@@ -907,11 +788,12 @@ suite
 				);
 				test
 				(
-					'parseInline should convert GitHub URLs of catalog modules to internal routes.',
+					'_createLinkResolver should convert GitHub URLs of catalog modules to internal routes.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('[fable](https://github.com/stevenvelozo/fable)');
+						var tmpResolver = tmpProvider._createLinkResolver();
+						var tmpResult = tmpProvider._ContentProvider.parseInline('[fable](https://github.com/stevenvelozo/fable)', tmpResolver);
 						Expect(tmpResult).to.contain('#/doc/fable/fable');
 						Expect(tmpResult).to.not.contain('target="_blank"');
 						fDone();
@@ -919,11 +801,12 @@ suite
 				);
 				test
 				(
-					'parseInline should leave non-catalog GitHub URLs as external links.',
+					'_createLinkResolver should leave non-catalog GitHub URLs as external links.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('[react](https://github.com/facebook/react)');
+						var tmpResolver = tmpProvider._createLinkResolver();
+						var tmpResult = tmpProvider._ContentProvider.parseInline('[react](https://github.com/facebook/react)', tmpResolver);
 						Expect(tmpResult).to.contain('href="https://github.com/facebook/react"');
 						Expect(tmpResult).to.contain('target="_blank"');
 						fDone();
@@ -931,54 +814,13 @@ suite
 				);
 				test
 				(
-					'parseInline should handle inline LaTeX.',
+					'_createLinkResolver should resolve relative links within module context.',
 					(fDone) =>
 					{
 						var tmpProvider = createProvider();
-						var tmpResult = tmpProvider.parseInline('The equation $E=mc^2$ is famous.');
-						Expect(tmpResult).to.contain('docuserve-katex-inline');
-						fDone();
-					}
-				);
-				test
-				(
-					'parseInline should handle empty input.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.parseInline('')).to.equal('');
-						Expect(tmpProvider.parseInline(null)).to.equal('');
-						fDone();
-					}
-				);
-			}
-		);
-
-		suite
-		(
-			'HTML Escaping',
-			function()
-			{
-				test
-				(
-					'escapeHTML should escape special characters.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.escapeHTML('<script>alert("xss")</script>')).to.equal('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
-						Expect(tmpProvider.escapeHTML("it's")).to.equal("it&#39;s");
-						Expect(tmpProvider.escapeHTML('a & b')).to.equal('a &amp; b');
-						fDone();
-					}
-				);
-				test
-				(
-					'escapeHTML should handle empty input.',
-					(fDone) =>
-					{
-						var tmpProvider = createProvider();
-						Expect(tmpProvider.escapeHTML('')).to.equal('');
-						Expect(tmpProvider.escapeHTML(null)).to.equal('');
+						var tmpResolver = tmpProvider._createLinkResolver('fable', 'fable');
+						var tmpResult = tmpProvider._ContentProvider.parseInline('[API](api.md)', tmpResolver);
+						Expect(tmpResult).to.contain('#/doc/fable/fable/api.md');
 						fDone();
 					}
 				);
