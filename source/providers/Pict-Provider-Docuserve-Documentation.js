@@ -636,6 +636,39 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
+	 * Find the catalog group key that contains a given module name.
+	 *
+	 * Searches all groups in the catalog for a module with the given name.
+	 * This is used to resolve sidebar links where the path uses a conceptual
+	 * group name (e.g. "fable") that doesn't match the catalog group key
+	 * (e.g. "modules").
+	 *
+	 * @param {string} pModuleName - The module name to find (e.g. "fable")
+	 * @returns {string|null} The catalog group key (e.g. "modules") or null
+	 */
+	findModuleGroupKey(pModuleName)
+	{
+		if (!this._Catalog || !this._Catalog.Groups)
+		{
+			return null;
+		}
+
+		for (let i = 0; i < this._Catalog.Groups.length; i++)
+		{
+			let tmpGroup = this._Catalog.Groups[i];
+			for (let j = 0; j < tmpGroup.Modules.length; j++)
+			{
+				if (tmpGroup.Modules[j].Name === pModuleName)
+				{
+					return tmpGroup.Key;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Check whether a group key exists in the loaded catalog.
 	 *
 	 * Used to dynamically validate group keys instead of hardcoding them.
@@ -918,6 +951,20 @@ class DocuserveDocumentationProvider extends libPictProvider
 			if (this.isGroupInCatalog(tmpParts[0]) && this.isModuleInCatalog(tmpParts[0], tmpParts[1]))
 			{
 				return '#/doc/' + tmpPath;
+			}
+
+			// Fallback: the path may use a conceptual group name (e.g. "fable/fable")
+			// where the first part isn't a catalog group key. Try to find the module
+			// (second part) in any catalog group and rewrite the route.
+			let tmpActualGroup = this.findModuleGroupKey(tmpParts[1]);
+			if (tmpActualGroup)
+			{
+				let tmpRemainder = tmpParts.slice(2).join('/');
+				if (tmpRemainder)
+				{
+					return '#/doc/' + tmpActualGroup + '/' + tmpParts[1] + '/' + tmpRemainder;
+				}
+				return '#/doc/' + tmpActualGroup + '/' + tmpParts[1];
 			}
 		}
 
