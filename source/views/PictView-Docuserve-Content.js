@@ -1,5 +1,11 @@
 const libPictContentView = require('pict-section-content');
 
+// Inherit the base content CSS from pict-section-content so Object.assign
+// doesn't lose it when we supply our own CSS property.
+const _ParentCSS = libPictContentView.default_configuration && libPictContentView.default_configuration.CSS
+	? libPictContentView.default_configuration.CSS
+	: '';
+
 const _ViewConfiguration =
 {
 	ViewIdentifier: "Docuserve-Content",
@@ -9,7 +15,7 @@ const _ViewConfiguration =
 
 	AutoRender: false,
 
-	CSS: /*css*/`
+	CSS: _ParentCSS + /*css*/`
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
