@@ -1,11 +1,5 @@
 const libPictContentView = require('pict-section-content');
 
-// Inherit the base content CSS from pict-section-content so Object.assign
-// doesn't lose it when we supply our own CSS property.
-const _ParentCSS = libPictContentView.default_configuration && libPictContentView.default_configuration.CSS
-	? libPictContentView.default_configuration.CSS
-	: '';
-
 const _ViewConfiguration =
 {
 	ViewIdentifier: "Docuserve-Content",
@@ -15,7 +9,145 @@ const _ViewConfiguration =
 
 	AutoRender: false,
 
-	CSS: _ParentCSS + /*css*/`
+	// The parent pict-section-content CSS must be included here because
+	// pict-view's Object.assign replaces the CSS property entirely when
+	// the child provides its own.  We cannot read the parent's
+	// default_configuration.CSS at module scope because browserify's
+	// module initialisation order does not guarantee it is populated yet.
+	CSS: /*css*/`
+		.pict-content {
+			padding: 2em 3em;
+			max-width: 900px;
+			margin: 0 auto;
+		}
+		.pict-content-loading {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 200px;
+			color: #8A7F72;
+			font-size: 1em;
+		}
+		.pict-content h1 {
+			font-size: 2em;
+			color: #3D3229;
+			border-bottom: 1px solid #DDD6CA;
+			padding-bottom: 0.3em;
+			margin-top: 0;
+		}
+		.pict-content h2 {
+			font-size: 1.5em;
+			color: #3D3229;
+			border-bottom: 1px solid #EAE3D8;
+			padding-bottom: 0.25em;
+			margin-top: 1.5em;
+		}
+		.pict-content h3 {
+			font-size: 1.25em;
+			color: #3D3229;
+			margin-top: 1.25em;
+		}
+		.pict-content h4, .pict-content h5, .pict-content h6 {
+			color: #5E5549;
+			margin-top: 1em;
+		}
+		.pict-content p {
+			line-height: 1.7;
+			color: #423D37;
+			margin: 0.75em 0;
+		}
+		.pict-content a {
+			color: #2E7D74;
+			text-decoration: none;
+		}
+		.pict-content a:hover {
+			text-decoration: underline;
+		}
+		.pict-content pre {
+			background: #3D3229;
+			color: #E8E0D4;
+			padding: 1.25em;
+			border-radius: 6px;
+			overflow-x: auto;
+			line-height: 1.5;
+			font-size: 0.9em;
+		}
+		.pict-content code {
+			background: #F0ECE4;
+			padding: 0.15em 0.4em;
+			border-radius: 3px;
+			font-size: 0.9em;
+			color: #9E6B47;
+		}
+		.pict-content pre code {
+			background: none;
+			padding: 0;
+			color: inherit;
+			font-size: inherit;
+		}
+		.pict-content blockquote {
+			border-left: 4px solid #2E7D74;
+			margin: 1em 0;
+			padding: 0.5em 1em;
+			background: #F7F5F0;
+			color: #5E5549;
+		}
+		.pict-content blockquote p {
+			margin: 0.25em 0;
+		}
+		.pict-content ul, .pict-content ol {
+			padding-left: 2em;
+			line-height: 1.8;
+		}
+		.pict-content li {
+			margin: 0.25em 0;
+			color: #423D37;
+		}
+		.pict-content hr {
+			border: none;
+			border-top: 1px solid #DDD6CA;
+			margin: 2em 0;
+		}
+		.pict-content table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 1em 0;
+		}
+		.pict-content table th {
+			background: #F5F0E8;
+			border: 1px solid #DDD6CA;
+			padding: 0.6em 0.8em;
+			text-align: left;
+			font-weight: 600;
+			color: #3D3229;
+		}
+		.pict-content table td {
+			border: 1px solid #DDD6CA;
+			padding: 0.5em 0.8em;
+			color: #423D37;
+		}
+		.pict-content table tr:nth-child(even) {
+			background: #F7F5F0;
+		}
+		.pict-content img {
+			max-width: 100%;
+			height: auto;
+		}
+		.pict-content pre.mermaid {
+			background: #fff;
+			color: #3D3229;
+			text-align: center;
+			padding: 1em;
+		}
+		.pict-content .pict-content-katex-display {
+			text-align: center;
+			margin: 1em 0;
+			padding: 0.5em;
+			overflow-x: auto;
+		}
+		.pict-content .pict-content-katex-inline {
+			display: inline;
+		}
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
