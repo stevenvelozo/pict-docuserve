@@ -1209,11 +1209,13 @@ class DocuserveDocumentationProvider extends libPictProvider
 		// Remove leading slash
 		tmpPath = tmpPath.replace(/^\//, '');
 
-		// If it looks like an absolute module path (group/module/...), route directly
+		// If it looks like an absolute module path (group/module/...), route directly.
+		// Both the group AND the module must exist in the catalog, otherwise treat
+		// as a local page reference (e.g. docs subfolder like modules/modules.md).
 		let tmpParts = tmpPath.split('/');
 		if (tmpParts.length >= 2)
 		{
-			if (this.isGroupInCatalog(tmpParts[0]))
+			if (this.isGroupInCatalog(tmpParts[0]) && this.isModuleInCatalog(tmpParts[0], tmpParts[1]))
 			{
 				return '#/doc/' + tmpPath;
 			}
