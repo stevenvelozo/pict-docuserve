@@ -910,10 +910,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		let tmpParts = tmpPath.split('/');
 
-		// Check if it's a module path (group/module)
+		// Check if it's a module path (group/module) — both the group
+		// AND the module must exist in the catalog, otherwise treat it
+		// as a local page reference (e.g. docs subfolder).
 		if (tmpParts.length >= 2)
 		{
-			if (this.isGroupInCatalog(tmpParts[0]))
+			if (this.isGroupInCatalog(tmpParts[0]) && this.isModuleInCatalog(tmpParts[0], tmpParts[1]))
 			{
 				return '#/doc/' + tmpPath;
 			}
