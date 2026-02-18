@@ -933,6 +933,12 @@ class DocuserveDocumentationProvider extends libPictProvider
 			return '#/Home';
 		}
 
+		// Bare hash link (e.g. "#fable") — docsify convention for the home/readme page
+		if (pHref.match(/^#[^/]/))
+		{
+			return '#/Home';
+		}
+
 		// Strip leading/trailing slashes for parsing
 		let tmpPath = pHref.replace(/^\//, '').replace(/\/$/, '');
 
