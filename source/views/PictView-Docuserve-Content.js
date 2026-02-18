@@ -148,6 +148,19 @@ const _ViewConfiguration =
 		.pict-content .pict-content-katex-inline {
 			display: inline;
 		}
+		.docuserve-module-external-link {
+			padding: 0.5em 0;
+			margin-bottom: 0.5em;
+			border-bottom: 1px solid #EAE3D8;
+			font-size: 0.85em;
+		}
+		.docuserve-module-external-link a {
+			color: #2E7D74;
+			text-decoration: none;
+		}
+		.docuserve-module-external-link a:hover {
+			text-decoration: underline;
+		}
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
@@ -200,11 +213,36 @@ class DocuserveContentView extends libPictContentView
 	/**
 	 * Display parsed HTML content in the content area.
 	 *
+	 * When viewing a module's documentation, prepends a link to the
+	 * module's own GitHub Pages documentation site.
+	 *
 	 * @param {string} pHTMLContent - The HTML to display
 	 */
 	displayContent(pHTMLContent)
 	{
-		super.displayContent(pHTMLContent, 'Docuserve-Content-Body');
+		let tmpHTML = pHTMLContent;
+		let tmpGroup = this.pict.AppData.Docuserve.CurrentGroup;
+		let tmpModule = this.pict.AppData.Docuserve.CurrentModule;
+
+		if (tmpGroup && tmpModule)
+		{
+			let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
+			if (tmpDocProvider)
+			{
+				let tmpPagesURL = tmpDocProvider.resolveGitHubPagesURL(tmpGroup, tmpModule);
+				if (tmpPagesURL)
+				{
+					tmpHTML = '<div class="docuserve-module-external-link">'
+						+ '<a href="' + tmpPagesURL + '" target="_blank" rel="noopener">'
+						+ '&#x2197; View ' + tmpModule + ' documentation site'
+						+ '</a>'
+						+ '</div>'
+						+ tmpHTML;
+				}
+			}
+		}
+
+		super.displayContent(tmpHTML, 'Docuserve-Content-Body');
 	}
 
 	/**

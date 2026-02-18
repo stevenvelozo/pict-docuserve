@@ -1133,6 +1133,53 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
+	 * Resolve the GitHub Pages documentation URL for a module.
+	 *
+	 * Returns a URL like https://stevenvelozo.github.io/pict-view/ if the
+	 * module exists in the catalog.
+	 *
+	 * @param {string} pGroup - The group key
+	 * @param {string} pModule - The module name
+	 * @returns {string|null} The GitHub Pages URL or null
+	 */
+	resolveGitHubPagesURL(pGroup, pModule)
+	{
+		if (!this._Catalog || !this._Catalog.Groups)
+		{
+			return null;
+		}
+
+		let tmpOrg = this._Catalog.GitHubOrg || 'stevenvelozo';
+
+		for (let i = 0; i < this._Catalog.Groups.length; i++)
+		{
+			let tmpGroup = this._Catalog.Groups[i];
+			if (tmpGroup.Key !== pGroup)
+			{
+				continue;
+			}
+
+			for (let j = 0; j < tmpGroup.Modules.length; j++)
+			{
+				let tmpModule = tmpGroup.Modules[j];
+				if (tmpModule.Name !== pModule)
+				{
+					continue;
+				}
+
+				if (!tmpModule.HasDocs)
+				{
+					return null;
+				}
+
+				return 'https://' + tmpOrg + '.github.io/' + tmpModule.Repo + '/';
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the module-specific sidebar entries for a given group/module.
 	 *
 	 * @param {string} pGroup - The group key
