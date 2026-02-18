@@ -153,6 +153,7 @@ const _ViewConfiguration =
 			margin-bottom: 0.5em;
 			border-bottom: 1px solid #EAE3D8;
 			font-size: 0.85em;
+			text-align: right;
 		}
 		.docuserve-module-external-link a {
 			color: #2E7D74;

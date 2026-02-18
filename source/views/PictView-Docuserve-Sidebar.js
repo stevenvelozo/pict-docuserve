@@ -125,9 +125,15 @@ const _ViewConfiguration =
 			letter-spacing: 0.03em;
 			cursor: pointer;
 			user-select: none;
+			transition: background-color 0.1s, color 0.1s;
 		}
 		.docuserve-sidebar-group-title:hover {
 			color: #2E7D74;
+			background-color: #EAE3D8;
+		}
+		a.docuserve-sidebar-group-title.active {
+			color: #2E7D74;
+			background-color: #E0EDEB;
 		}
 		.docuserve-sidebar-modules {
 			list-style: none;
@@ -301,7 +307,12 @@ class DocusserveSidebarView extends libPictView
 
 			if (tmpGroupRoute)
 			{
-				tmpHTML += '<a class="docuserve-sidebar-group-title" href="' + tmpGroupRoute + '">' + this.escapeHTML(tmpGroup.Name) + '</a>';
+				let tmpGroupActiveClass = '';
+				if (this.pict.AppData.Docuserve.CurrentGroup === tmpGroup.Key)
+				{
+					tmpGroupActiveClass = ' active';
+				}
+				tmpHTML += '<a class="docuserve-sidebar-group-title' + tmpGroupActiveClass + '" href="' + tmpGroupRoute + '">' + this.escapeHTML(tmpGroup.Name) + '</a>';
 			}
 			else
 			{
