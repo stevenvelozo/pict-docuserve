@@ -28,6 +28,7 @@ const _ViewConfiguration =
 			flex-shrink: 0;
 			width: 280px;
 			overflow-y: auto;
+			background-color: #F5F0E8;
 		}
 		#Docuserve-Content-Container {
 			flex: 1;

@@ -11,11 +11,10 @@ const _ViewConfiguration =
 
 	CSS: /*css*/`
 		.docuserve-sidebar {
-			background-color: #F5F0E8;
 			border-right: 1px solid #DDD6CA;
 			padding: 1em 0;
 			padding-top: 0;
-			height: 100%;
+			min-height: 100%;
 			position: relative;
 		}
 		.docuserve-sidebar-header {
@@ -308,7 +307,9 @@ class DocusserveSidebarView extends libPictView
 			if (tmpGroupRoute)
 			{
 				let tmpGroupActiveClass = '';
-				if (this.pict.AppData.Docuserve.CurrentGroup === tmpGroup.Key)
+				let tmpCurrentHash = window.location.hash || '';
+				if (this.pict.AppData.Docuserve.CurrentGroup === tmpGroup.Key
+					|| tmpCurrentHash === tmpGroupRoute)
 				{
 					tmpGroupActiveClass = ' active';
 				}
