@@ -1,5 +1,5 @@
 {
-	"Generated": "2026-02-10T22:48:11.813Z",
+	"Generated": "2026-02-18T05:43:25.538Z",
 	"GitHubOrg": "stevenvelozo",
 	"DefaultBranch": "master",
 	"Groups": [
@@ -46,28 +46,83 @@
 			"Description": "",
 			"Modules": [
 				{
-					"Name": "css",
-					"Repo": "css",
+					"Name": "example_applications",
+					"Repo": "example_applications",
 					"Group": "docs",
 					"Branch": "master",
 					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
+					"HasCover": true,
+					"Sidebar": [
+						{
+							"Title": "Getting Started",
+							"Children": [
+								{
+									"Title": "Quick Start",
+									"Path": "quick-start.md"
+								},
+								{
+									"Title": "Configuration",
+									"Path": "configuration.md"
+								}
+							]
+						},
+						{
+							"Title": "Core Concepts",
+							"Children": [
+								{
+									"Title": "Tasks",
+									"Path": "tasks.md"
+								},
+								{
+									"Title": "Lists",
+									"Path": "lists.md"
+								},
+								{
+									"Title": "Tags & Filters",
+									"Path": "tags.md"
+								}
+							]
+						},
+						{
+							"Title": "API Reference",
+							"Path": "api.md"
+						}
+					],
 					"DocFiles": [
-						"css/docuserve.css"
-					]
-				},
-				{
-					"Name": "js",
-					"Repo": "js",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"js/pict.min.js",
-						"js/pict.min.js.map"
+						"example_applications/contacts-app/README.md",
+						"example_applications/contacts-app/_sidebar.md",
+						"example_applications/contacts-app/_topbar.md",
+						"example_applications/contacts-app/api.md",
+						"example_applications/contacts-app/configuration.md",
+						"example_applications/contacts-app/cover.md",
+						"example_applications/contacts-app/data-model.md",
+						"example_applications/contacts-app/errorpage.md",
+						"example_applications/contacts-app/quick-start.md",
+						"example_applications/contacts-app/relationships.md",
+						"example_applications/sports-stats-api/README.md",
+						"example_applications/sports-stats-api/_sidebar.md",
+						"example_applications/sports-stats-api/_topbar.md",
+						"example_applications/sports-stats-api/api.md",
+						"example_applications/sports-stats-api/authentication.md",
+						"example_applications/sports-stats-api/cover.md",
+						"example_applications/sports-stats-api/errorpage.md",
+						"example_applications/sports-stats-api/games.md",
+						"example_applications/sports-stats-api/leagues-teams.md",
+						"example_applications/sports-stats-api/players.md",
+						"example_applications/sports-stats-api/quick-start.md",
+						"example_applications/sports-stats-api/standings.md",
+						"example_applications/sports-stats-api/websocket.md",
+						"example_applications/todo-app/README.md",
+						"example_applications/todo-app/_sidebar.md",
+						"example_applications/todo-app/_topbar.md",
+						"example_applications/todo-app/api.md",
+						"example_applications/todo-app/configuration.md",
+						"example_applications/todo-app/cover.md",
+						"example_applications/todo-app/errorpage.md",
+						"example_applications/todo-app/lists.md",
+						"example_applications/todo-app/quick-start.md",
+						"example_applications/todo-app/tags.md",
+						"example_applications/todo-app/tasks.md"
 					]
 				}
 			]
@@ -261,33 +316,6 @@
 			]
 		},
 		{
-			"Name": "Site",
-			"Key": "site",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "css",
-					"Repo": "css",
-					"Group": "site",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				},
-				{
-					"Name": "js",
-					"Repo": "js",
-					"Group": "site",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
 			"Name": "Source",
 			"Key": "source",
 			"Description": "",
@@ -316,6 +344,23 @@
 					"Name": "views",
 					"Repo": "views",
 					"Group": "source",
+					"Branch": "master",
+					"HasDocs": false,
+					"HasCover": false,
+					"Sidebar": [],
+					"DocFiles": []
+				}
+			]
+		},
+		{
+			"Name": "Test",
+			"Key": "test",
+			"Description": "",
+			"Modules": [
+				{
+					"Name": "sites",
+					"Repo": "sites",
+					"Group": "test",
 					"Branch": "master",
 					"HasDocs": false,
 					"HasCover": false,

@@ -26,17 +26,17 @@
     "license": "MIT",
     "dependencies": {
         "lunr": "^2.3.9",
-        "pict": "^1.0.343",
-        "pict-application": "^1.0.30",
-        "pict-provider": "^1.0.7",
+        "pict": "^1.0.348",
+        "pict-application": "^1.0.32",
+        "pict-provider": "^1.0.10",
         "pict-section-content": "file:../pict-section-content",
-        "pict-service-commandlineutility": "^1.0.17",
-        "pict-view": "^1.0.64"
+        "pict-service-commandlineutility": "^1.0.18",
+        "pict-view": "^1.0.66"
     },
     "devDependencies": {
         "chai": "^6.2.2",
         "mocha": "^11.7.5",
-        "quackage": "^1.0.47"
+        "quackage": "^1.0.51"
     },
     "copyFilesSettings": {
         "whenFileExists": "overwrite"
