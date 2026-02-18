@@ -933,9 +933,34 @@ class DocuserveDocumentationProvider extends libPictProvider
 			return '#/Home';
 		}
 
-		// Bare hash link (e.g. "#fable") — docsify convention for the home/readme page
+		// Bare hash link (e.g. "#fable") — docsify convention for the home/readme page.
+		// Navigate to the first available sidebar entry rather than #/Home, because
+		// on the splash page #/Home is a no-op (already there).
 		if (pHref.match(/^#[^/]/))
 		{
+			let tmpSidebarGroups = this.pict.AppData.Docuserve.SidebarGroups;
+			if (tmpSidebarGroups)
+			{
+				for (let g = 0; g < tmpSidebarGroups.length; g++)
+				{
+					let tmpModules = tmpSidebarGroups[g].Modules;
+					if (tmpModules)
+					{
+						for (let m = 0; m < tmpModules.length; m++)
+						{
+							if (tmpModules[m].HasDocs && tmpModules[m].Route)
+							{
+								return tmpModules[m].Route;
+							}
+						}
+					}
+					// Group itself may have a route
+					if (tmpSidebarGroups[g].Route)
+					{
+						return tmpSidebarGroups[g].Route;
+					}
+				}
+			}
 			return '#/Home';
 		}
 
