@@ -65,11 +65,11 @@ class DocuserveApplication extends libPictApplication
 			let tmpDocuserve = this.pict.AppData.Docuserve;
 			if (tmpDocuserve.CoverLoaded && tmpDocuserve.Cover && tmpDocuserve.Cover.Title)
 			{
-				document.title = tmpDocuserve.Cover.Title;
+				document.title = tmpDocuserve.Cover.Title.replace(/<[^>]*>/g, '');
 			}
 			else if (tmpDocuserve.TopBarLoaded && tmpDocuserve.TopBar && tmpDocuserve.TopBar.Brand)
 			{
-				document.title = tmpDocuserve.TopBar.Brand;
+				document.title = tmpDocuserve.TopBar.Brand.replace(/<[^>]*>/g, '');
 			}
 
 			// Render the layout shell, which triggers child view rendering
