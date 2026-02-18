@@ -934,8 +934,8 @@ class DocuserveDocumentationProvider extends libPictProvider
 		}
 
 		// Bare hash link (e.g. "#fable") — docsify convention for the home/readme page.
-		// Navigate to the first available sidebar entry rather than #/Home, because
-		// on the splash page #/Home is a no-op (already there).
+		// Navigate to the first available content route in the sidebar, skipping
+		// #/Home since the cover page is already displaying that.
 		if (pHref.match(/^#[^/]/))
 		{
 			let tmpSidebarGroups = this.pict.AppData.Docuserve.SidebarGroups;
@@ -948,14 +948,13 @@ class DocuserveDocumentationProvider extends libPictProvider
 					{
 						for (let m = 0; m < tmpModules.length; m++)
 						{
-							if (tmpModules[m].HasDocs && tmpModules[m].Route)
+							if (tmpModules[m].HasDocs && tmpModules[m].Route && tmpModules[m].Route !== '#/Home')
 							{
 								return tmpModules[m].Route;
 							}
 						}
 					}
-					// Group itself may have a route
-					if (tmpSidebarGroups[g].Route)
+					if (tmpSidebarGroups[g].Route && tmpSidebarGroups[g].Route !== '#/Home')
 					{
 						return tmpSidebarGroups[g].Route;
 					}
