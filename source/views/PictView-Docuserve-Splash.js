@@ -26,6 +26,13 @@ const _ViewConfiguration =
 			color: #3D3229;
 			margin: 0 0 0.25em 0;
 		}
+		.docuserve-splash h1 small {
+			font-size: 0.4em;
+			font-weight: 400;
+			color: #7A7568;
+			vertical-align: middle;
+			margin-left: 0.15em;
+		}
 		.docuserve-splash-tagline {
 			font-size: 1.25em;
 			color: #7A7568;
@@ -161,7 +168,7 @@ class DocusserveSplashView extends libPictView
 	 */
 	renderFromCover(pCover)
 	{
-		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Title', this.escapeHTML(pCover.Title));
+		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Title', this.sanitizeTitle(pCover.Title));
 		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Tagline', this.escapeHTML(pCover.Tagline));
 		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Description', this.escapeHTML(pCover.Description));
 
@@ -259,6 +266,25 @@ class DocusserveSplashView extends libPictView
 
 		// Default action buttons
 		this.pict.ContentAssignment.assignContent('#Docuserve-Splash-Actions', '');
+	}
+
+	/**
+	 * Sanitize a title string, preserving only <small> tags.
+	 * All other HTML is escaped.
+	 *
+	 * @param {string} pText - The raw title text
+	 * @returns {string} The sanitized title HTML
+	 */
+	sanitizeTitle(pText)
+	{
+		if (!pText)
+		{
+			return '';
+		}
+		// Escape everything first, then restore <small> and </small>
+		return this.escapeHTML(pText)
+			.replace(/&lt;small&gt;/gi, '<small>')
+			.replace(/&lt;\/small&gt;/gi, '</small>');
 	}
 
 	/**

@@ -31,6 +31,12 @@ const _ViewConfiguration =
 			text-decoration: none;
 			cursor: pointer;
 		}
+		.docuserve-topbar-brand small {
+			font-size: 0.65em;
+			font-weight: 400;
+			color: #8A7F72;
+			margin-left: 0.2em;
+		}
 		.docuserve-topbar-brand:hover {
 			color: #fff;
 		}
@@ -151,7 +157,7 @@ class DocuserveTopBarView extends libPictView
 			let tmpTopBar = tmpDocuserve.TopBar;
 
 			// Brand
-			tmpBrandEl.textContent = tmpTopBar.Brand || 'Documentation';
+			tmpBrandEl.innerHTML = this.sanitizeTitle(tmpTopBar.Brand || 'Documentation');
 
 			// Navigation links (centre)
 			let tmpNavHTML = '<a href="#/Home">Home</a>';
@@ -188,10 +194,24 @@ class DocuserveTopBarView extends libPictView
 				tmpBrand = tmpDocuserve.Catalog.Name;
 			}
 
-			tmpBrandEl.textContent = tmpBrand;
+			tmpBrandEl.innerHTML = this.sanitizeTitle(tmpBrand);
 			tmpNavEl.innerHTML = '<a href="#/Home">Home</a>';
 			tmpLinksEl.innerHTML = tmpDocuserve.KeywordIndexLoaded ? '<a href="#/search/">Search</a>' : '';
 		}
+	}
+
+	/**
+	 * Sanitize a title string, preserving only <small> tags.
+	 */
+	sanitizeTitle(pText)
+	{
+		if (!pText)
+		{
+			return '';
+		}
+		return this.escapeHTML(pText)
+			.replace(/&lt;small&gt;/gi, '<small>')
+			.replace(/&lt;\/small&gt;/gi, '</small>');
 	}
 
 	/**
