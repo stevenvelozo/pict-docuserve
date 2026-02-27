@@ -718,7 +718,10 @@ suite
 						Expect(tmpResult).to.contain('<pre>');
 						Expect(tmpResult).to.contain('<code');
 						Expect(tmpResult).to.contain('language-javascript');
-						Expect(tmpResult).to.contain('var x = 1;');
+						// Syntax highlighting wraps tokens in spans
+						Expect(tmpResult).to.contain('var');
+						Expect(tmpResult).to.contain('x = ');
+						Expect(tmpResult).to.contain('1');
 						fDone();
 					}
 				);

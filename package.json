@@ -20,7 +20,8 @@
         "serve-examples": "node example_applications/build-examples.js",
         "test": "npx quack test",
         "tests": "npx quack test -g",
-        "coverage": "npx quack coverage"
+        "coverage": "npx quack coverage",
+        "prepublishOnly": "npx quack build && npx quack copy"
     },
     "author": "steven velozo <steven@velozo.com>",
     "license": "MIT",
