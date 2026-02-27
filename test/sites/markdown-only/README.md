@@ -1,6 +1,6 @@
 # Markdown Only Test
 
-This documentation site has no `_sidebar.md`, no `cover.md`, no `_topbar.md`, no catalog and no keyword index.
+This documentation site has no `_sidebar.md`, no `_cover.md`, no `_topbar.md`, no catalog and no keyword index.
 
 It is the simplest possible pict-docuserve site: just a folder of markdown files.
 

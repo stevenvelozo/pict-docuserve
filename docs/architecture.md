@@ -7,9 +7,9 @@ Docuserve follows the standard Pict application pattern: a main application clas
 1. **HTML loads** `pict.min.js` and `pict-docuserve.min.js`
 2. **Bootstrap** via `Pict.safeOnDocumentReady()` instantiates the application
 3. **Constructor** registers the router, documentation provider, and all views
-4. **`onAfterInitializeAsync`** initializes `AppData.Docuserve` state and triggers the provider to load the catalog, `cover.md`, and `_sidebar.md` in parallel
+4. **`onAfterInitializeAsync`** initializes `AppData.Docuserve` state and triggers the provider to load the catalog, `_cover.md`, and `_sidebar.md` in parallel
 5. **Layout renders** the shell (top bar + sidebar + content area)
-6. **Splash view** populates from `cover.md` data (or catalog fallback)
+6. **Splash view** populates from `_cover.md` data (or catalog fallback)
 7. **Sidebar view** populates from `_sidebar.md` data (or catalog fallback)
 8. **Router resolves** the current hash URL to show the correct content
 
@@ -20,7 +20,7 @@ Docuserve follows the standard Pict application pattern: a main application clas
 `Pict-Provider-Docuserve-Documentation.js` is the data layer. It handles:
 
 - **Catalog loading** -- Fetches `retold-catalog.json` and builds sidebar group data
-- **Cover loading** -- Fetches and parses `cover.md` into structured splash data
+- **Cover loading** -- Fetches and parses `_cover.md` into structured splash data
 - **Sidebar loading** -- Fetches and parses `_sidebar.md` into navigation groups
 - **Keyword index loading** -- Fetches `retold-keyword-index.json` and hydrates a lunr search index
 - **Document fetching** -- Retrieves markdown from local paths or raw GitHub URLs
@@ -54,7 +54,7 @@ Hash-based routing with these patterns:
 ## Data Flow
 
 ```
-                    cover.md ──> AppData.Cover ──> Splash View
+                    _cover.md ──> AppData.Cover ──> Splash View
                         │
 retold-catalog.json ──> AppData.Catalog
         │                   │
@@ -68,7 +68,7 @@ retold-keyword-index.json ──> lunr Index ──> Search View / Sidebar Searc
                                               (only if index is available)
 ```
 
-The catalog always loads first and provides default sidebar data. Then `cover.md`, `_sidebar.md`, `_topbar.md`, and `retold-keyword-index.json` load in parallel; if they succeed, they override the defaults. Search UI only appears when the keyword index is available.
+The catalog always loads first and provides default sidebar data. Then `_cover.md`, `_sidebar.md`, `_topbar.md`, and `retold-keyword-index.json` load in parallel; if they succeed, they override the defaults. Search UI only appears when the keyword index is available.
 
 ## File Structure
 

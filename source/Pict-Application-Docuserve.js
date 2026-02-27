@@ -61,7 +61,7 @@ class DocuserveApplication extends libPictApplication
 		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
 		tmpDocProvider.loadCatalog(() =>
 		{
-			// Set the page title from cover.md or _topbar.md
+			// Set the page title from _cover.md or _topbar.md
 			let tmpDocuserve = this.pict.AppData.Docuserve;
 			if (tmpDocuserve.CoverLoaded && tmpDocuserve.Cover && tmpDocuserve.Cover.Title)
 			{

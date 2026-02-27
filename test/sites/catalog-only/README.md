@@ -1,6 +1,6 @@
 # Catalog Only Test
 
-This site has a `retold-catalog.json` and `retold-keyword-index.json` but **no** `cover.md`, `_sidebar.md`, `_topbar.md` or `errorpage.md`.
+This site has a `retold-catalog.json` and `retold-keyword-index.json` but **no** `_cover.md`, `_sidebar.md`, `_topbar.md` or `errorpage.md`.
 
 This simulates a site generated purely by `indoctrinate` + `pict-docuserve inject` with no hand-written markdown configuration.
 

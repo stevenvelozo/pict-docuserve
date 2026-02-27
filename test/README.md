@@ -24,7 +24,7 @@ The simplest possible site: just a folder of `.md` files with no special configu
 | File | Present? |
 |------|----------|
 | `README.md` | Yes |
-| `cover.md` | No |
+| `_cover.md` | No |
 | `_sidebar.md` | No |
 | `_topbar.md` | No |
 | `errorpage.md` | No |
@@ -42,7 +42,7 @@ Markdown files plus a hand-written `_sidebar.md` for navigation.
 | File | Present? |
 |------|----------|
 | `README.md` | Yes |
-| `cover.md` | No |
+| `_cover.md` | No |
 | `_sidebar.md` | **Yes** |
 | `_topbar.md` | No |
 | `errorpage.md` | No |
@@ -55,19 +55,19 @@ Markdown files plus a hand-written `_sidebar.md` for navigation.
 
 ### `with-cover`
 
-Markdown files plus `cover.md` and `_topbar.md` for branding, but no explicit sidebar.
+Markdown files plus `_cover.md` and `_topbar.md` for branding, but no explicit sidebar.
 
 | File | Present? |
 |------|----------|
 | `README.md` | Yes |
-| `cover.md` | **Yes** |
+| `_cover.md` | **Yes** |
 | `_sidebar.md` | No |
 | `_topbar.md` | **Yes** |
 | `errorpage.md` | No |
 | `retold-catalog.json` | No |
 | `retold-keyword-index.json` | No |
 
-**Expected behavior:** Splash driven by cover.md with title, tagline, highlights and action buttons. Top bar branded from `_topbar.md` with nav links. Sidebar auto-discovered from README.md.
+**Expected behavior:** Splash driven by _cover.md with title, tagline, highlights and action buttons. Top bar branded from `_topbar.md` with nav links. Sidebar auto-discovered from README.md.
 
 ---
 
@@ -78,7 +78,7 @@ Every optional markdown file present plus a standalone keyword index. No catalog
 | File | Present? |
 |------|----------|
 | `README.md` | Yes |
-| `cover.md` | **Yes** |
+| `_cover.md` | **Yes** |
 | `_sidebar.md` | **Yes** |
 | `_topbar.md` | **Yes** |
 | `errorpage.md` | **Yes** |
@@ -96,7 +96,7 @@ A `retold-catalog.json` and `retold-keyword-index.json` with no markdown configu
 | File | Present? |
 |------|----------|
 | `README.md` | Yes |
-| `cover.md` | No |
+| `_cover.md` | No |
 | `_sidebar.md` | No |
 | `_topbar.md` | No |
 | `errorpage.md` | No |

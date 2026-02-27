@@ -29,7 +29,7 @@ The application initializes `AppData.Docuserve` with these properties:
 | `CatalogURL` | string | `"retold-catalog.json"` | URL to the module catalog JSON |
 | `DocsBaseURL` | string | `""` | Base URL prefix for local doc fetches |
 | `CatalogLoaded` | boolean | `false` | Whether the catalog loaded successfully |
-| `CoverLoaded` | boolean | `false` | Whether cover.md loaded successfully |
+| `CoverLoaded` | boolean | `false` | Whether _cover.md loaded successfully |
 | `SidebarLoaded` | boolean | `false` | Whether _sidebar.md loaded successfully |
 | `TopBarLoaded` | boolean | `false` | Whether _topbar.md loaded successfully |
 | `KeywordIndexLoaded` | boolean | `false` | Whether retold-keyword-index.json loaded |

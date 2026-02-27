@@ -8,7 +8,7 @@ This site tests that pict-docuserve works correctly when **all** optional config
 
 ## What to Verify
 
-1. The splash page shows content from `cover.md`
+1. The splash page shows content from `_cover.md`
 2. The top bar shows the brand and links from `_topbar.md`
 3. The sidebar shows groups and modules from `_sidebar.md`
 4. The search box appears in the sidebar (keyword index is loaded)

@@ -162,7 +162,7 @@ class DocusserveSplashView extends libPictView
 	}
 
 	/**
-	 * Render the splash screen from parsed cover.md data.
+	 * Render the splash screen from parsed _cover.md data.
 	 *
 	 * @param {Object} pCover - The parsed cover data { Title, Tagline, Description, Highlights, Actions }
 	 */
@@ -212,7 +212,7 @@ class DocusserveSplashView extends libPictView
 	}
 
 	/**
-	 * Render the splash screen from catalog data as a fallback when cover.md
+	 * Render the splash screen from catalog data as a fallback when _cover.md
 	 * is not available.
 	 *
 	 * @param {Object} pDocuserve - The AppData.Docuserve state

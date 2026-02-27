@@ -6,11 +6,11 @@ Docuserve renders standard Markdown files. If you've written docs for docsify, y
 
 Any `.md` file placed alongside the built site is accessible via the `#/page/` route. For example, `getting-started.md` is available at `#/page/getting-started`.
 
-The file `README.md` serves as the default home content when no `cover.md` is present.
+The file `README.md` serves as the default home content when no `_cover.md` is present.
 
-## cover.md
+## _cover.md
 
-The `cover.md` file drives the splash screen. Docuserve parses it into structured sections:
+The `_cover.md` file drives the splash screen. Docuserve parses it into structured sections:
 
 ```markdown
 # Your Project Name
@@ -43,7 +43,7 @@ External URLs (starting with `http`) open in a new tab. Internal links are conve
 
 ### Fallback behavior
 
-If `cover.md` is not present, the splash screen shows:
+If `_cover.md` is not present, the splash screen shows:
 - Title: "Retold" (or your project name)
 - Cards for each catalog group with their descriptions
 - No action buttons

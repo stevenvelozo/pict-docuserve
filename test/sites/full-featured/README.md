@@ -2,7 +2,7 @@
 
 This site has every optional file:
 
-- `cover.md` — custom splash page
+- `_cover.md` — custom splash page
 - `_sidebar.md` — custom sidebar navigation
 - `_topbar.md` — custom top navigation bar
 - `errorpage.md` — custom error page

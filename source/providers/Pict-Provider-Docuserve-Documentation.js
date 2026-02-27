@@ -57,10 +57,10 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
-	 * Load all documentation data sources: catalog, cover.md, _sidebar.md.
+	 * Load all documentation data sources: catalog, _cover.md, _sidebar.md.
 	 *
 	 * Loads the catalog first (it provides the fallback data), then attempts
-	 * to load cover.md and _sidebar.md in parallel.  If those markdown files
+	 * to load _cover.md and _sidebar.md in parallel.  If those markdown files
 	 * exist they drive the splash and sidebar views; otherwise the catalog
 	 * data is used as a fallback.
 	 *
@@ -74,7 +74,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		let tmpLoadOptionalFiles = () =>
 		{
-			// Load cover.md, _sidebar.md, _topbar.md, errorpage.md and keyword index in parallel.
+			// Load _cover.md, _sidebar.md, _topbar.md, errorpage.md and keyword index in parallel.
 			// When all are done, if we still have no sidebar data, try to auto-discover
 			// a README.md so the site works with plain markdown folders.
 			let tmpPending = 5;
@@ -205,9 +205,9 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
-	 * Fetch and parse cover.md into structured data for the splash view.
+	 * Fetch and parse _cover.md into structured data for the splash view.
 	 *
-	 * The expected cover.md format follows the docsify convention:
+	 * The expected _cover.md format follows the docsify convention:
 	 *   # Title
 	 *   > Tagline
 	 *   Description paragraph text.
@@ -224,7 +224,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 		let tmpCallback = (typeof(fCallback) === 'function') ? fCallback : () => {};
 		let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
 
-		fetch(tmpDocsBase + 'cover.md')
+		fetch(tmpDocsBase + '_cover.md')
 			.then((pResponse) =>
 			{
 				if (!pResponse.ok)
@@ -237,7 +237,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 			{
 				if (!pMarkdown)
 				{
-					this.log.info('Docuserve: No cover.md found; splash will use catalog data.');
+					this.log.info('Docuserve: No _cover.md found; splash will use catalog data.');
 					return tmpCallback();
 				}
 
@@ -247,15 +247,15 @@ class DocuserveDocumentationProvider extends libPictProvider
 			})
 			.catch((pError) =>
 			{
-				this.log.warn(`Docuserve: Error loading cover.md: ${pError}`);
+				this.log.warn(`Docuserve: Error loading _cover.md: ${pError}`);
 				return tmpCallback();
 			});
 	}
 
 	/**
-	 * Parse cover.md markdown text into a structured object.
+	 * Parse _cover.md markdown text into a structured object.
 	 *
-	 * @param {string} pMarkdown - Raw cover.md content
+	 * @param {string} pMarkdown - Raw _cover.md content
 	 * @returns {Object} Parsed cover data
 	 */
 	parseCover(pMarkdown)
