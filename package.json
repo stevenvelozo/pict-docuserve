@@ -18,8 +18,8 @@
         "build-docs": "npx quack build && npx quack copy && node source/cli/Docuserve-CLI-Run.js inject ./docs && node example_applications/build-examples.js stage-docs",
         "serve-docs": "node source/cli/Docuserve-CLI-Run.js serve ./docs",
         "serve-examples": "node example_applications/build-examples.js",
-        "test": "npx mocha -u tdd --exit -R spec",
-        "tests": "npx mocha -u tdd --exit -R spec --grep",
+        "test": "npx quack test",
+        "tests": "npx quack test -g",
         "coverage": "npx quack coverage"
     },
     "author": "steven velozo <steven@velozo.com>",
