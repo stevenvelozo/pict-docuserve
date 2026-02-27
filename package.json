@@ -27,10 +27,10 @@
     "license": "MIT",
     "dependencies": {
         "lunr": "^2.3.9",
-        "pict": "^1.0.355",
+        "pict": "^1.0.356",
         "pict-application": "^1.0.33",
         "pict-provider": "^1.0.12",
-        "pict-section-content": "^0.0.7",
+        "pict-section-content": "^0.0.8",
         "pict-service-commandlineutility": "^1.0.19",
         "pict-view": "^1.0.67"
     },
@@ -48,14 +48,6 @@
         {
             "from": "./css/**",
             "to": "./dist/css/"
-        },
-        {
-            "from": "./node_modules/pict/dist/pict.min.js",
-            "to": "./dist/js/"
-        },
-        {
-            "from": "./node_modules/pict/dist/pict.min.js.map",
-            "to": "./dist/js/"
         }
     ],
     "mocha": {
