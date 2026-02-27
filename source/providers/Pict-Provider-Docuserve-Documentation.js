@@ -57,6 +57,42 @@ class DocuserveDocumentationProvider extends libPictProvider
 	}
 
 	/**
+	 * Create an image resolver closure for the content provider.
+	 *
+	 * Resolves relative image URLs against the directory of the document
+	 * being rendered, so that images referenced with relative paths in
+	 * markdown (e.g. `![graph](diagram.svg)`) resolve correctly even
+	 * when the page uses hash-based routing.
+	 *
+	 * @param {string} pDocURL - The URL the markdown document was fetched from
+	 * @returns {Function} An image resolver callback: (pSrc, pAlt) => resolvedSrc
+	 */
+	_createImageResolver(pDocURL)
+	{
+		// Extract the directory portion of the document URL
+		let tmpBaseDir = '';
+		if (pDocURL)
+		{
+			let tmpLastSlash = pDocURL.lastIndexOf('/');
+			if (tmpLastSlash >= 0)
+			{
+				tmpBaseDir = pDocURL.substring(0, tmpLastSlash + 1);
+			}
+		}
+
+		return (pSrc, pAlt) =>
+		{
+			// Leave absolute URLs, data URIs, and root-relative paths unchanged
+			if (pSrc.match(/^https?:\/\//) || pSrc.match(/^data:/) || pSrc.match(/^\//))
+			{
+				return pSrc;
+			}
+			// Prepend the document's directory to make relative paths work
+			return tmpBaseDir + pSrc;
+		};
+	}
+
+	/**
 	 * Load all documentation data sources: catalog, _cover.md, _sidebar.md.
 	 *
 	 * Loads the catalog first (it provides the fallback data), then attempts
@@ -1286,7 +1322,7 @@ class DocuserveDocumentationProvider extends libPictProvider
 					return tmpCallback('Document not found', this.getErrorPageHTML(pURL));
 				}
 
-				let tmpHTML = this._ContentProvider.parseMarkdown(pMarkdown, this._createLinkResolver(pCurrentGroup, pCurrentModule, pCurrentDocPath));
+				let tmpHTML = this._ContentProvider.parseMarkdown(pMarkdown, this._createLinkResolver(pCurrentGroup, pCurrentModule, pCurrentDocPath), this._createImageResolver(pURL));
 				this._ContentCache[pURL] = tmpHTML;
 				return tmpCallback(null, tmpHTML);
 			})

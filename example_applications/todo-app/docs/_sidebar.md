@@ -10,3 +10,8 @@
   - [Tags & Filters](tags.md)
 
 - [API Reference](api.md)
+
+- Media
+
+  - [Image Examples](images.md)
+  - [Advanced Guide](guides/advanced.md)
