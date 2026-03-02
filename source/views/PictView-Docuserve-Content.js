@@ -63,6 +63,28 @@ const _ViewConfiguration =
 		.pict-content a:hover {
 			text-decoration: underline;
 		}
+		.pict-content pre {
+			background: #3D3229;
+			color: #E8E0D4;
+			padding: 1.25em;
+			border-radius: 6px;
+			overflow-x: auto;
+			line-height: 1.5;
+			font-size: 0.9em;
+		}
+		.pict-content code {
+			background: #F0ECE4;
+			padding: 0.15em 0.4em;
+			border-radius: 3px;
+			font-size: 0.9em;
+			color: #9E6B47;
+		}
+		.pict-content pre code {
+			background: none;
+			padding: 0;
+			color: inherit;
+			font-size: inherit;
+		}
 		.pict-content-code-wrap {
 			position: relative;
 			font-family: 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
@@ -121,28 +143,6 @@ const _ViewConfiguration =
 		.pict-content-code-wrap .tag { color: #E06C75; }
 		.pict-content-code-wrap .attr-name { color: #D19A66; }
 		.pict-content-code-wrap .attr-value { color: #98C379; }
-		.pict-content pre {
-			background: #3D3229;
-			color: #E8E0D4;
-			padding: 1.25em;
-			border-radius: 6px;
-			overflow-x: auto;
-			line-height: 1.5;
-			font-size: 0.9em;
-		}
-		.pict-content code {
-			background: #F0ECE4;
-			padding: 0.15em 0.4em;
-			border-radius: 3px;
-			font-size: 0.9em;
-			color: #9E6B47;
-		}
-		.pict-content pre code {
-			background: none;
-			padding: 0;
-			color: inherit;
-			font-size: inherit;
-		}
 		.pict-content blockquote {
 			border-left: 4px solid #2E7D74;
 			margin: 1em 0;
