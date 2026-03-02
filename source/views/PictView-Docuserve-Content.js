@@ -63,6 +63,64 @@ const _ViewConfiguration =
 		.pict-content a:hover {
 			text-decoration: underline;
 		}
+		.pict-content-code-wrap {
+			position: relative;
+			font-family: 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+			font-size: 14px;
+			line-height: 1.5;
+			border-radius: 6px;
+			overflow: auto;
+			margin: 1em 0;
+			background: #3D3229;
+		}
+		.pict-content-code-wrap .pict-content-code-line-numbers {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 40px;
+			padding: 1.25em 0;
+			text-align: right;
+			background: #342A22;
+			border-right: 1px solid #4A3F35;
+			color: #8A7F72;
+			font-size: 13px;
+			line-height: 1.5;
+			user-select: none;
+			pointer-events: none;
+			box-sizing: border-box;
+		}
+		.pict-content-code-wrap .pict-content-code-line-numbers span {
+			display: block;
+			padding: 0 8px 0 0;
+		}
+		.pict-content-code-wrap pre {
+			margin: 0;
+			background: #3D3229;
+			color: #E8E0D4;
+			padding: 1.25em 1.25em 1.25em 52px;
+			border-radius: 6px;
+			overflow-x: auto;
+			line-height: 1.5;
+			font-size: inherit;
+		}
+		.pict-content-code-wrap pre code {
+			background: none;
+			padding: 0;
+			color: inherit;
+			font-size: inherit;
+			font-family: inherit;
+		}
+		.pict-content-code-wrap .keyword { color: #C678DD; }
+		.pict-content-code-wrap .string { color: #98C379; }
+		.pict-content-code-wrap .number { color: #D19A66; }
+		.pict-content-code-wrap .comment { color: #7F848E; font-style: italic; }
+		.pict-content-code-wrap .operator { color: #56B6C2; }
+		.pict-content-code-wrap .punctuation { color: #E8E0D4; }
+		.pict-content-code-wrap .function-name { color: #61AFEF; }
+		.pict-content-code-wrap .property { color: #E06C75; }
+		.pict-content-code-wrap .tag { color: #E06C75; }
+		.pict-content-code-wrap .attr-name { color: #D19A66; }
+		.pict-content-code-wrap .attr-value { color: #98C379; }
 		.pict-content pre {
 			background: #3D3229;
 			color: #E8E0D4;
