@@ -216,10 +216,30 @@ const _ViewConfiguration =
 		}
 		.pict-content pre.mermaid {
 			background: var(--docuserve-mermaid-bg);
-			color: var(--docuserve-text-strong);
+			color: #2A241E;
 			text-align: center;
 			padding: 1em;
 			border: 1px solid var(--docuserve-border-soft);
+		}
+		/* Force dark text inside mermaid SVGs so diagrams stay readable
+		   in dark mode (mermaid bg is always light). */
+		.pict-content pre.mermaid text,
+		.pict-content pre.mermaid .nodeLabel,
+		.pict-content pre.mermaid .edgeLabel,
+		.pict-content pre.mermaid .label,
+		.pict-content pre.mermaid .cluster-label,
+		.pict-content pre.mermaid span,
+		.pict-content pre.mermaid foreignObject p,
+		.pict-content pre.mermaid foreignObject div,
+		.pict-content pre.mermaid foreignObject span {
+			color: #2A241E !important;
+			fill: #2A241E !important;
+		}
+		.pict-content pre.mermaid .edgePath .path {
+			stroke: #5E5549 !important;
+		}
+		.pict-content pre.mermaid .arrowheadPath {
+			fill: #5E5549 !important;
 		}
 		.pict-content .pict-content-katex-display {
 			text-align: center;
@@ -473,8 +493,20 @@ const _ViewConfiguration =
 			height: auto;
 			max-height: calc(100vh - 96px);
 			background: var(--docuserve-mermaid-bg);
+			color: #2A241E;
 			padding: 16px;
 			border-radius: 6px;
+		}
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg text,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg .nodeLabel,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg .edgeLabel,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg .label,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg span,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject p,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject div,
+		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject span {
+			color: #2A241E !important;
+			fill: #2A241E !important;
 		}
 		.pict-fullscreen-content .pict-fullscreen-codewrap {
 			max-width: 90vw;
