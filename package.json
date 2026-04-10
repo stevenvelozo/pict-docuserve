@@ -4,7 +4,7 @@
     "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
     "main": "source/Pict-Application-Docuserve.js",
     "bin": {
-        "pict-docuserve": "source/cli/Docuserve-CLI-Run.js"
+        "pict-docuserve": "^0.1.1"
     },
     "files": [
         "source/",
@@ -35,7 +35,7 @@
         "pict-view": "^1.0.68"
     },
     "devDependencies": {
-        "quackage": "^1.0.68"
+        "quackage": "^1.1.0"
     },
     "copyFilesSettings": {
         "whenFileExists": "overwrite"
