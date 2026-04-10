@@ -27,15 +27,15 @@
     "license": "MIT",
     "dependencies": {
         "lunr": "^2.3.9",
-        "pict": "^1.0.356",
+        "pict": "^1.0.363",
         "pict-application": "^1.0.33",
         "pict-provider": "^1.0.12",
-        "pict-section-content": "^0.0.8",
+        "pict-section-content": "^0.0.12",
         "pict-service-commandlineutility": "^1.0.19",
-        "pict-view": "^1.0.67"
+        "pict-view": "^1.0.68"
     },
     "devDependencies": {
-        "quackage": "^1.0.59"
+        "quackage": "^1.0.68"
     },
     "copyFilesSettings": {
         "whenFileExists": "overwrite"

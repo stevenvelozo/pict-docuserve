@@ -31,6 +31,24 @@ class DocuserveApplication extends libPictApplication
 
 	onAfterInitializeAsync(fCallback)
 	{
+		// Apply saved theme preference BEFORE first layout render to avoid
+		// a flash of the wrong color scheme.  The TopBar view wires up the
+		// toggle UI and rebroadcasts this same choice after it renders.
+		try
+		{
+			let tmpPath = (window.location.pathname || '/').replace(/\/[^/]*$/, '/');
+			let tmpKey = 'docuserve-theme:' + window.location.origin + tmpPath;
+			let tmpSaved = localStorage.getItem(tmpKey);
+			if (tmpSaved === 'light' || tmpSaved === 'dark')
+			{
+				document.documentElement.setAttribute('data-theme', tmpSaved);
+			}
+		}
+		catch (e)
+		{
+			// localStorage unavailable; fall through to system preference.
+		}
+
 		// Initialize application state
 		this.pict.AppData.Docuserve =
 		{
@@ -42,6 +60,8 @@ class DocuserveApplication extends libPictApplication
 			SidebarGroups: [],
 			TopBarLoaded: false,
 			TopBar: null,
+			VersionLoaded: false,
+			Version: null,
 			ErrorPageLoaded: false,
 			ErrorPageHTML: null,
 			KeywordIndexLoaded: false,
@@ -61,15 +81,30 @@ class DocuserveApplication extends libPictApplication
 		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
 		tmpDocProvider.loadCatalog(() =>
 		{
-			// Set the page title from _cover.md or _topbar.md
+			// Set the page title to match the stamped <title> pattern
+			// "<DisplayName> v<Version> Documentation" so the browser
+			// tab and the static HTML metadata stay in sync.  Falls back
+			// to the cover/topbar brand alone when no version is loaded.
 			let tmpDocuserve = this.pict.AppData.Docuserve;
+			let tmpDisplayName = '';
 			if (tmpDocuserve.CoverLoaded && tmpDocuserve.Cover && tmpDocuserve.Cover.Title)
 			{
-				document.title = tmpDocuserve.Cover.Title.replace(/<[^>]*>/g, '');
+				tmpDisplayName = tmpDocuserve.Cover.Title.replace(/<[^>]*>/g, '').trim();
 			}
 			else if (tmpDocuserve.TopBarLoaded && tmpDocuserve.TopBar && tmpDocuserve.TopBar.Brand)
 			{
-				document.title = tmpDocuserve.TopBar.Brand.replace(/<[^>]*>/g, '');
+				tmpDisplayName = tmpDocuserve.TopBar.Brand.replace(/<[^>]*>/g, '').trim();
+			}
+			if (tmpDisplayName)
+			{
+				if (tmpDocuserve.VersionLoaded && tmpDocuserve.Version && tmpDocuserve.Version.Version)
+				{
+					document.title = `${tmpDisplayName} v${tmpDocuserve.Version.Version} Documentation`;
+				}
+				else
+				{
+					document.title = tmpDisplayName;
+				}
 			}
 
 			// Render the layout shell, which triggers child view rendering

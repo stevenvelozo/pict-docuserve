@@ -11,11 +11,15 @@ const _ViewConfiguration =
 
 	CSS: /*css*/`
 		.docuserve-sidebar {
-			border-right: 1px solid #DDD6CA;
+			display: flex;
+			flex-direction: column;
+			background: var(--docuserve-sidebar-bg);
+			border-right: 1px solid var(--docuserve-sidebar-border);
 			padding: 1em 0;
 			padding-top: 0;
 			min-height: 100%;
 			position: relative;
+			transition: background-color 0.15s ease;
 		}
 		.docuserve-sidebar-header {
 			display: flex;
@@ -25,31 +29,33 @@ const _ViewConfiguration =
 		.docuserve-sidebar-close {
 			background: none;
 			border: none;
-			color: #8A7F72;
+			color: var(--docuserve-text-dim);
 			font-size: 1.2em;
 			cursor: pointer;
 			padding: 0.2em 0.4em;
 			line-height: 1;
 		}
 		.docuserve-sidebar-close:hover {
-			color: #2E7D74;
+			color: var(--docuserve-accent);
 		}
 		.docuserve-sidebar-search {
 			padding: 0 1em 1em 1em;
-			border-bottom: 1px solid #EAE3D8;
+			border-bottom: 1px solid var(--docuserve-sidebar-border-soft);
 			margin-bottom: 0.5em;
 		}
 		.docuserve-sidebar-search input {
 			width: 100%;
 			padding: 0.5em 0.75em;
-			border: 1px solid #D4CCBE;
+			background: var(--docuserve-sidebar-search-bg);
+			color: var(--docuserve-text);
+			border: 1px solid var(--docuserve-sidebar-search-border);
 			border-radius: 4px;
 			font-size: 0.85em;
 			outline: none;
 			box-sizing: border-box;
 		}
 		.docuserve-sidebar-search input:focus {
-			border-color: #2E7D74;
+			border-color: var(--docuserve-accent);
 		}
 		.docuserve-sidebar-search-results {
 			margin-top: 0.5em;
@@ -57,7 +63,7 @@ const _ViewConfiguration =
 		.docuserve-sidebar-search-results a {
 			display: block;
 			padding: 0.4em 0.5em;
-			color: #423D37;
+			color: var(--docuserve-sidebar-text);
 			text-decoration: none;
 			font-size: 0.82em;
 			border-radius: 3px;
@@ -65,29 +71,29 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-sidebar-search-results a:hover {
-			background-color: #EAE3D8;
-			color: #2E7D74;
+			background-color: var(--docuserve-sidebar-hover-bg);
+			color: var(--docuserve-sidebar-hover-text);
 		}
 		.docuserve-sidebar-search-result-title {
 			font-weight: 600;
-			color: #3D3229;
+			color: var(--docuserve-text-strong);
 		}
 		.docuserve-sidebar-search-results a:hover .docuserve-sidebar-search-result-title {
-			color: #2E7D74;
+			color: var(--docuserve-sidebar-hover-text);
 		}
 		.docuserve-sidebar-search-result-meta {
 			font-size: 0.9em;
-			color: #8A7F72;
+			color: var(--docuserve-text-dim);
 		}
 		.docuserve-sidebar-search-all {
 			display: block;
 			padding: 0.4em 0.5em;
 			font-size: 0.82em;
-			color: #2E7D74;
+			color: var(--docuserve-accent);
 			text-decoration: none;
 			font-weight: 600;
 			cursor: pointer;
-			border-top: 1px solid #EAE3D8;
+			border-top: 1px solid var(--docuserve-sidebar-border-soft);
 			margin-top: 0.25em;
 			padding-top: 0.5em;
 		}
@@ -102,13 +108,13 @@ const _ViewConfiguration =
 			letter-spacing: 0.03em;
 		}
 		.docuserve-sidebar-home a {
-			color: #5E5549;
+			color: var(--docuserve-sidebar-module-text);
 			text-decoration: none;
 			cursor: pointer;
 			user-select: none;
 		}
 		.docuserve-sidebar-home a:hover {
-			color: #2E7D74;
+			color: var(--docuserve-sidebar-hover-text);
 		}
 		.docuserve-sidebar-group {
 			margin-top: 0.25em;
@@ -118,7 +124,7 @@ const _ViewConfiguration =
 			padding: 0.5em 1.25em;
 			font-weight: 600;
 			font-size: 0.85em;
-			color: #5E5549;
+			color: var(--docuserve-sidebar-group-title);
 			text-decoration: none;
 			text-transform: uppercase;
 			letter-spacing: 0.03em;
@@ -127,12 +133,12 @@ const _ViewConfiguration =
 			transition: background-color 0.1s, color 0.1s;
 		}
 		.docuserve-sidebar-group-title:hover {
-			color: #2E7D74;
-			background-color: #EAE3D8;
+			color: var(--docuserve-sidebar-hover-text);
+			background-color: var(--docuserve-sidebar-hover-bg);
 		}
 		a.docuserve-sidebar-group-title.active {
-			color: #2E7D74;
-			background-color: #E0EDEB;
+			color: var(--docuserve-sidebar-active-text);
+			background-color: var(--docuserve-sidebar-active-bg);
 		}
 		.docuserve-sidebar-modules {
 			list-style: none;
@@ -145,29 +151,29 @@ const _ViewConfiguration =
 		.docuserve-sidebar-modules a {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: #5E5549;
+			color: var(--docuserve-sidebar-module-text);
 			text-decoration: none;
 			font-size: 0.85em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-modules a:hover {
-			background-color: #EAE3D8;
-			color: #2E7D74;
+			background-color: var(--docuserve-sidebar-hover-bg);
+			color: var(--docuserve-sidebar-hover-text);
 		}
 		.docuserve-sidebar-modules a.active {
-			color: #2E7D74;
+			color: var(--docuserve-sidebar-active-text);
 			font-weight: 600;
-			background-color: #E0EDEB;
+			background-color: var(--docuserve-sidebar-active-bg);
 		}
 		.docuserve-sidebar-modules .no-docs {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: #A39889;
+			color: var(--docuserve-text-dim);
 			font-size: 0.85em;
 		}
 		.docuserve-sidebar-module-nav {
-			border-top: 1px solid #EAE3D8;
+			border-top: 1px solid var(--docuserve-sidebar-border-soft);
 			margin-top: 0.5em;
 			padding-top: 0.5em;
 		}
@@ -175,22 +181,50 @@ const _ViewConfiguration =
 			padding: 0.4em 1.25em;
 			font-weight: 600;
 			font-size: 0.8em;
-			color: #8A7F72;
+			color: var(--docuserve-text-dim);
 			text-transform: uppercase;
 			letter-spacing: 0.02em;
 		}
 		.docuserve-sidebar-module-nav a {
 			display: block;
 			padding: 0.25em 1.25em 0.25em 2.25em;
-			color: #5E5549;
+			color: var(--docuserve-sidebar-module-text);
 			text-decoration: none;
 			font-size: 0.82em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-module-nav a:hover {
-			background-color: #EAE3D8;
-			color: #2E7D74;
+			background-color: var(--docuserve-sidebar-hover-bg);
+			color: var(--docuserve-sidebar-hover-text);
+		}
+		.docuserve-sidebar-footer {
+			margin-top: auto;
+			padding: 0.9em 1.25em 1em 1.25em;
+			border-top: 1px solid var(--docuserve-sidebar-border-soft);
+		}
+		.docuserve-sidebar-footer:empty {
+			display: none;
+		}
+		.docuserve-version-placard {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			line-height: 1.35;
+		}
+		.docuserve-version-name {
+			font-size: 0.78em;
+			font-weight: 600;
+			color: var(--docuserve-text-muted);
+			letter-spacing: 0.02em;
+		}
+		.docuserve-version-number {
+			font-size: 0.82em;
+			font-weight: 500;
+			color: var(--docuserve-accent);
+		}
+		.docuserve-version-meta {
+			font-size: 0.7em;
+			color: var(--docuserve-text-dim);
+			margin-top: 0.15em;
 		}
 	`,
 
@@ -212,6 +246,7 @@ const _ViewConfiguration =
 	</div>
 	<div id="Docuserve-Sidebar-Groups"></div>
 	<div id="Docuserve-Sidebar-ModuleNav"></div>
+	<div id="Docuserve-Sidebar-Footer" class="docuserve-sidebar-footer"></div>
 </div>
 `
 		}
@@ -240,6 +275,7 @@ class DocusserveSidebarView extends libPictView
 	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
 	{
 		this.renderSidebarGroups();
+		this.renderSidebarFooter();
 
 		// Conditionally show the search box if the keyword index is loaded
 		let tmpSearchContainer = document.getElementById('Docuserve-Sidebar-Search');
@@ -266,6 +302,52 @@ class DocusserveSidebarView extends libPictView
 		}
 
 		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+	}
+
+	/**
+	 * Render the sidebar footer placard showing module name, version,
+	 * build timestamp and git commit from _version.json.  Hides the
+	 * footer entirely when no version data is loaded.
+	 */
+	renderSidebarFooter()
+	{
+		let tmpFooterEl = document.getElementById('Docuserve-Sidebar-Footer');
+		if (!tmpFooterEl)
+		{
+			return;
+		}
+		let tmpDocuserve = this.pict.AppData.Docuserve;
+		if (!tmpDocuserve.VersionLoaded || !tmpDocuserve.Version || !tmpDocuserve.Version.Version)
+		{
+			tmpFooterEl.innerHTML = '';
+			return;
+		}
+		let tmpVersion = tmpDocuserve.Version;
+		let tmpHTML = '<div class="docuserve-version-placard">';
+		if (tmpVersion.Name)
+		{
+			tmpHTML += '<div class="docuserve-version-name">' + this.escapeHTML(tmpVersion.Name) + '</div>';
+		}
+		tmpHTML += '<div class="docuserve-version-number">v' + this.escapeHTML(tmpVersion.Version) + '</div>';
+		let tmpMetaParts = [];
+		if (tmpVersion.GeneratedAt)
+		{
+			let tmpDate = String(tmpVersion.GeneratedAt).match(/^(\d{4}-\d{2}-\d{2})/);
+			if (tmpDate)
+			{
+				tmpMetaParts.push('built ' + tmpDate[1]);
+			}
+		}
+		if (tmpVersion.GitCommit)
+		{
+			tmpMetaParts.push(tmpVersion.GitCommit);
+		}
+		if (tmpMetaParts.length > 0)
+		{
+			tmpHTML += '<div class="docuserve-version-meta">' + this.escapeHTML(tmpMetaParts.join(' · ')) + '</div>';
+		}
+		tmpHTML += '</div>';
+		tmpFooterEl.innerHTML = tmpHTML;
 	}
 
 	/**

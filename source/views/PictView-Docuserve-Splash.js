@@ -18,30 +18,30 @@ const _ViewConfiguration =
 			min-height: calc(100vh - 56px);
 			padding: 3em 2em;
 			text-align: center;
-			background: linear-gradient(135deg, #F5F0E8 0%, #E4EFED 100%);
+			background: var(--docuserve-bg);
 		}
 		.docuserve-splash h1 {
 			font-size: 3em;
 			font-weight: 700;
-			color: #3D3229;
+			color: var(--docuserve-text-strong);
 			margin: 0 0 0.25em 0;
 		}
 		.docuserve-splash h1 small {
 			font-size: 0.4em;
 			font-weight: 400;
-			color: #7A7568;
+			color: var(--docuserve-text-dim);
 			vertical-align: middle;
 			margin-left: 0.15em;
 		}
 		.docuserve-splash-tagline {
 			font-size: 1.25em;
-			color: #7A7568;
+			color: var(--docuserve-text-muted);
 			margin-bottom: 1.5em;
 			font-style: italic;
 		}
 		.docuserve-splash-description {
 			font-size: 1em;
-			color: #5E5549;
+			color: var(--docuserve-text-muted);
 			max-width: 600px;
 			line-height: 1.7;
 			margin-bottom: 2em;
@@ -55,25 +55,25 @@ const _ViewConfiguration =
 			margin-bottom: 2.5em;
 		}
 		.docuserve-splash-highlight-card {
-			background: #fff;
-			border: 1px solid #DDD6CA;
+			background: var(--docuserve-bg-elevated);
+			border: 1px solid var(--docuserve-border);
 			border-radius: 8px;
 			padding: 1.25em;
 			text-align: left;
 			transition: box-shadow 0.2s, border-color 0.2s;
 		}
 		.docuserve-splash-highlight-card:hover {
-			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-			border-color: #2E7D74;
+			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+			border-color: var(--docuserve-accent);
 		}
 		.docuserve-splash-highlight-card h3 {
 			margin: 0 0 0.5em 0;
-			color: #3D3229;
+			color: var(--docuserve-text-strong);
 			font-size: 1em;
 		}
 		.docuserve-splash-highlight-card p {
 			margin: 0;
-			color: #7A7568;
+			color: var(--docuserve-text-muted);
 			font-size: 0.85em;
 			line-height: 1.5;
 		}
@@ -94,20 +94,20 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-splash-actions .primary {
-			background-color: #2E7D74;
+			background-color: var(--docuserve-accent);
 			color: #fff;
 		}
 		.docuserve-splash-actions .primary:hover {
-			background-color: #256861;
+			background-color: var(--docuserve-accent-hover);
 		}
 		.docuserve-splash-actions .secondary {
-			background-color: #fff;
-			color: #3D3229;
-			border: 2px solid #2E7D74;
+			background-color: var(--docuserve-bg-elevated);
+			color: var(--docuserve-text-strong);
+			border: 2px solid var(--docuserve-accent);
 		}
 		.docuserve-splash-actions .secondary:hover {
-			border-color: #256861;
-			color: #2E7D74;
+			border-color: var(--docuserve-accent-hover);
+			color: var(--docuserve-accent);
 		}
 	`,
 
