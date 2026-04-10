@@ -1,6 +1,6 @@
 {
     "name": "pict-docuserve",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
     "main": "source/Pict-Application-Docuserve.js",
     "bin": {
@@ -30,7 +30,7 @@
         "pict": "^1.0.363",
         "pict-application": "^1.0.33",
         "pict-provider": "^1.0.12",
-        "pict-section-content": "^0.1.1",
+        "pict-section-content": "^0.1.3",
         "pict-service-commandlineutility": "^1.0.19",
         "pict-view": "^1.0.68"
     },
