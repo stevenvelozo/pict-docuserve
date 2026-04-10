@@ -19,9 +19,9 @@ The `_cover.md` file drives the splash screen. Docuserve parses it into structur
 
 A longer description paragraph that explains what the project does.
 
-- **Feature One** — Description of the first feature
-- **Feature Two** — Description of the second feature
-- **Feature Three** — Description of the third feature
+- **Feature One** -- Description of the first feature
+- **Feature Two** -- Description of the second feature
+- **Feature Three** -- Description of the third feature
 
 [Get Started](getting-started.md)
 [API Reference](api.md)
@@ -35,7 +35,7 @@ A longer description paragraph that explains what the project does.
 | `# Heading` | Large title |
 | `> Blockquote` | Tagline (italic, below title) |
 | Plain text | Description paragraph |
-| `- **Bold** — text` | Highlight cards (bold = card title) |
+| `- **Bold** -- text` | Highlight cards (bold = card title) |
 | `- Plain bullet` | Highlight card (no title, just text) |
 | `[Text](url)` (bare line) | Action buttons (first = primary, rest = secondary) |
 
