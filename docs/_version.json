@@ -1,7 +1,7 @@
 {
 	"Name": "pict-docuserve",
-	"Version": "0.1.1",
+	"Version": "0.1.5",
 	"Description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
-	"GeneratedAt": "2026-04-10T03:20:31.801Z",
-	"GitCommit": "5c41465"
+	"GeneratedAt": "2026-04-10T17:24:12.695Z",
+	"GitCommit": "0f11f95"
 }

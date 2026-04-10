@@ -35,6 +35,7 @@
         "pict-view": "^1.0.68"
     },
     "devDependencies": {
+        "pict-docuserve": "^0.1.5",
         "quackage": "^1.1.0"
     },
     "copyFilesSettings": {
