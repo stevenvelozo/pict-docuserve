@@ -30,7 +30,7 @@
         "pict": "^1.0.363",
         "pict-application": "^1.0.33",
         "pict-provider": "^1.0.12",
-        "pict-section-content": "^0.1.3",
+        "pict-section-content": "^0.1.4",
         "pict-service-commandlineutility": "^1.0.19",
         "pict-view": "^1.0.68"
     },
