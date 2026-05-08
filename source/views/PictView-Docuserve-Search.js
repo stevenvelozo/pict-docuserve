@@ -20,7 +20,7 @@ const _ViewConfiguration =
 		}
 		.docuserve-search-header h1 {
 			font-size: 1.75em;
-			color: #3D3229;
+			color: var(--theme-color-text-primary, #3D3229);
 			margin: 0 0 0.75em 0;
 		}
 		.docuserve-search-input {

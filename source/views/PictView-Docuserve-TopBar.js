@@ -39,7 +39,7 @@ const _ViewConfiguration =
 			margin-left: 0.2em;
 		}
 		.docuserve-topbar-brand:hover {
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 		}
 		.docuserve-topbar-brandgroup {
 			display: flex;
@@ -77,7 +77,7 @@ const _ViewConfiguration =
 		}
 		.docuserve-topbar-nav a:hover {
 			background-color: var(--docuserve-topbar-hover-bg);
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 		}
 		.docuserve-topbar-links {
 			display: flex;
@@ -149,7 +149,7 @@ const _ViewConfiguration =
 			line-height: 1;
 		}
 		.docuserve-topbar-toggle:hover {
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 		}
 		.docuserve-topbar-right {
 			display: flex;

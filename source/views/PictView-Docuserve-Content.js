@@ -216,7 +216,7 @@ const _ViewConfiguration =
 		}
 		.pict-content pre.mermaid {
 			background: var(--docuserve-mermaid-bg);
-			color: #2A241E;
+			color: var(--theme-color-text-primary, #2A241E);
 			text-align: center;
 			padding: 1em;
 			border: 1px solid var(--docuserve-border-soft);
@@ -232,14 +232,14 @@ const _ViewConfiguration =
 		.pict-content pre.mermaid foreignObject p,
 		.pict-content pre.mermaid foreignObject div,
 		.pict-content pre.mermaid foreignObject span {
-			color: #2A241E !important;
-			fill: #2A241E !important;
+			color: var(--theme-color-text-primary, #2A241E) !important;
+			fill: var(--theme-color-text-primary, #2A241E) !important;
 		}
 		.pict-content pre.mermaid .edgePath .path {
-			stroke: #5E5549 !important;
+			stroke: var(--theme-color-text-secondary, #5E5549) !important;
 		}
 		.pict-content pre.mermaid .arrowheadPath {
-			fill: #5E5549 !important;
+			fill: var(--theme-color-text-secondary, #5E5549) !important;
 		}
 		.pict-content .pict-content-katex-display {
 			text-align: center;
@@ -353,7 +353,7 @@ const _ViewConfiguration =
 		}
 		.pict-content-code-action-btn:hover {
 			background: var(--docuserve-accent);
-			color: #FFFFFF;
+			color: var(--theme-color-background-panel, #FFFFFF);
 			border-color: var(--docuserve-accent);
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 		}
@@ -363,12 +363,12 @@ const _ViewConfiguration =
 		}
 		.pict-content-code-action-btn.is-copied {
 			background: var(--docuserve-accent);
-			color: #FFFFFF;
+			color: var(--theme-color-background-panel, #FFFFFF);
 			border-color: var(--docuserve-accent);
 		}
 		.pict-content-code-action-btn.is-copy-failed {
 			background: #B23A3A;
-			color: #FFFFFF;
+			color: var(--theme-color-background-panel, #FFFFFF);
 			border-color: #B23A3A;
 		}
 		.pict-fullscreen-overlay {
@@ -447,7 +447,7 @@ const _ViewConfiguration =
 		}
 		.pict-fullscreen-close:hover {
 			background: var(--docuserve-accent);
-			color: #FFFFFF;
+			color: var(--theme-color-background-panel, #FFFFFF);
 		}
 		.pict-fullscreen-stage {
 			flex: 1 1 auto;
@@ -493,7 +493,7 @@ const _ViewConfiguration =
 			height: auto;
 			max-height: calc(100vh - 96px);
 			background: var(--docuserve-mermaid-bg);
-			color: #2A241E;
+			color: var(--theme-color-text-primary, #2A241E);
 			padding: 16px;
 			border-radius: 6px;
 		}
@@ -505,8 +505,8 @@ const _ViewConfiguration =
 		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject p,
 		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject div,
 		.pict-fullscreen-content .pict-fullscreen-mermaid-svg foreignObject span {
-			color: #2A241E !important;
-			fill: #2A241E !important;
+			color: var(--theme-color-text-primary, #2A241E) !important;
+			fill: var(--theme-color-text-primary, #2A241E) !important;
 		}
 		.pict-fullscreen-content .pict-fullscreen-codewrap {
 			max-width: 90vw;

@@ -95,7 +95,7 @@ const _ViewConfiguration =
 		}
 		.docuserve-splash-actions .primary {
 			background-color: var(--docuserve-accent);
-			color: #fff;
+			color: var(--theme-color-background-panel, #fff);
 		}
 		.docuserve-splash-actions .primary:hover {
 			background-color: var(--docuserve-accent-hover);
