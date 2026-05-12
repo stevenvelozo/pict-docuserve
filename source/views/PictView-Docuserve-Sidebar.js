@@ -437,41 +437,60 @@ class DocusserveSidebarView extends libPictView
 	renderModuleNav(pGroup, pModule)
 	{
 		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
-		if (!tmpDocProvider)
-		{
-			return;
-		}
+		let tmpDemosProvider = this.pict.providers['Docuserve-Demos'];
 
-		let tmpSidebar = tmpDocProvider.getModuleSidebar(pGroup, pModule);
-		if (!tmpSidebar)
+		let tmpSidebar = tmpDocProvider ? tmpDocProvider.getModuleSidebar(pGroup, pModule) : null;
+		let tmpDemos = tmpDemosProvider ? tmpDemosProvider.listByModule(pGroup, pModule) : [];
+
+		if ((!tmpSidebar || tmpSidebar.length < 1) && tmpDemos.length < 1)
 		{
 			this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', '');
 			return;
 		}
 
 		let tmpRoutePrefix = '#/doc/' + pGroup + '/' + pModule + '/';
+		let tmpDemoPrefix  = '#/demo/' + pGroup + '/' + pModule + '/';
+		let tmpCurrentDemo = this.pict.AppData.Docuserve.CurrentDemo || '';
 		let tmpHTML = '<div class="docuserve-sidebar-module-nav">';
 
-		for (let i = 0; i < tmpSidebar.length; i++)
+		if (tmpSidebar && tmpSidebar.length > 0)
 		{
-			let tmpEntry = tmpSidebar[i];
-
-			if (tmpEntry.Children)
+			for (let i = 0; i < tmpSidebar.length; i++)
 			{
-				tmpHTML += '<div class="docuserve-sidebar-module-nav-section">' + this.escapeHTML(tmpEntry.Title) + '</div>';
+				let tmpEntry = tmpSidebar[i];
 
-				for (let j = 0; j < tmpEntry.Children.length; j++)
+				if (tmpEntry.Children)
 				{
-					let tmpChild = tmpEntry.Children[j];
-					if (tmpChild.Path)
+					tmpHTML += '<div class="docuserve-sidebar-module-nav-section">' + this.escapeHTML(tmpEntry.Title) + '</div>';
+
+					for (let j = 0; j < tmpEntry.Children.length; j++)
 					{
-						tmpHTML += '<a href="' + tmpRoutePrefix + tmpChild.Path + '">' + this.escapeHTML(tmpChild.Title) + '</a>';
+						let tmpChild = tmpEntry.Children[j];
+						if (tmpChild.Path)
+						{
+							tmpHTML += '<a href="' + tmpRoutePrefix + tmpChild.Path + '">' + this.escapeHTML(tmpChild.Title) + '</a>';
+						}
 					}
 				}
+				else if (tmpEntry.Path)
+				{
+					tmpHTML += '<a href="' + tmpRoutePrefix + tmpEntry.Path + '">' + this.escapeHTML(tmpEntry.Title) + '</a>';
+				}
 			}
-			else if (tmpEntry.Path)
+		}
+
+		// Demos sub-section appears at the bottom of the module nav when
+		// the Docuserve-Demos provider has entries for this (group, module).
+		// Active demo gets the same `active` styling as a regular page link.
+		if (tmpDemos.length > 0)
+		{
+			tmpHTML += '<div class="docuserve-sidebar-module-nav-section">Demos</div>';
+			for (let i = 0; i < tmpDemos.length; i++)
 			{
-				tmpHTML += '<a href="' + tmpRoutePrefix + tmpEntry.Path + '">' + this.escapeHTML(tmpEntry.Title) + '</a>';
+				let tmpDemo = tmpDemos[i];
+				let tmpActive = (tmpDemo.Hash === tmpCurrentDemo) ? ' class="active"' : '';
+				tmpHTML += '<a' + tmpActive + ' href="' + tmpDemoPrefix + this.escapeHTML(tmpDemo.Hash) + '">'
+					+ this.escapeHTML(tmpDemo.Name || tmpDemo.Hash) + '</a>';
 			}
 		}
 
@@ -542,24 +561,30 @@ class DocusserveSidebarView extends libPictView
 	}
 
 	/**
-	 * Toggle the sidebar visibility and update the top bar hamburger button.
+	 * Toggle the sidebar visibility via the layout's shell panel.
+	 *
+	 * The pict-section-modal shell owns the collapse / resize / persist
+	 * chrome for the sidebar panel; we delegate to its toggle() so the
+	 * persisted state stays in sync with the actual visual state.
+	 *
+	 * Falls back to the legacy display:none toggle when the shell isn't
+	 * available (e.g. apps still on the pre-migration layout).
 	 */
 	toggleSidebar()
 	{
-		this.pict.AppData.Docuserve.SidebarVisible = !this.pict.AppData.Docuserve.SidebarVisible;
-
-		let tmpContainer = document.getElementById('Docuserve-Sidebar-Container');
-		let tmpToggle = document.getElementById('Docuserve-TopBar-Toggle');
-
-		if (this.pict.AppData.Docuserve.SidebarVisible)
+		let tmpLayout = this.pict.views['Docuserve-Layout'];
+		if (tmpLayout && typeof tmpLayout.toggleSidebar === 'function')
 		{
-			if (tmpContainer) tmpContainer.style.display = '';
-			if (tmpToggle) tmpToggle.style.display = 'none';
+			tmpLayout.toggleSidebar();
+			return;
 		}
-		else
+
+		// Legacy fallback for hosts not yet on the shell-driven layout.
+		this.pict.AppData.Docuserve.SidebarVisible = !this.pict.AppData.Docuserve.SidebarVisible;
+		let tmpContainer = document.getElementById('Docuserve-Sidebar-Container');
+		if (tmpContainer)
 		{
-			if (tmpContainer) tmpContainer.style.display = 'none';
-			if (tmpToggle) tmpToggle.style.display = 'inline-block';
+			tmpContainer.style.display = this.pict.AppData.Docuserve.SidebarVisible ? '' : 'none';
 		}
 	}
 

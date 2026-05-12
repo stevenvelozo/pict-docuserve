@@ -1,239 +1,106 @@
 /* ============================================================================
-   Pict Docuserve - Base Styles & Theme Variables
-   ============================================================================ */
+   Pict Docuserve - Base Styles
+   ============================================================================
 
-/* ----------------------------------------------------------------------------
-   Theme variables — light defaults on :root.
-   Dark mode applies when either:
-     (a) the user explicitly selected dark via <html data-theme="dark">
-     (b) the user hasn't chosen anything AND the system prefers dark
-   An explicit <html data-theme="light"> pins the light palette regardless.
-   ---------------------------------------------------------------------------- */
+   Every `--docuserve-*` variable below is wired through a corresponding
+   `--theme-color-*` token from pict-provider-theme. The original warm-beige
+   light-mode hexes are preserved as `var()` fallbacks so apps that don't
+   install the theme provider still look the way docuserve always did.
+
+   Apps that DO install pict-provider-theme get full coherent re-skinning
+   when the user changes themes / modes: the underlying theme tokens flip
+   and every `var(--docuserve-*)` reference downstream reads the new value
+   without further work.
+
+   The legacy `data-theme="dark"` attribute + `@media (prefers-color-scheme: dark)`
+   bifurcation is intentionally gone — pict-section-theme owns mode handling
+   now and sets `--theme-color-*` to the appropriate light/dark variant
+   itself.  Hosts that load docuserve without the theme provider get the
+   fallback hexes (light palette) regardless of OS preference, which is
+   a reasonable degradation. */
 
 :root
 {
 	/* Surfaces */
-	--docuserve-bg: #FDFBF7;
-	--docuserve-bg-elevated: #FFFFFF;
-	--docuserve-border: #DDD6CA;
-	--docuserve-border-soft: #EAE3D8;
+	--docuserve-bg:                var(--theme-color-background-primary,   #FDFBF7);
+	--docuserve-bg-elevated:       var(--theme-color-background-panel,     #FFFFFF);
+	--docuserve-border:            var(--theme-color-border-default,       #DDD6CA);
+	--docuserve-border-soft:       var(--theme-color-border-light,         #EAE3D8);
 
 	/* Text */
-	--docuserve-text: #2A241E;
-	--docuserve-text-strong: #3D3229;
-	--docuserve-text-muted: #5E5549;
-	--docuserve-text-dim: #8A7F72;
+	--docuserve-text:              var(--theme-color-text-primary,         #2A241E);
+	--docuserve-text-strong:       var(--theme-color-text-primary,         #3D3229);
+	--docuserve-text-muted:        var(--theme-color-text-secondary,       #5E5549);
+	--docuserve-text-dim:          var(--theme-color-text-muted,           #8A7F72);
 
 	/* Accent / links */
-	--docuserve-accent: #2E7D74;
-	--docuserve-accent-hover: #236660;
+	--docuserve-accent:            var(--theme-color-brand-primary,        #2E7D74);
+	--docuserve-accent-hover:      var(--theme-color-brand-primary-hover,  #236660);
 
-	/* Top bar */
-	--docuserve-topbar-bg: #3D3229;
-	--docuserve-topbar-text: #E8E0D4;
-	--docuserve-topbar-text-muted: #B5AA9A;
-	--docuserve-topbar-text-dim: #8A7F72;
-	--docuserve-topbar-hover-bg: #524438;
-	--docuserve-topbar-version-bg: rgba(255, 255, 255, 0.06);
-	--docuserve-topbar-version-border: rgba(255, 255, 255, 0.08);
-	--docuserve-topbar-version-text: #B5AA9A;
+	/* Top bar — themed surface vars. Theme-TopBar uses brand-primary as
+	   its background by default; we mirror that here so any docuserve
+	   chrome that still references --docuserve-topbar-* stays consistent
+	   when the theme switches. */
+	--docuserve-topbar-bg:             var(--theme-color-text-primary,        #3D3229);
+	--docuserve-topbar-text:           var(--theme-color-text-on-brand,       #E8E0D4);
+	--docuserve-topbar-text-muted:     var(--theme-color-text-on-brand,       #B5AA9A);
+	--docuserve-topbar-text-dim:       var(--theme-color-text-muted,          #8A7F72);
+	--docuserve-topbar-hover-bg:       var(--theme-color-background-hover,    #524438);
+	--docuserve-topbar-version-bg:     var(--theme-color-background-hover,    rgba(255, 255, 255, 0.06));
+	--docuserve-topbar-version-border: var(--theme-color-border-light,        rgba(255, 255, 255, 0.08));
+	--docuserve-topbar-version-text:   var(--theme-color-text-on-brand,       #B5AA9A);
 
 	/* Sidebar */
-	--docuserve-sidebar-bg: #FAF7F1;
-	--docuserve-sidebar-border: #DDD6CA;
-	--docuserve-sidebar-border-soft: #E5DED1;
-	--docuserve-sidebar-text: #423D37;
-	--docuserve-sidebar-group-title: #3D3229;
-	--docuserve-sidebar-module-text: #5E5549;
-	--docuserve-sidebar-hover-bg: #EAE3D8;
-	--docuserve-sidebar-hover-text: #2E7D74;
-	--docuserve-sidebar-active-bg: #E5DED1;
-	--docuserve-sidebar-active-text: #2E7D74;
-	--docuserve-sidebar-search-bg: #FFFFFF;
-	--docuserve-sidebar-search-border: #DDD6CA;
+	--docuserve-sidebar-bg:            var(--theme-color-background-secondary, #FAF7F1);
+	--docuserve-sidebar-border:        var(--theme-color-border-default,       #DDD6CA);
+	--docuserve-sidebar-border-soft:   var(--theme-color-border-light,         #E5DED1);
+	--docuserve-sidebar-text:          var(--theme-color-text-primary,         #423D37);
+	--docuserve-sidebar-group-title:   var(--theme-color-text-primary,         #3D3229);
+	--docuserve-sidebar-module-text:   var(--theme-color-text-secondary,       #5E5549);
+	--docuserve-sidebar-hover-bg:      var(--theme-color-background-hover,     #EAE3D8);
+	--docuserve-sidebar-hover-text:    var(--theme-color-brand-primary,        #2E7D74);
+	--docuserve-sidebar-active-bg:     var(--theme-color-background-tertiary,  #E5DED1);
+	--docuserve-sidebar-active-text:   var(--theme-color-brand-primary,        #2E7D74);
+	--docuserve-sidebar-search-bg:     var(--theme-color-background-panel,     #FFFFFF);
+	--docuserve-sidebar-search-border: var(--theme-color-border-default,       #DDD6CA);
 
 	/* Inline code */
-	--docuserve-inline-code-bg: #F0ECE4;
-	--docuserve-inline-code-text: #9E3A50;
+	--docuserve-inline-code-bg:        var(--theme-color-background-tertiary,  #F0ECE4);
+	--docuserve-inline-code-text:      var(--theme-color-syntax-property,      #9E3A50);
 
 	/* Code block panel */
-	--docuserve-code-bg: #F6F3EE;
-	--docuserve-code-border: #E5DED1;
-	--docuserve-code-gutter-bg: #EFEAE0;
-	--docuserve-code-gutter-border: #DDD6CA;
-	--docuserve-code-gutter-text: #A59986;
-	--docuserve-code-text: #2A241E;
+	--docuserve-code-bg:               var(--theme-color-background-secondary, #F6F3EE);
+	--docuserve-code-border:           var(--theme-color-border-light,         #E5DED1);
+	--docuserve-code-gutter-bg:        var(--theme-color-background-tertiary,  #EFEAE0);
+	--docuserve-code-gutter-border:    var(--theme-color-border-default,       #DDD6CA);
+	--docuserve-code-gutter-text:      var(--theme-color-text-muted,           #A59986);
+	--docuserve-code-text:             var(--theme-color-text-primary,         #2A241E);
 
-	/* Syntax tokens — low-chroma dark-on-light palette */
-	--docuserve-tok-keyword: #A03472;
-	--docuserve-tok-string: #1A6640;
-	--docuserve-tok-number: #B25A00;
-	--docuserve-tok-comment: #8A7F72;
-	--docuserve-tok-operator: #2E7D74;
-	--docuserve-tok-punctuation: #2A241E;
-	--docuserve-tok-function: #2A5DB0;
-	--docuserve-tok-property: #9E3A50;
-	--docuserve-tok-tag: #9E3A50;
-	--docuserve-tok-attr-name: #B25A00;
-	--docuserve-tok-attr-value: #1A6640;
+	/* Syntax tokens — pict-section-code's Color.Syntax.* set drives these. */
+	--docuserve-tok-keyword:           var(--theme-color-syntax-keyword,       #A03472);
+	--docuserve-tok-string:            var(--theme-color-syntax-string,        #1A6640);
+	--docuserve-tok-number:            var(--theme-color-syntax-number,        #B25A00);
+	--docuserve-tok-comment:           var(--theme-color-syntax-comment,       #8A7F72);
+	--docuserve-tok-operator:          var(--theme-color-syntax-operator,      #2E7D74);
+	--docuserve-tok-punctuation:       var(--theme-color-syntax-punctuation,   #2A241E);
+	--docuserve-tok-function:          var(--theme-color-syntax-function,      #2A5DB0);
+	--docuserve-tok-property:          var(--theme-color-syntax-property,      #9E3A50);
+	--docuserve-tok-tag:               var(--theme-color-syntax-tag,           #9E3A50);
+	--docuserve-tok-attr-name:         var(--theme-color-syntax-attrname,      #B25A00);
+	--docuserve-tok-attr-value:        var(--theme-color-syntax-attrvalue,     #1A6640);
 
 	/* Tables, blockquotes, mermaid */
-	--docuserve-table-header-bg: #F5F0E8;
-	--docuserve-table-row-alt-bg: #F9F6F0;
-	--docuserve-blockquote-bg: #F7F5F0;
-	--docuserve-blockquote-border: #2E7D74;
-	--docuserve-blockquote-text: #5E5549;
-	--docuserve-mermaid-bg: #FFFFFF;
+	--docuserve-table-header-bg:       var(--theme-color-background-tertiary,  #F5F0E8);
+	--docuserve-table-row-alt-bg:      var(--theme-color-background-secondary, #F9F6F0);
+	--docuserve-blockquote-bg:         var(--theme-color-background-secondary, #F7F5F0);
+	--docuserve-blockquote-border:     var(--theme-color-brand-primary,        #2E7D74);
+	--docuserve-blockquote-text:       var(--theme-color-text-secondary,       #5E5549);
+	--docuserve-mermaid-bg:            var(--theme-color-background-panel,     #FFFFFF);
 
 	/* Scrollbars */
-	--docuserve-scrollbar-track: #F5F0E8;
-	--docuserve-scrollbar-thumb: #D4CCBE;
-	--docuserve-scrollbar-thumb-hover: #B5AA9A;
-}
-
-@media (prefers-color-scheme: dark)
-{
-	:root:not([data-theme="light"])
-	{
-		--docuserve-bg: #15120F;
-		--docuserve-bg-elevated: #1B1814;
-		--docuserve-border: #2F2823;
-		--docuserve-border-soft: #26211C;
-
-		--docuserve-text: #E8E0D4;
-		--docuserve-text-strong: #F2ECE0;
-		--docuserve-text-muted: #B5AA9A;
-		--docuserve-text-dim: #7A6F62;
-
-		--docuserve-accent: #5DB8A8;
-		--docuserve-accent-hover: #7FCCB8;
-
-		--docuserve-topbar-bg: #1A1612;
-		--docuserve-topbar-text: #E8E0D4;
-		--docuserve-topbar-text-muted: #B5AA9A;
-		--docuserve-topbar-text-dim: #7A6F62;
-		--docuserve-topbar-hover-bg: #2A241E;
-		--docuserve-topbar-version-bg: rgba(255, 255, 255, 0.05);
-		--docuserve-topbar-version-border: rgba(255, 255, 255, 0.09);
-		--docuserve-topbar-version-text: #B5AA9A;
-
-		--docuserve-sidebar-bg: #1B1814;
-		--docuserve-sidebar-border: #2F2823;
-		--docuserve-sidebar-border-soft: #26211C;
-		--docuserve-sidebar-text: #C9C0B3;
-		--docuserve-sidebar-group-title: #F2ECE0;
-		--docuserve-sidebar-module-text: #B5AA9A;
-		--docuserve-sidebar-hover-bg: #2A241E;
-		--docuserve-sidebar-hover-text: #7FCCB8;
-		--docuserve-sidebar-active-bg: #2F2823;
-		--docuserve-sidebar-active-text: #7FCCB8;
-		--docuserve-sidebar-search-bg: #26211C;
-		--docuserve-sidebar-search-border: #2F2823;
-
-		--docuserve-inline-code-bg: #2A241E;
-		--docuserve-inline-code-text: #E8B07A;
-
-		--docuserve-code-bg: #1E1A17;
-		--docuserve-code-border: #2F2823;
-		--docuserve-code-gutter-bg: #17130F;
-		--docuserve-code-gutter-border: #2F2823;
-		--docuserve-code-gutter-text: #6A6052;
-		--docuserve-code-text: #E8E0D4;
-
-		--docuserve-tok-keyword: #C678DD;
-		--docuserve-tok-string: #98C379;
-		--docuserve-tok-number: #D19A66;
-		--docuserve-tok-comment: #7F848E;
-		--docuserve-tok-operator: #56B6C2;
-		--docuserve-tok-punctuation: #E8E0D4;
-		--docuserve-tok-function: #61AFEF;
-		--docuserve-tok-property: #E06C75;
-		--docuserve-tok-tag: #E06C75;
-		--docuserve-tok-attr-name: #D19A66;
-		--docuserve-tok-attr-value: #98C379;
-
-		--docuserve-table-header-bg: #26211C;
-		--docuserve-table-row-alt-bg: #1F1B17;
-		--docuserve-blockquote-bg: #1F1B17;
-		--docuserve-blockquote-border: #5DB8A8;
-		--docuserve-blockquote-text: #C9C0B3;
-		--docuserve-mermaid-bg: #E8E0D4;
-
-		--docuserve-scrollbar-track: #1B1814;
-		--docuserve-scrollbar-thumb: #3A322B;
-		--docuserve-scrollbar-thumb-hover: #524438;
-	}
-}
-
-:root[data-theme="dark"]
-{
-	--docuserve-bg: #15120F;
-	--docuserve-bg-elevated: #1B1814;
-	--docuserve-border: #2F2823;
-	--docuserve-border-soft: #26211C;
-
-	--docuserve-text: #E8E0D4;
-	--docuserve-text-strong: #F2ECE0;
-	--docuserve-text-muted: #B5AA9A;
-	--docuserve-text-dim: #7A6F62;
-
-	--docuserve-accent: #5DB8A8;
-	--docuserve-accent-hover: #7FCCB8;
-
-	--docuserve-topbar-bg: #1A1612;
-	--docuserve-topbar-text: #E8E0D4;
-	--docuserve-topbar-text-muted: #B5AA9A;
-	--docuserve-topbar-text-dim: #7A6F62;
-	--docuserve-topbar-hover-bg: #2A241E;
-	--docuserve-topbar-version-bg: rgba(255, 255, 255, 0.05);
-	--docuserve-topbar-version-border: rgba(255, 255, 255, 0.09);
-	--docuserve-topbar-version-text: #B5AA9A;
-
-	--docuserve-sidebar-bg: #1B1814;
-	--docuserve-sidebar-border: #2F2823;
-	--docuserve-sidebar-border-soft: #26211C;
-	--docuserve-sidebar-text: #C9C0B3;
-	--docuserve-sidebar-group-title: #F2ECE0;
-	--docuserve-sidebar-module-text: #B5AA9A;
-	--docuserve-sidebar-hover-bg: #2A241E;
-	--docuserve-sidebar-hover-text: #7FCCB8;
-	--docuserve-sidebar-active-bg: #2F2823;
-	--docuserve-sidebar-active-text: #7FCCB8;
-	--docuserve-sidebar-search-bg: #26211C;
-	--docuserve-sidebar-search-border: #2F2823;
-
-	--docuserve-inline-code-bg: #2A241E;
-	--docuserve-inline-code-text: #E8B07A;
-
-	--docuserve-code-bg: #1E1A17;
-	--docuserve-code-border: #2F2823;
-	--docuserve-code-gutter-bg: #17130F;
-	--docuserve-code-gutter-border: #2F2823;
-	--docuserve-code-gutter-text: #6A6052;
-	--docuserve-code-text: #E8E0D4;
-
-	--docuserve-tok-keyword: #C678DD;
-	--docuserve-tok-string: #98C379;
-	--docuserve-tok-number: #D19A66;
-	--docuserve-tok-comment: #7F848E;
-	--docuserve-tok-operator: #56B6C2;
-	--docuserve-tok-punctuation: #E8E0D4;
-	--docuserve-tok-function: #61AFEF;
-	--docuserve-tok-property: #E06C75;
-	--docuserve-tok-tag: #E06C75;
-	--docuserve-tok-attr-name: #D19A66;
-	--docuserve-tok-attr-value: #98C379;
-
-	--docuserve-table-header-bg: #26211C;
-	--docuserve-table-row-alt-bg: #1F1B17;
-	--docuserve-blockquote-bg: #1F1B17;
-	--docuserve-blockquote-border: #5DB8A8;
-	--docuserve-blockquote-text: #C9C0B3;
-	--docuserve-mermaid-bg: #E8E0D4;
-
-	--docuserve-scrollbar-track: #1B1814;
-	--docuserve-scrollbar-thumb: #3A322B;
-	--docuserve-scrollbar-thumb-hover: #524438;
+	--docuserve-scrollbar-track:       var(--theme-color-scrollbar-track,      #F5F0E8);
+	--docuserve-scrollbar-thumb:       var(--theme-color-scrollbar-thumb,      #D4CCBE);
+	--docuserve-scrollbar-thumb-hover: var(--theme-color-scrollbar-hover,      #B5AA9A);
 }
 
 /* ----------------------------------------------------------------------------

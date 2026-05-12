@@ -28,9 +28,10 @@
 		<!-- The root container for the Pict application -->
 		<div id="Docuserve-Application-Container"></div>
 
-		<!-- Mermaid diagram rendering -->
+		<!-- Mermaid diagram rendering.  pict-section-content (v0.1.8+) drives
+		     initialization with theme: 'base' + themeVariables sourced
+		     from --theme-color-* so diagrams follow the active theme. -->
 		<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-		<script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
 		<!-- KaTeX for LaTeX equation rendering -->
 		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 		<!-- Load the Docuserve PICT Application Bundle from jsDelivr CDN -->

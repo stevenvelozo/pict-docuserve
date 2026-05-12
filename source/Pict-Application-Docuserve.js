@@ -2,14 +2,21 @@ const libPictApplication = require('pict-application');
 
 // Provider
 const libDocumentationProvider = require('./providers/Pict-Provider-Docuserve-Documentation.js');
+const libDemosProvider         = require('./providers/Pict-Provider-Docuserve-Demos.js');
+
+// Shared modal + theme stack
+const libPictSectionModal = require('pict-section-modal');
+const libPictSectionTheme = require('pict-section-theme');
 
 // Views
-const libViewLayout = require('./views/PictView-Docuserve-Layout.js');
-const libViewTopBar = require('./views/PictView-Docuserve-TopBar.js');
-const libViewSidebar = require('./views/PictView-Docuserve-Sidebar.js');
-const libViewSplash = require('./views/PictView-Docuserve-Splash.js');
-const libViewContent = require('./views/PictView-Docuserve-Content.js');
-const libViewSearch = require('./views/PictView-Docuserve-Search.js');
+const libViewLayout       = require('./views/PictView-Docuserve-Layout.js');
+const libViewTopBarNav    = require('./views/PictView-Docuserve-TopBar-Nav.js');
+const libViewTopBarUser   = require('./views/PictView-Docuserve-TopBar-User.js');
+const libViewSidebar      = require('./views/PictView-Docuserve-Sidebar.js');
+const libViewSplash       = require('./views/PictView-Docuserve-Splash.js');
+const libViewContent      = require('./views/PictView-Docuserve-Content.js');
+const libViewSearch       = require('./views/PictView-Docuserve-Search.js');
+const libViewDemo         = require('./views/PictView-Docuserve-Demo.js');
 
 class DocuserveApplication extends libPictApplication
 {
@@ -20,35 +27,61 @@ class DocuserveApplication extends libPictApplication
 		// Add the documentation provider
 		this.pict.addProvider('Docuserve-Documentation', libDocumentationProvider.default_configuration, libDocumentationProvider);
 
-		// Add views
-		this.pict.addView('Docuserve-Layout', libViewLayout.default_configuration, libViewLayout);
-		this.pict.addView('Docuserve-TopBar', libViewTopBar.default_configuration, libViewTopBar);
-		this.pict.addView('Docuserve-Sidebar', libViewSidebar.default_configuration, libViewSidebar);
-		this.pict.addView('Docuserve-Splash', libViewSplash.default_configuration, libViewSplash);
-		this.pict.addView('Docuserve-Content', libViewContent.default_configuration, libViewContent);
-		this.pict.addView('Docuserve-Search', libViewSearch.default_configuration, libViewSearch);
+		// Add the demos registry provider.  Libraries that ship demos
+		// (e.g. pict-section-form, pict-section-code) call
+		// `pict.providers['Docuserve-Demos'].registerAll([...])` at
+		// app boot to populate it.
+		this.pict.addProvider('Docuserve-Demos', libDemosProvider.default_configuration, libDemosProvider);
+
+		// Modal section — drives the shell() + addPanel() layout machinery,
+		// plus dialogs / tooltips / toasts.
+		this.pict.addView('Pict-Section-Modal', libPictSectionModal.default_configuration, libPictSectionModal);
+
+		// Add views — the layout, sidebar, splash, content, search are
+		// docuserve's own content surfaces.  The two TopBar-* slot views
+		// fill the Theme-TopBar's Nav and User slots.
+		this.pict.addView('Docuserve-Layout',       libViewLayout.default_configuration,       libViewLayout);
+		this.pict.addView('Docuserve-TopBar-Nav',   libViewTopBarNav.default_configuration,    libViewTopBarNav);
+		this.pict.addView('Docuserve-TopBar-User',  libViewTopBarUser.default_configuration,   libViewTopBarUser);
+		this.pict.addView('Docuserve-Sidebar',      libViewSidebar.default_configuration,      libViewSidebar);
+		this.pict.addView('Docuserve-Splash',       libViewSplash.default_configuration,       libViewSplash);
+		this.pict.addView('Docuserve-Content',      libViewContent.default_configuration,      libViewContent);
+		this.pict.addView('Docuserve-Search',       libViewSearch.default_configuration,       libViewSearch);
+		this.pict.addView('Docuserve-Demo',         libViewDemo.default_configuration,         libViewDemo);
+
+		// Theme section provider.  Wires the pict-provider-theme runtime,
+		// the bundled theme catalog (retold-default, retold-content-system,
+		// retold-manager, …), and the picker + mode-toggle + scale-select
+		// + BrandMark + TopBar chrome views.  The TopBar mounts the two
+		// slot views above (TopBar-Nav for navigation + version, TopBar-User
+		// for search + external links).
+		//
+		// Host applications subclassing DocuserveApplication can pass their
+		// own `Brand` block via constructor options.Brand or by overriding
+		// in onAfterInitializeAsync before calling super.  The fallback
+		// shape is intentionally minimal so vanilla pict-docuserve works
+		// out of the box without any branding setup.
+		let tmpBrand = (pOptions && pOptions.Brand) ? pOptions.Brand : null;
+		this.pict.addProvider('Theme-Section',
+		{
+			ApplyDefault: 'retold-default',
+			DefaultMode:  'system',
+			DefaultScale: 1.0,
+			Brand:        tmpBrand,
+			// 'Button' is intentionally omitted — docuserve has no settings
+			// panel to host theme controls.  We add a Theme-Button into the
+			// User slot view instead (a topbar popover trigger).
+			Views: ['Picker', 'ModeToggle', 'ScaleSelect', 'Button', 'BrandMark', 'TopBar'],
+			ViewOptions:
+			{
+				// Height matches the topbar panel Size in the Layout view.
+				TopBar: { NavView: 'Docuserve-TopBar-Nav', UserView: 'Docuserve-TopBar-User', Height: 56 }
+			}
+		}, libPictSectionTheme);
 	}
 
 	onAfterInitializeAsync(fCallback)
 	{
-		// Apply saved theme preference BEFORE first layout render to avoid
-		// a flash of the wrong color scheme.  The TopBar view wires up the
-		// toggle UI and rebroadcasts this same choice after it renders.
-		try
-		{
-			let tmpPath = (window.location.pathname || '/').replace(/\/[^/]*$/, '/');
-			let tmpKey = 'docuserve-theme:' + window.location.origin + tmpPath;
-			let tmpSaved = localStorage.getItem(tmpKey);
-			if (tmpSaved === 'light' || tmpSaved === 'dark')
-			{
-				document.documentElement.setAttribute('data-theme', tmpSaved);
-			}
-		}
-		catch (e)
-		{
-			// localStorage unavailable; fall through to system preference.
-		}
-
 		// Initialize application state
 		this.pict.AppData.Docuserve =
 		{
@@ -167,8 +200,53 @@ class DocuserveApplication extends libPictApplication
 			return;
 		}
 
+		// #/demo/<group>/<module>/<hash> — interactive demo registered
+		// with Docuserve-Demos.  Mounts the demo's view into the content
+		// area + renders any Sources tabs alongside.
+		if (tmpParts[0] === 'demo' && tmpParts.length >= 4)
+		{
+			let tmpGroup = tmpParts[1];
+			let tmpModule = tmpParts[2];
+			let tmpHash = tmpParts.slice(3).join('/');
+			this.navigateToDemo(tmpGroup, tmpModule, tmpHash);
+			return;
+		}
+
 		// Unknown route — treat as a page
 		this.navigateToPage(tmpHash);
+	}
+
+	/**
+	 * Navigate to an interactive demo registered with Docuserve-Demos.
+	 *
+	 * @param {string} pGroup  - catalog group key
+	 * @param {string} pModule - module name
+	 * @param {string} pHash   - demo hash (unique within group/module)
+	 */
+	navigateToDemo(pGroup, pModule, pHash)
+	{
+		let tmpDemoView  = this.pict.views['Docuserve-Demo'];
+		let tmpSidebarView = this.pict.views['Docuserve-Sidebar'];
+
+		this.pict.AppData.Docuserve.CurrentGroup  = pGroup;
+		this.pict.AppData.Docuserve.CurrentModule = pModule;
+		this.pict.AppData.Docuserve.CurrentDemo   = pHash;
+		this.pict.AppData.Docuserve.CurrentPath   = '';
+
+		if (tmpDemoView && typeof tmpDemoView.showDemo === 'function')
+		{
+			tmpDemoView.showDemo(pGroup, pModule, pHash);
+		}
+
+		// Keep the sidebar in sync — show module-scoped demos + nav.
+		if (tmpSidebarView)
+		{
+			tmpSidebarView.renderSidebarGroups();
+			if (typeof tmpSidebarView.renderModuleNav === 'function')
+			{
+				tmpSidebarView.renderModuleNav(pGroup, pModule);
+			}
+		}
 	}
 
 	/**
