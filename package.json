@@ -1,6 +1,6 @@
 {
     "name": "pict-docuserve",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
     "main": "source/Pict-Application-Docuserve.js",
     "bin": {
@@ -27,17 +27,17 @@
     "license": "MIT",
     "dependencies": {
         "lunr": "^2.3.9",
-        "pict": "^1.0.367",
+        "pict": "^1.0.368",
         "pict-application": "^1.0.34",
         "pict-provider": "^1.0.13",
-        "pict-section-content": "^1.0.0",
-        "pict-section-modal": "^1.0.0",
-        "pict-section-theme": "^1.0.0",
+        "pict-section-content": "^1.0.1",
+        "pict-section-modal": "^1.0.1",
+        "pict-section-theme": "^1.0.1",
         "pict-service-commandlineutility": "^1.0.19",
         "pict-view": "^1.0.68"
     },
     "devDependencies": {
-        "pict-docuserve": "^0.1.7",
+        "pict-docuserve": "^1.0.0",
         "quackage": "^1.2.3"
     },
     "copyFilesSettings": {

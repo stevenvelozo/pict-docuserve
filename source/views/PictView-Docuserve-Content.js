@@ -241,6 +241,65 @@ const _ViewConfiguration =
 		.pict-content pre.mermaid .arrowheadPath {
 			fill: var(--theme-color-text-secondary, #5E5549) !important;
 		}
+		/* Mermaid 11's block-beta renderer ignores the themeVariables we
+		   pass to mermaid.initialize() — it bakes its own multi-color
+		   palette directly into each rect's inline SVG attributes.  In
+		   light mode that palette is fine: Mermaid's pastel colors on a
+		   light page have good contrast and visual hierarchy.  In dark
+		   mode those same light-pastel fills with dark text appear as a
+		   light-mode island stamped onto a dark page — poor contrast and
+		   visually jarring.
+		   Rather than collapsing the palette to a single theme color
+		   (which loses the per-cluster identity the diagram author chose),
+		   we invert the entire diagram with a CSS filter in dark mode.
+		   The 0.92 factor avoids a harsh pure-white→pure-black flip; the
+		   hue-rotate(180deg) compensates for the hue shift invert()
+		   introduces, so red stays reddish, green stays greenish, etc.
+		   Scoped via :has(g.block) so only block-beta diagrams get
+		   filtered — flowchart / sequence / state diagrams already honor
+		   themeVariables and render mode-correctly without inversion. */
+		.theme-dark .pict-content pre.mermaid:has(g.block) {
+			filter: invert(0.92) hue-rotate(180deg);
+			background: transparent !important;
+			border-color: transparent !important;
+		}
+		/* When the block-beta inversion is active, the global "force
+		   text to theme-color-text-primary" rule above would set text
+		   to the dark-mode text color (light cream), which the filter
+		   then inverts to dark — unreadable against the now-dark fills.
+		   Reverting lets Mermaid's natural light-mode text color (dark)
+		   pass through the inversion, becoming light text in dark mode. */
+		.theme-dark .pict-content pre.mermaid:has(g.block) text,
+		.theme-dark .pict-content pre.mermaid:has(g.block) .nodeLabel,
+		.theme-dark .pict-content pre.mermaid:has(g.block) .edgeLabel,
+		.theme-dark .pict-content pre.mermaid:has(g.block) .label,
+		.theme-dark .pict-content pre.mermaid:has(g.block) .cluster-label,
+		.theme-dark .pict-content pre.mermaid:has(g.block) span,
+		.theme-dark .pict-content pre.mermaid:has(g.block) foreignObject p,
+		.theme-dark .pict-content pre.mermaid:has(g.block) foreignObject div,
+		.theme-dark .pict-content pre.mermaid:has(g.block) foreignObject span {
+			/* Force text to render DARK pre-filter so the dark-mode filter
+			   inverts it to LIGHT on the now-dark inverted blocks.  Using
+			   the theme's light-mode text-primary hex directly (not the
+			   var() chain) because the chain would resolve to light cream
+			   in dark mode, which the filter would then invert BACK to
+			   dark — unreadable on the inverted dark blocks. */
+			color: #3D3229 !important;
+			fill:  #3D3229 !important;
+		}
+		/* Inner blocks (the .basic.label-container rects inside block-beta
+		   diagrams, NOT the cluster wrappers) pick up mainBkg from the
+		   themeVariables we pass to mermaid.initialize().  In dark mode
+		   that's a dark color — which the SVG filter then inverts to
+		   light gray, undoing the dark-mode-ification.  Force the inner
+		   blocks to render with a fixed light fill so the inversion
+		   produces dark cards in dark mode.  In light mode (no filter)
+		   the white fill is effectively the same as Mermaid's default
+		   light-theme block bg — so no visual change there. */
+		.pict-content pre.mermaid:has(g.block) rect.basic.label-container:not(.cluster) {
+			fill:   #FFFFFF !important;
+			stroke: #6E6E6E !important;
+		}
 		.pict-content .pict-content-katex-display {
 			text-align: center;
 			margin: 1em 0;
