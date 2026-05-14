@@ -1137,6 +1137,43 @@ class DocuserveFablePlaygroundView extends libPictView
 			return tmpInstance;
 		}
 
+		// Wrapper around the FableLog class.  fable-log's default
+		// console stream calls globalThis.console.log directly — which
+		// the playground's per-run console shim (scoped through the
+		// IIFE parameter) can't see.  By attaching our capture logger
+		// to every new FableLog instance, log.* calls land in the panel
+		// regardless of which streams the user configured.  Mirrors
+		// `PlaygroundFableWrapper` above.  Static FableLog properties
+		// (LogProviderBase, LogProviderConsole, etc.) are forwarded so
+		// `FableLog.LogProviderBase` still works in user code.
+		let tmpFableLogClass = pFableInstance.Logging && pFableInstance.Logging.constructor;
+		function PlaygroundFableLogWrapper(pSettings, pServiceHash)
+		{
+			let tmpInstance = new tmpFableLogClass(pSettings, pServiceHash);
+			tmpInstance.addLogger(tmpSelf._buildCaptureLogger(pRecords, pStart), 'trace');
+			return tmpInstance;
+		}
+		if (tmpFableLogClass)
+		{
+			// Forward static / class-level properties the user might
+			// reach for (LogProviderBase etc.).  Done by iterating own
+			// enumerable keys plus the well-known statics, so any
+			// future additions to FableLog flow through automatically.
+			let tmpKeys = Object.getOwnPropertyNames(tmpFableLogClass);
+			for (let i = 0; i < tmpKeys.length; i++)
+			{
+				let tmpKey = tmpKeys[i];
+				if (tmpKey === 'length' || tmpKey === 'name' || tmpKey === 'prototype') { continue; }
+				try { PlaygroundFableLogWrapper[tmpKey] = tmpFableLogClass[tmpKey]; }
+				catch (pError) { /* non-forwardable property — skip */ }
+			}
+			// Legacy factory: `FableLog.new(settings)` should also work.
+			PlaygroundFableLogWrapper.new = function (pSettings)
+			{
+				return PlaygroundFableLogWrapper(pSettings);
+			};
+		}
+
 		// Built-in resolvers — every "bundled" module in the schema
 		// goes through one of these.  Future "cdn" / "dynamic" sources
 		// would be wired in alongside as lazy promises.
@@ -1146,7 +1183,7 @@ class DocuserveFablePlaygroundView extends libPictView
 			'pict':                      () => tmpPict.constructor,
 			'fable-uuid':                () => pFableInstance.UUID && pFableInstance.UUID.constructor,
 			'fable-settings':            () => pFableInstance.SettingsManager && pFableInstance.SettingsManager.constructor,
-			'fable-log':                 () => pFableInstance.Logging && pFableInstance.Logging.constructor,
+			'fable-log':                 () => tmpFableLogClass ? PlaygroundFableLogWrapper : null,
 			'fable-serviceproviderbase': () => libFableServiceProviderBase
 		};
 
