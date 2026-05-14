@@ -105,73 +105,153 @@ const _ViewConfiguration =
 	AutoRender: false,
 
 	CSS: /*css*/`
-		.docuserve-playground {
+		/* The shell renders the panel content into a wrapper that has
+		   min-height: 100% but no explicit height — which means our
+		   percentage-height children would resolve to 0.  Promote the
+		   destination to a flex column so the playground inside it
+		   can use flex: 1 to fill the drawer height. */
+		#Docuserve-Playground-Drawer-Content {
 			display: flex;
 			flex-direction: column;
-			padding: 1.5em 2em;
-			max-width: 1400px;
-			margin: 0 auto;
-			color: var(--theme-color-text-primary, #2A241E);
+			height: 100%;
+			min-height: 0;
 		}
-		.docuserve-playground-header {
-			border-bottom: 1px solid var(--theme-color-border-default, #DDD6CA);
-			padding-bottom: 0.75em;
-			margin-bottom: 1em;
-		}
-		.docuserve-playground-header h1 {
-			font-size: 1.5em;
-			font-weight: 600;
-			margin: 0 0 0.25em;
-			color: var(--theme-color-text-primary, #3D3229);
-		}
-		.docuserve-playground-header p {
-			font-size: 0.9em;
-			color: var(--theme-color-text-secondary, #5E5549);
-			margin: 0 0 0.75em;
-			line-height: 1.5;
-		}
-		.docuserve-playground-actions {
+		/* Playground fills the bottom drawer height-wise.  The drawer
+		   itself owns the outer resize; everything inside flexes to
+		   whatever vertical space remains so a thin drawer is usable
+		   and a tall drawer just gives the editor more room. */
+		.docuserve-playground {
+			flex: 1 1 0;
+			min-height: 0;
 			display: flex;
-			gap: 0.5em;
-			align-items: center;
-		}
-		.docuserve-playground-actions button {
-			padding: 0.4em 0.9em;
-			font-size: 0.9em;
-			background: var(--theme-color-background-panel, #FFFFFF);
+			flex-direction: column;
+			padding: 0;
 			color: var(--theme-color-text-primary, #2A241E);
-			border: 1px solid var(--theme-color-border-default, #DDD6CA);
+		}
+		.docuserve-playground-body {
+			flex: 1 1 0;
+			min-height: 0;
+			display: flex;
+			gap: 0;
+		}
+		@media (max-width: 900px) {
+			.docuserve-playground-body { flex-direction: column; gap: 0; }
+		}
+		.docuserve-playground-pane {
+			flex: 1 1 0;
+			min-width: 0;
+			min-height: 0;
+			display: flex;
+			flex-direction: column;
+		}
+		.docuserve-playground-pane-code   { border-right: 1px solid var(--theme-color-border-default, #DDD6CA); }
+		.docuserve-playground-pane-log    { background: var(--theme-color-background-secondary, #F6F3EE); }
+
+		/* Per-pane header — small uppercase label on the left, controls
+		   on the right.  Same row height as the doc page section
+		   labels so it slots in visually under the topbar. */
+		.docuserve-playground-pane-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.5em;
+			padding: 0.45em 0.9em;
+			border-bottom: 1px solid var(--theme-color-border-default, #DDD6CA);
+			background: var(--theme-color-background-panel, #FFFFFF);
+		}
+		.docuserve-playground-pane-log .docuserve-playground-pane-header {
+			background: var(--theme-color-background-secondary, #F6F3EE);
+		}
+		.docuserve-playground-pane-title {
+			font-size: 0.72em;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: var(--theme-color-text-muted, #8A7F72);
+		}
+		.docuserve-playground-pane-controls {
+			display: flex;
+			align-items: center;
+			gap: 0.15em;
+		}
+
+		/* Compact icon button — subtle by default, brand-primary on
+		   hover.  Used for help, copy, copy-log, clear-log, and run.
+		   All glyphs are 14px @ 1em via SVG so they ride the font-size
+		   set on the parent. */
+		.docuserve-playground-iconbtn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 1.6em;
+			height: 1.6em;
+			padding: 0;
+			background: transparent;
+			color: var(--theme-color-text-muted, #8A7F72);
+			border: 1px solid transparent;
 			border-radius: 4px;
 			cursor: pointer;
-			transition: background-color 0.1s, border-color 0.1s;
+			font-size: 14px;
+			transition: color 0.12s, background-color 0.12s, border-color 0.12s, opacity 0.12s;
+			opacity: 0.6;
 		}
-		.docuserve-playground-actions button:hover {
+		.docuserve-playground-iconbtn svg {
+			width: 1em;
+			height: 1em;
+			display: block;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+		.docuserve-playground-iconbtn:hover {
+			opacity: 1;
+			color: var(--theme-color-brand-primary, #2E7D74);
 			background: var(--theme-color-background-hover, #EAE3D8);
-			border-color: var(--theme-color-brand-primary, #2E7D74);
+			border-color: var(--theme-color-border-default, #DDD6CA);
 		}
-		.docuserve-playground-actions .primary {
+		.docuserve-playground-iconbtn:focus-visible {
+			opacity: 1;
+			outline: 2px solid var(--theme-color-brand-primary, #2E7D74);
+			outline-offset: 1px;
+		}
+		/* Run is the destination action — slightly brighter at rest so
+		   the user's eye lands on it, with a filled play triangle that
+		   uses fill instead of stroke. */
+		.docuserve-playground-iconbtn-run {
+			color: var(--theme-color-brand-primary, #2E7D74);
+			opacity: 0.7;
+		}
+		.docuserve-playground-iconbtn-run svg { fill: currentColor; stroke: none; }
+		.docuserve-playground-iconbtn-run:hover {
+			opacity: 1;
 			background: var(--theme-color-brand-primary, #2E7D74);
 			color: var(--theme-color-background-panel, #FFFFFF);
 			border-color: var(--theme-color-brand-primary, #2E7D74);
-			font-weight: 600;
 		}
-		.docuserve-playground-actions .primary:hover {
-			background: var(--theme-color-brand-primary-hover, #236660);
-			border-color: var(--theme-color-brand-primary-hover, #236660);
+
+		/* The copy-log button only materializes on hover of the log
+		   pane — it's a "by the way" action, not something the user
+		   should be reaching for during normal exploration. */
+		.docuserve-playground-iconbtn-copylog { opacity: 0; pointer-events: none; }
+		.docuserve-playground-pane-log:hover .docuserve-playground-iconbtn-copylog,
+		.docuserve-playground-pane-log:focus-within .docuserve-playground-iconbtn-copylog {
+			opacity: 0.6;
+			pointer-events: auto;
 		}
-		.docuserve-playground-actions .status {
-			margin-left: auto;
-			font-size: 0.75em;
-			color: var(--theme-color-text-muted, #8A7F72);
-			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-		}
+		.docuserve-playground-pane-log:hover .docuserve-playground-iconbtn-copylog:hover { opacity: 1; }
+
+		/* Auto-attach toggle — compact inline checkbox + label sized
+		   to sit alongside the icon buttons without overpowering
+		   them. */
 		.docuserve-playground-toggle {
 			display: inline-flex;
 			align-items: center;
-			gap: 0.4em;
-			margin-left: 0.5em;
-			font-size: 0.8em;
-			color: var(--theme-color-text-secondary, #5E5549);
+			gap: 0.35em;
+			margin-right: 0.25em;
+			font-size: 11px;
+			color: var(--theme-color-text-muted, #8A7F72);
 			cursor: pointer;
 			user-select: none;
 		}
@@ -179,67 +259,40 @@ const _ViewConfiguration =
 			accent-color: var(--theme-color-brand-primary, #2E7D74);
 			cursor: pointer;
 			margin: 0;
+			width: 0.95em;
+			height: 0.95em;
 		}
-		.docuserve-playground-toggle code {
-			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-			font-size: 0.92em;
-			color: var(--theme-color-syntax-property, #9E3A50);
-			background: var(--theme-color-background-tertiary, #F0ECE4);
-			padding: 0 0.25em;
-			border-radius: 2px;
-		}
-		.docuserve-playground-body {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 1em;
-			min-height: 500px;
-		}
-		@media (max-width: 900px) {
-			.docuserve-playground-body { grid-template-columns: 1fr; }
-		}
-		.docuserve-playground-pane {
-			display: flex;
-			flex-direction: column;
-			min-width: 0;
-		}
-		.docuserve-playground-pane h3 {
-			font-size: 0.78em;
-			font-weight: 600;
-			text-transform: uppercase;
-			letter-spacing: 0.04em;
-			color: var(--theme-color-text-muted, #8A7F72);
-			margin: 0 0 0.4em;
-		}
-		/* Mount target for the pict-section-code view.  The wrap + editor
-		   styling all comes from pict-section-code's bundled CSS; we only
-		   need to make sure the wrap fills the pane. */
+		.docuserve-playground-toggle:hover { color: var(--theme-color-text-secondary, #5E5549); }
+
+		/* Editor mount fills the remaining pane height; pict-section-code
+		   styles the inner editor + gutter itself. */
 		#${_CodeEditorMountId} {
-			flex: 1;
-			min-height: 460px;
-			max-height: 70vh;
+			flex: 1 1 0;
+			min-height: 0;
 			display: flex;
 			flex-direction: column;
+			overflow: hidden;
 		}
 		#${_CodeEditorMountId} .pict-code-editor-wrap {
 			flex: 1;
 			min-height: 0;
+			height: 100%;
 		}
 		.docuserve-playground-log {
-			flex: 1;
-			min-height: 460px;
-			max-height: 70vh;
+			flex: 1 1 0;
+			min-height: 0;
 			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 			font-size: 12.5px;
 			line-height: 1.6;
 			background: var(--theme-color-background-secondary, #F6F3EE);
-			border: 1px solid var(--theme-color-border-default, #DDD6CA);
-			border-radius: 6px;
-			padding: 1em;
+			padding: 0.8em 0.9em;
 			overflow: auto;
 			margin: 0;
 			white-space: pre-wrap;
 			word-break: break-word;
 			color: var(--theme-color-text-primary, #2A241E);
+			border: 0;
+			border-radius: 0;
 		}
 		.docuserve-playground-log-line {
 			display: block;
@@ -266,6 +319,30 @@ const _ViewConfiguration =
 			padding: 0 0.3em;
 			border-radius: 2px;
 		}
+		/* Banner records (start / finish) — span the full row width
+		   with no level chip or timestamp, since the message itself
+		   is the dash-bordered marker.  font-size: 0 on the row
+		   collapses the literal whitespace text nodes the line
+		   template inserts between time/level/message (those are
+		   needed for copy-paste of regular rows but would otherwise
+		   leak 2 leading spaces onto every banner line); the message
+		   span re-asserts the inherited font size so it renders. */
+		.docuserve-playground-log-line-banner
+		{
+			font-size: 0;
+		}
+		.docuserve-playground-log-line-banner .docuserve-playground-log-time,
+		.docuserve-playground-log-line-banner .docuserve-playground-log-level
+		{
+			display: none;
+		}
+		.docuserve-playground-log-line-banner .docuserve-playground-log-message
+		{
+			font-size: 12.5px;
+			color: var(--theme-color-text-muted, #8A7F72);
+			font-weight: 600;
+			letter-spacing: 0.02em;
+		}
 		.docuserve-playground-log-message { color: var(--theme-color-text-primary, #2A241E); }
 		.docuserve-playground-log-datum {
 			color: var(--theme-color-syntax-property, #9E3A50);
@@ -291,27 +368,43 @@ const _ViewConfiguration =
 			Hash: "Docuserve-Fable-Playground-Template",
 			Template: /*html*/`
 <div class="docuserve-playground">
-	<div class="docuserve-playground-header">
-		<h1>{~D:AppData.Docuserve.Playground.Title~}</h1>
-		<p>{~D:AppData.Docuserve.Playground.Description~}</p>
-		<div class="docuserve-playground-actions">
-			<button class="primary" onclick="{~P~}.views['Docuserve-Fable-Playground'].run()">Run</button>
-			<button onclick="{~P~}.views['Docuserve-Fable-Playground'].clear()">Clear log</button>
-			<button onclick="{~P~}.views['Docuserve-Fable-Playground'].reset()">Reset code</button>
-			<label class="docuserve-playground-toggle" title="When on, user code that does new Fable(...) via require('fable') gets the playground's log capture pre-attached, so app.log.info(...) calls appear in the panel.  Uncheck for a truly clean Fable.">
-				<input type="checkbox" id="Docuserve-Fable-Playground-AutoCapture-Toggle" onchange="{~P~}.views['Docuserve-Fable-Playground'].setAutoCapture(this.checked)">
-				Auto-attach to require('fable')
-			</label>
-			<span id="Docuserve-Fable-Playground-Status" class="status"></span>
-		</div>
-	</div>
 	<div class="docuserve-playground-body">
-		<div class="docuserve-playground-pane">
-			<h3>Code</h3>
+		<div class="docuserve-playground-pane docuserve-playground-pane-code">
+			<div class="docuserve-playground-pane-header">
+				<span class="docuserve-playground-pane-title">Code</span>
+				<div class="docuserve-playground-pane-controls">
+					<button type="button" class="docuserve-playground-iconbtn" id="Docuserve-Fable-Playground-HelpBtn" aria-label="What's the playground?">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/></svg>
+					</button>
+					<label class="docuserve-playground-toggle" title="When on, user code that does new Fable(...) via require('fable') gets the playground's log capture pre-attached, so app.log.info(...) calls appear in the panel.">
+						<input type="checkbox" id="Docuserve-Fable-Playground-AutoCapture-Toggle" onchange="{~P~}.views['Docuserve-Fable-Playground'].setAutoCapture(this.checked)">
+						auto-attach
+					</label>
+					<button type="button" class="docuserve-playground-iconbtn" title="Copy code" aria-label="Copy code" onclick="{~P~}.views['Docuserve-Fable-Playground'].copyCode()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+					</button>
+					<button type="button" class="docuserve-playground-iconbtn docuserve-playground-iconbtn-run" title="Run" aria-label="Run code" onclick="{~P~}.views['Docuserve-Fable-Playground'].run()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>
+					</button>
+				</div>
+			</div>
 			<div id="${_CodeEditorMountId}"></div>
 		</div>
-		<div class="docuserve-playground-pane">
-			<h3>Log output</h3>
+		<div class="docuserve-playground-pane docuserve-playground-pane-log">
+			<div class="docuserve-playground-pane-header">
+				<span class="docuserve-playground-pane-title">Log output</span>
+				<div class="docuserve-playground-pane-controls">
+					<button type="button" class="docuserve-playground-iconbtn docuserve-playground-iconbtn-copylog" title="Copy log" aria-label="Copy log" onclick="{~P~}.views['Docuserve-Fable-Playground'].copyLog()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+					</button>
+					<button type="button" class="docuserve-playground-iconbtn" title="Clear log" aria-label="Clear log" onclick="{~P~}.views['Docuserve-Fable-Playground'].clear()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+					</button>
+					<button type="button" class="docuserve-playground-iconbtn" title="Close playground" aria-label="Close playground" onclick="{~P~}.views['Docuserve-Layout'].collapsePlayground()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+					</button>
+				</div>
+			</div>
 			<pre class="docuserve-playground-log" id="Docuserve-Fable-Playground-Log">{~T:Docuserve-Fable-Playground-Log-Body-Template:AppData~}</pre>
 		</div>
 	</div>
@@ -324,7 +417,7 @@ const _ViewConfiguration =
 		},
 		{
 			Hash: "Docuserve-Fable-Playground-Log-Line-Template",
-			Template: /*html*/`<span class="docuserve-playground-log-line"><span class="docuserve-playground-log-time">{~D:Record.Time~}</span><span class="docuserve-playground-log-level docuserve-playground-log-level-{~D:Record.Level~}">{~D:Record.Level~}</span><span class="docuserve-playground-log-message">{~D:Record.Message~}</span>{~TS:Docuserve-Fable-Playground-Log-Datum-Template:Record.DatumSlot~}</span>`
+			Template: /*html*/`<span class="docuserve-playground-log-line docuserve-playground-log-line-{~D:Record.Level~}"><span class="docuserve-playground-log-time">{~D:Record.Time~}</span> <span class="docuserve-playground-log-level docuserve-playground-log-level-{~D:Record.Level~}">{~D:Record.Level~}</span> <span class="docuserve-playground-log-message">{~D:Record.Message~}</span>{~TS:Docuserve-Fable-Playground-Log-Datum-Template:Record.DatumSlot~}</span>`
 		},
 		{
 			Hash: "Docuserve-Fable-Playground-Log-Datum-Template",
@@ -410,7 +503,106 @@ class DocuserveFablePlaygroundView extends libPictView
 		{
 			tmpToggle.checked = !!this.pict.AppData.Docuserve.Playground.AutoCaptureUserFables;
 		}
+		this._wireHelpTooltip();
 		this._mountCodeEditor();
+	}
+
+	/**
+	 * Attach the rich-tooltip onto the [?] help button via
+	 * pict-section-modal's tooltip service.  Lazy — silently no-ops if
+	 * the modal isn't registered (which would only happen during a
+	 * brief boot window).  Re-runnable; the tooltip helper destroys
+	 * any prior one bound to the same element.
+	 */
+	_wireHelpTooltip()
+	{
+		let tmpBtn = document.getElementById('Docuserve-Fable-Playground-HelpBtn');
+		let tmpModal = this.pict.views['Pict-Section-Modal'];
+		if (!tmpBtn || !tmpModal || typeof tmpModal.richTooltip !== 'function') { return; }
+		if (this._helpTooltip && typeof this._helpTooltip.destroy === 'function')
+		{
+			this._helpTooltip.destroy();
+		}
+		let tmpHTML = ''
+			+ '<div style="font-size:12px;line-height:1.5;">'
+			+ '<strong>JS Playground</strong> &mdash; write JavaScript that receives a fresh '
+			+ '<code>fable</code> instance.  Every <code>fable.log.*</code> call is captured and '
+			+ 'shown in the Log Output panel.  Toggle <em>auto-attach</em> off to get a raw Fable '
+			+ 'whose log streams you wire yourself.  Press the play button to run; click the '
+			+ 'copy icon to grab the code or the output.'
+			+ '</div>';
+		this._helpTooltip = tmpModal.richTooltip(tmpBtn, tmpHTML,
+			{ position: 'bottom', interactive: true, maxWidth: '340px', delay: 80 });
+	}
+
+	/**
+	 * Copy the editor's current contents to the clipboard.  Falls back
+	 * to a textarea trick when the async Clipboard API isn't available
+	 * (older Safari, insecure contexts).
+	 */
+	copyCode()
+	{
+		this._copyToClipboard(this._getCurrentCode(), 'code');
+	}
+
+	/**
+	 * Copy the captured log records to the clipboard as plain text.
+	 * Format mirrors the on-screen layout: `<time>  <LEVEL>  message  [datum]`
+	 * one record per line, so the result is paste-friendly into bug
+	 * reports or scratch files.
+	 */
+	copyLog()
+	{
+		let tmpLines = (this.pict.AppData.Docuserve.Playground
+			&& this.pict.AppData.Docuserve.Playground.LogLines) || [];
+		let tmpText = tmpLines.map(function (pLine)
+		{
+			// Banner rows are pre-formatted dash-bordered markers —
+			// emit the message verbatim so the copied transcript has
+			// the same visual separators the user saw on screen.
+			if (pLine.Level === 'banner') { return pLine.Message; }
+			let tmpRow = pLine.Time + '  ' + pLine.Level.toUpperCase() + '  ' + pLine.Message;
+			if (Array.isArray(pLine.DatumSlot) && pLine.DatumSlot.length > 0)
+			{
+				tmpRow += '  ' + pLine.DatumSlot[0].Datum;
+			}
+			return tmpRow;
+		}).join('\n');
+		this._copyToClipboard(tmpText, 'log');
+	}
+
+	_copyToClipboard(pText, pKind)
+	{
+		let tmpToast = (pSuccess) =>
+		{
+			let tmpModal = this.pict.views['Pict-Section-Modal'];
+			if (!tmpModal || typeof tmpModal.toast !== 'function') { return; }
+			tmpModal.toast(
+				pSuccess ? (pKind === 'log' ? 'Log copied' : 'Code copied')
+					: 'Copy failed',
+				{ type: pSuccess ? 'success' : 'error', duration: 1500 });
+		};
+		if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function')
+		{
+			navigator.clipboard.writeText(pText)
+				.then(() => tmpToast(true))
+				.catch(() => tmpToast(false));
+			return;
+		}
+		// Fallback for non-secure contexts (e.g. http on a LAN dev box).
+		try
+		{
+			let tmpEl = document.createElement('textarea');
+			tmpEl.value = pText;
+			tmpEl.style.position = 'fixed';
+			tmpEl.style.opacity  = '0';
+			document.body.appendChild(tmpEl);
+			tmpEl.select();
+			let tmpOk = document.execCommand('copy');
+			document.body.removeChild(tmpEl);
+			tmpToast(tmpOk);
+		}
+		catch (pError) { tmpToast(false); }
 	}
 
 	/**
@@ -522,6 +714,7 @@ class DocuserveFablePlaygroundView extends libPictView
 	run()
 	{
 		this._cancelAsyncRender();
+		this._cancelFinishBanner();
 
 		let tmpCode = this._getCurrentCode();
 		this.pict.AppData.Docuserve.Playground.Code = tmpCode;
@@ -530,6 +723,24 @@ class DocuserveFablePlaygroundView extends libPictView
 		let tmpStart   = Date.now();
 		this._currentRunRecords = tmpRecords;
 		this._currentRunStart   = tmpStart;
+
+		// Start banner — ASCII-bordered line so it stands out from
+		// captured log records and copy/paste lands in any text editor
+		// with the same visual weight as it had in the panel.
+		tmpRecords.push(
+		{
+			level:   'banner',
+			message: this._formatStartBanner(tmpStart),
+			datum:   null,
+			ms:      0
+		});
+
+		// Console capture is done via a per-run scoped `console`
+		// parameter passed into new Function(...) below.  Lexical
+		// scoping in the snippet means user-code console.* calls hit
+		// our shim while pict/fable-log's own console.log calls
+		// (firing template-render traces) keep using the global
+		// console untouched — avoids the obvious feedback loop.
 
 		let tmpFable;
 		try
@@ -578,18 +789,21 @@ class DocuserveFablePlaygroundView extends libPictView
 				// IIFE land in the .catch handler below — both turn
 				// into error-level records in the log pane.
 				let tmpRequire = this._buildRequireShim(tmpFable, tmpRecords, tmpStart);
-				let tmpFn = new Function('fable', 'pict', 'require',
+				let tmpConsole = this._buildCapturingConsole(tmpRecords, tmpStart);
+				let tmpFn = new Function('fable', 'pict', 'require', 'console',
 					'return (async () => { ' + tmpCode + '\n})();');
-				let tmpPromise = tmpFn(tmpFable, this.pict, tmpRequire);
-				if (tmpPromise && typeof tmpPromise.catch === 'function')
+				let tmpPromise = tmpFn(tmpFable, this.pict, tmpRequire, tmpConsole);
+				if (tmpPromise && typeof tmpPromise.then === 'function')
 				{
 					let tmpSelf = this;
-					tmpPromise.catch((pAsyncError) =>
-					{
-						if (tmpRecords !== tmpSelf._currentRunRecords) { return; }
-						tmpRecords.push({ level: 'error', message: tmpSelf._errorMessage(pAsyncError), datum: null, ms: Date.now() - tmpStart });
-						tmpSelf._scheduleAsyncLogRender();
-					});
+					tmpPromise.then(
+						() => {},
+						(pAsyncError) =>
+						{
+							if (tmpRecords !== tmpSelf._currentRunRecords) { return; }
+							tmpRecords.push({ level: 'error', message: tmpSelf._errorMessage(pAsyncError), datum: null, ms: Date.now() - tmpStart });
+							tmpSelf._scheduleAsyncLogRender();
+						});
 				}
 			}
 			catch (pError)
@@ -599,14 +813,207 @@ class DocuserveFablePlaygroundView extends libPictView
 			}
 		}
 
-		let tmpElapsed = Date.now() - tmpStart;
-		this._setLogRecords(tmpRecords, tmpElapsed, tmpRunError);
+		// Initial paint — user sees start banner + any sync records
+		// land in the panel right away.  The finish banner is deferred
+		// (see below) so naked setTimeouts / fetches / etc. get a
+		// chance to push their logs before we declare the run "done".
+		this._setLogRecords(tmpRecords, Date.now() - tmpStart, tmpRunError);
 		this._renderLogOnly();
+
+		// Settle-window watcher — wait for the records array to be
+		// quiet for IDLE_MS, then emit the finish banner.  Naked
+		// setTimeouts / fetch chains / etc. keep arming the watcher
+		// for as long as they push records, capped at MAX_RUN_MS.
+		this._scheduleFinishBanner(tmpRecords, tmpStart, tmpRunError);
+	}
+
+	/**
+	 * Defer the finish banner until the run's records array has been
+	 * quiet for ~200ms.  Each fresh record (sync or async) resets the
+	 * idle clock.  A 10-second cap forces the banner to emit even if
+	 * the snippet has a runaway setInterval — better to truthfully
+	 * say "run finished · elapsed 10000ms" once than to never close
+	 * the banner pair at all.
+	 *
+	 * Cancellable via `_cancelFinishBanner` — called by the next run
+	 * (`run()` clears the previous watcher up front) and by `clear()`.
+	 */
+	_scheduleFinishBanner(pRecords, pStart, pRunError)
+	{
+		this._cancelFinishBanner();
+		let IDLE_MS    = 200;
+		let MAX_RUN_MS = 10000;
+		let tmpSelf = this;
+		let tmpLastCount = pRecords.length;
+		let tmpDeadline  = Date.now() + MAX_RUN_MS;
+
+		let fEmit = (pHitCap) =>
+		{
+			tmpSelf._finishBannerTimer = null;
+			if (tmpSelf._finishBannerMaxTimer)
+			{
+				clearTimeout(tmpSelf._finishBannerMaxTimer);
+				tmpSelf._finishBannerMaxTimer = null;
+			}
+			if (pRecords !== tmpSelf._currentRunRecords) { return; }
+			let tmpElapsed = Date.now() - pStart;
+			pRecords.push(
+			{
+				level:   'banner',
+				message: tmpSelf._formatFinishBanner(tmpElapsed, pRunError, pHitCap),
+				datum:   null,
+				ms:      tmpElapsed
+			});
+			tmpSelf._setLogRecords(pRecords, tmpElapsed, pRunError);
+			tmpSelf._renderLogOnly();
+		};
+
+		let fCheck = () =>
+		{
+			if (pRecords !== tmpSelf._currentRunRecords)
+			{
+				tmpSelf._cancelFinishBanner();
+				return;
+			}
+			if (pRecords.length === tmpLastCount)
+			{
+				// Quiet for IDLE_MS → run is done.
+				fEmit(false);
+			}
+			else
+			{
+				tmpLastCount = pRecords.length;
+				tmpSelf._finishBannerTimer = setTimeout(fCheck, IDLE_MS);
+			}
+		};
+
+		this._finishBannerTimer = setTimeout(fCheck, IDLE_MS);
+		this._finishBannerMaxTimer = setTimeout(() => fEmit(true), MAX_RUN_MS);
+		void tmpDeadline; // kept for future "remaining time" display
+	}
+
+	_cancelFinishBanner()
+	{
+		if (this._finishBannerTimer)
+		{
+			clearTimeout(this._finishBannerTimer);
+			this._finishBannerTimer = null;
+		}
+		if (this._finishBannerMaxTimer)
+		{
+			clearTimeout(this._finishBannerMaxTimer);
+			this._finishBannerMaxTimer = null;
+		}
+	}
+
+	/**
+	 * Build a per-run `console` shim that user code receives via the
+	 * `new Function('console', ...)` parameter — lexical scoping makes
+	 * the snippet see THIS object as `console`, while everything else
+	 * on the page (pict's template engine, fable-log's default web
+	 * stream, etc.) keeps using the real global console.  That
+	 * isolation is what stops the feedback loop where pict's own
+	 * console.trace template-render messages get captured back into
+	 * the playground and trigger another render.
+	 *
+	 * Each captured call forwards to the real global console so the
+	 * dev console still sees the output.  Mirrors fable-log's level
+	 * vocabulary so trace/debug/info/warn/error all show up coloured.
+	 */
+	_buildCapturingConsole(pRecords, pStart)
+	{
+		let tmpSelf = this;
+		let tmpReal = (typeof console !== 'undefined') ? console : null;
+		let fForward = (pLevel) =>
+		{
+			if (!tmpReal) { return function () {}; }
+			let tmpFn = tmpReal[pLevel] || tmpReal.log;
+			return function () { try { tmpFn.apply(tmpReal, arguments); } catch (pError) {} };
+		};
+		let fMake = (pLevel) =>
+		{
+			let tmpForward = fForward(pLevel);
+			return function ()
+			{
+				tmpForward.apply(null, arguments);
+				if (pRecords !== tmpSelf._currentRunRecords) { return; }
+				let tmpArgs = Array.prototype.slice.call(arguments);
+				let tmpMsgParts = [];
+				let tmpDatum    = null;
+				for (let i = 0; i < tmpArgs.length; i++)
+				{
+					let tmpArg = tmpArgs[i];
+					if (typeof tmpArg === 'string') { tmpMsgParts.push(tmpArg); }
+					else if (tmpDatum === null && tmpArg && typeof tmpArg === 'object') { tmpDatum = tmpArg; }
+					else { tmpMsgParts.push(tmpSelf._formatDatum(tmpArg)); }
+				}
+				pRecords.push(
+				{
+					level:   pLevel,
+					message: '[console] ' + tmpMsgParts.join(' '),
+					datum:   tmpDatum,
+					ms:      Date.now() - pStart
+				});
+				tmpSelf._scheduleAsyncLogRender();
+			};
+		};
+		return {
+			log:    fMake('info'),    // console.log → info level
+			info:   fMake('info'),
+			warn:   fMake('warn'),
+			error:  fMake('error'),
+			debug:  fMake('debug'),
+			trace:  fMake('trace'),
+			// Pass-throughs for the less-common methods so user code
+			// that calls them doesn't error.
+			group:        fForward('group'),
+			groupEnd:     fForward('groupEnd'),
+			groupCollapsed: fForward('groupCollapsed'),
+			table:        fForward('table'),
+			dir:          fForward('dir'),
+			time:         fForward('time'),
+			timeEnd:      fForward('timeEnd'),
+			count:        fForward('count'),
+			countReset:   fForward('countReset'),
+			assert:       fForward('assert'),
+			clear:        fForward('clear')
+		};
+	}
+
+	_formatStartBanner(pStart)
+	{
+		return '─── run started · ' + this._formatWallClock(pStart) + ' ' + this._padDashes(40);
+	}
+
+	_formatFinishBanner(pElapsed, pRunError, pHitCap)
+	{
+		let tmpLabel;
+		if (pRunError)    { tmpLabel = 'run threw'; }
+		else if (pHitCap) { tmpLabel = 'run still emitting · cut off at cap'; }
+		else              { tmpLabel = 'run finished'; }
+		let tmpSuffix = ' · elapsed ' + pElapsed + 'ms ';
+		return '─── ' + tmpLabel + tmpSuffix + this._padDashes(40);
+	}
+
+	_formatWallClock(pMs)
+	{
+		let tmpD = new Date(pMs);
+		let pad = (pN, pW) => { let tmpS = String(pN); while (tmpS.length < pW) { tmpS = '0' + tmpS; } return tmpS; };
+		return pad(tmpD.getHours(), 2) + ':' + pad(tmpD.getMinutes(), 2) + ':' + pad(tmpD.getSeconds(), 2)
+			+ '.' + pad(tmpD.getMilliseconds(), 3);
+	}
+
+	_padDashes(pCount)
+	{
+		let tmpOut = '';
+		for (let i = 0; i < pCount; i++) { tmpOut += '─'; }
+		return tmpOut;
 	}
 
 	clear()
 	{
 		this._cancelAsyncRender();
+		this._cancelFinishBanner();
 		this._currentRunRecords = null;
 		this._currentRunStart   = 0;
 		this._setLogRecords([], 0, null);
@@ -730,27 +1137,54 @@ class DocuserveFablePlaygroundView extends libPictView
 			return tmpInstance;
 		}
 
+		// Built-in resolvers — every "bundled" module in the schema
+		// goes through one of these.  Future "cdn" / "dynamic" sources
+		// would be wired in alongside as lazy promises.
+		let tmpResolvers =
+		{
+			'fable':                     () => tmpAutoCapture ? PlaygroundFableWrapper : tmpFableClass,
+			'pict':                      () => tmpPict.constructor,
+			'fable-uuid':                () => pFableInstance.UUID && pFableInstance.UUID.constructor,
+			'fable-settings':            () => pFableInstance.SettingsManager && pFableInstance.SettingsManager.constructor,
+			'fable-log':                 () => pFableInstance.Logging && pFableInstance.Logging.constructor,
+			'fable-serviceproviderbase': () => libFableServiceProviderBase
+		};
+
+		// Allowed-imports list derived from the current module's
+		// _playground.json.  When a config is present, only names it
+		// declares are exposed; when it isn't (or the page is the
+		// generic playground reference doc), fall back to the full
+		// built-in list so legacy snippets keep running.
+		let tmpConfig = this.pict.AppData.Docuserve.Playground.Config;
+		let tmpAllowedNames = null;
+		if (tmpConfig && Array.isArray(tmpConfig.Imports) && tmpConfig.Imports.length > 0)
+		{
+			tmpAllowedNames = {};
+			for (let i = 0; i < tmpConfig.Imports.length; i++)
+			{
+				let tmpEntry = tmpConfig.Imports[i];
+				if (tmpEntry && typeof tmpEntry.Name === 'string')
+				{
+					tmpAllowedNames[tmpEntry.Name] = tmpEntry.Source || 'bundled';
+				}
+			}
+		}
+
 		return function playgroundRequire(pModuleName)
 		{
-			switch (pModuleName)
+			let tmpResolver = tmpResolvers[pModuleName];
+			let tmpAllowed = (tmpAllowedNames === null) || Object.prototype.hasOwnProperty.call(tmpAllowedNames, pModuleName);
+			if (tmpResolver && tmpAllowed)
 			{
-				case 'fable':
-					return tmpAutoCapture ? PlaygroundFableWrapper : tmpFableClass;
-				case 'pict':
-					return tmpPict.constructor;
-				case 'fable-uuid':
-					return pFableInstance.UUID && pFableInstance.UUID.constructor;
-				case 'fable-settings':
-					return pFableInstance.SettingsManager && pFableInstance.SettingsManager.constructor;
-				case 'fable-log':
-					return pFableInstance.Logging && pFableInstance.Logging.constructor;
-				case 'fable-serviceproviderbase':
-					return libFableServiceProviderBase;
-				default:
-					throw new Error("require('" + pModuleName + "') is not available in the playground. "
-						+ "Recognized: 'fable', 'pict', 'fable-uuid', 'fable-settings', 'fable-log', 'fable-serviceproviderbase'. "
-						+ "For anything else, use the supplied `fable` / `pict` directly.");
+				return tmpResolver();
 			}
+			// Friendly error.  Lists what the current module's
+			// _playground.json declares so users know what's on the menu.
+			let tmpKnown;
+			if (tmpAllowedNames !== null) { tmpKnown = Object.keys(tmpAllowedNames); }
+			else                          { tmpKnown = Object.keys(tmpResolvers); }
+			throw new Error("require('" + pModuleName + "') is not available in this playground. "
+				+ "Allowed here: " + tmpKnown.map(pN => "'" + pN + "'").join(', ') + ".");
 		};
 	}
 

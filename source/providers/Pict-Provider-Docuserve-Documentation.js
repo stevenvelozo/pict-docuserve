@@ -18,6 +18,10 @@ class DocuserveDocumentationProvider extends libPictProvider
 
 		this._Catalog = null;
 		this._ContentCache = {};
+		// (group, module) -> playground config | null (negative cache).
+		// Loaded lazily by loadPlaygroundConfig on first navigation into
+		// a module that opts into the playground.
+		this._PlaygroundConfigCache = {};
 
 		// Create an instance of the content provider for markdown parsing
 		this._ContentProvider = this.pict.addProvider('Pict-Content', libPictContentProvider.default_configuration, libPictContentProvider);
@@ -578,6 +582,71 @@ class DocuserveDocumentationProvider extends libPictProvider
 			{
 				this.log.warn(`Docuserve: Error loading _version.json: ${pError}`);
 				return tmpCallback();
+			});
+	}
+
+	/**
+	 * Fetch a module's `_playground.json` config (the file that
+	 * declares which `require()` names the playground exposes and
+	 * how each one resolves).  Results are cached per (group, module);
+	 * a 404 / missing file caches a null so we don't hit the network
+	 * repeatedly when a module simply doesn't have a playground.
+	 *
+	 * Config shape:
+	 *   {
+	 *     "Imports":
+	 *     [
+	 *       { "Name": "fable",      "Source": "bundled" },
+	 *       { "Name": "meadow",     "Source": "cdn",
+	 *         "ScriptUrl": "https://...", "GlobalName": "Meadow" }
+	 *     ]
+	 *   }
+	 *
+	 * "Source" today is just `"bundled"` for the fable family (already
+	 * inside the page via the live Fable instance).  The schema makes
+	 * room for `"cdn"`-style loads when we get to meadow.
+	 *
+	 * @param {string} pGroup
+	 * @param {string} pModule
+	 * @returns {Promise<object|null>} Resolves with the parsed config
+	 *   or null if the module has no `_playground.json`.
+	 */
+	loadPlaygroundConfig(pGroup, pModule)
+	{
+		let tmpKey = (pGroup || '') + '/' + (pModule || '');
+		if (Object.prototype.hasOwnProperty.call(this._PlaygroundConfigCache, tmpKey))
+		{
+			return Promise.resolve(this._PlaygroundConfigCache[tmpKey]);
+		}
+		// Catalog mode: route to the module's docs/_playground.json on GitHub.
+		// Standalone mode: catalog isn't loaded, so the served docs ARE the
+		// current module's docs root; use DocsBaseURL.
+		let tmpURL;
+		if (pGroup && pModule && this._Catalog)
+		{
+			tmpURL = this.resolveDocumentURL(pGroup, pModule, '_playground.json');
+		}
+		if (!tmpURL)
+		{
+			let tmpDocsBase = this.pict.AppData.Docuserve.DocsBaseURL || '';
+			tmpURL = tmpDocsBase + '_playground.json';
+		}
+		return fetch(tmpURL)
+			.then((pResponse) =>
+			{
+				if (!pResponse.ok) { return null; }
+				return pResponse.json();
+			})
+			.then((pConfig) =>
+			{
+				this._PlaygroundConfigCache[tmpKey] = pConfig || null;
+				return this._PlaygroundConfigCache[tmpKey];
+			})
+			.catch((pError) =>
+			{
+				this.log.warn('Docuserve: Error loading _playground.json [' + tmpURL + ']: ' + pError);
+				this._PlaygroundConfigCache[tmpKey] = null;
+				return null;
 			});
 	}
 
@@ -1324,6 +1393,101 @@ class DocuserveDocumentationProvider extends libPictProvider
 		}
 
 		return null;
+	}
+
+	/**
+	 * Decide whether the playground panel should be enabled for the
+	 * given group/module.
+	 *
+	 * Opt-in signal: a module's `_sidebar.md` (baked into the catalog as
+	 * `module.Sidebar`) contains an entry whose Path matches
+	 * `playground.md` (case-insensitive, anywhere in the tree).  When the
+	 * sidebar contains that entry, code blocks in the module's docs get
+	 * the "Try in Playground" button and the bottom drawer/tab strip
+	 * becomes visible; otherwise the drawer is suppressed entirely.
+	 *
+	 * Falls back to the root SidebarGroups (standalone mode — docuserve
+	 * serving a single module's docs directly without a catalog).
+	 *
+	 * @param {string} [pGroup]  - Current group key (may be empty)
+	 * @param {string} [pModule] - Current module name (may be empty)
+	 * @returns {boolean}
+	 */
+	isPlaygroundEnabled(pGroup, pModule)
+	{
+		// Per-module sidebar (catalog mode).
+		if (pGroup && pModule)
+		{
+			let tmpSidebar = this.getModuleSidebar(pGroup, pModule);
+			if (Array.isArray(tmpSidebar) && this._sidebarEntriesIncludePlayground(tmpSidebar))
+			{
+				return true;
+			}
+		}
+		// Root sidebar (standalone-mode fallback) — checks both group-level
+		// Route entries and per-module Route entries for a playground link.
+		let tmpGroups = this.pict.AppData.Docuserve.SidebarGroups;
+		if (Array.isArray(tmpGroups) && this._sidebarGroupsIncludePlayground(tmpGroups))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Recursive search for a playground.md path in a per-module Sidebar
+	 * tree (shape: `[{Title, Path}|{Title, Children:[...]}]`).
+	 */
+	_sidebarEntriesIncludePlayground(pEntries)
+	{
+		for (let i = 0; i < pEntries.length; i++)
+		{
+			let tmpEntry = pEntries[i];
+			if (typeof tmpEntry.Path === 'string' && /(^|\/)playground\.md$/i.test(tmpEntry.Path))
+			{
+				return true;
+			}
+			if (Array.isArray(tmpEntry.Children)
+				&& this._sidebarEntriesIncludePlayground(tmpEntry.Children))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Search the root SidebarGroups (shape from parseSidebarMarkdown:
+	 * `[{Name, Route, Modules: [{Name, Route, ...}]}]`) for a playground
+	 * route.  Used in standalone mode where there's no catalog.
+	 *
+	 * `convertSidebarLink('playground.md')` strips the `.md` and emits
+	 * `#/page/playground`, so we match either the raw filename OR the
+	 * page route.
+	 */
+	_sidebarGroupsIncludePlayground(pGroups)
+	{
+		let tmpRegex = /(^|\/)playground(\.md|$)/i;
+		for (let i = 0; i < pGroups.length; i++)
+		{
+			let tmpGroup = pGroups[i];
+			if (typeof tmpGroup.Route === 'string' && tmpRegex.test(tmpGroup.Route))
+			{
+				return true;
+			}
+			if (Array.isArray(tmpGroup.Modules))
+			{
+				for (let j = 0; j < tmpGroup.Modules.length; j++)
+				{
+					let tmpMod = tmpGroup.Modules[j];
+					if (typeof tmpMod.Route === 'string' && tmpRegex.test(tmpMod.Route))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

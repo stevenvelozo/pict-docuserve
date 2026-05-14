@@ -714,6 +714,21 @@ class DocuserveContentView extends libPictContentView
 	{
 		let tmpBody = document.getElementById('Docuserve-Content-Body');
 		if (!tmpBody) { return; }
+		// Per-module opt-in: only inject the "Try in Playground" button
+		// when the current module's _sidebar.md (or the root one in
+		// standalone mode) contains a "Code Playground" entry.  Without
+		// that opt-in, JS code blocks render with the standard Copy +
+		// Fullscreen actions only — keeping the playground out of modules
+		// that haven't been wired up to run in it yet.
+		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
+		if (tmpDocProvider && typeof tmpDocProvider.isPlaygroundEnabled === 'function')
+		{
+			let tmpAppData = this.pict.AppData.Docuserve || {};
+			if (!tmpDocProvider.isPlaygroundEnabled(tmpAppData.CurrentGroup, tmpAppData.CurrentModule))
+			{
+				return;
+			}
+		}
 		let tmpContainers = tmpBody.querySelectorAll('.pict-content-code-container:not([data-tryplay-wired])');
 		for (let i = 0; i < tmpContainers.length; i++)
 		{

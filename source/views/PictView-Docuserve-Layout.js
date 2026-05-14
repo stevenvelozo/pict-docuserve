@@ -95,6 +95,31 @@ const _ViewConfiguration =
 			overflow-y: auto;
 			background: var(--theme-color-background-secondary, #FAF7F1);
 		}
+
+		/* Playground panel suppression — the bottom drawer (and its
+		   collapsed tab strip) only takes layout space on pages that
+		   have opted into the playground via a "Code Playground"
+		   entry in their module's _sidebar.md.  Everywhere else we
+		   hide the panel entirely so the doc content gets the full
+		   vertical area.  The class is toggled by
+		   setPlaygroundEnabled() on each navigation. */
+		.docuserve-playground-disabled .pict-modal-shell-center > .pict-modal-shell-panel-bottom
+		{
+			display: none !important;
+		}
+
+		/* Kill the height transition on the playground drawer.
+		   pict-section-modal ships a 0.14s height transition on every
+		   shell panel for smooth resize handoffs, but when the play
+		   button mounts the CodeJar editor mid-expand the synchronous
+		   innerHTML rewrite races the transition and the panel gets
+		   stuck at its pre-transition size.  Snapping the resize
+		   avoids the race and the user never sees the in-between
+		   frames anyway. */
+		.pict-modal-shell-center > .pict-modal-shell-panel-bottom
+		{
+			transition: none !important;
+		}
 	`,
 
 	Templates:
@@ -208,17 +233,35 @@ class DocuserveLayoutView extends libPictView
 			Side: 'bottom',
 			Scope: 'center',
 			Mode: 'resizable',
-			Size: 380,
-			MinSize: 200,
-			MaxSize: 700,
+			Size: 420,
+			// MinSize chosen so the per-pane headers + ~14 editor lines
+			// fit at the smallest drag.  Below this the editor becomes
+			// unusable and the user has to expand to do anything.
+			MinSize: 320,
+			MaxSize: 800,
 			Collapsed: true,
-			Title: 'Playground',
+			Title: 'JS Playground',
 			ContentDestinationId: 'Docuserve-Playground-Drawer-Content',
 			OnExpand: () => { this._onPlaygroundDrawerExpand(); }
 		});
 
 		// Center — the content area where splash / content / search render.
 		this._shell.center({ ContentDestinationId: 'Docuserve-Content-Container' });
+
+		// Reconcile initial panel state with the playground content.
+		// pict-section-modal's Panel ctor respects persisted state
+		// (localStorage), so a panel that the user left expanded on a
+		// previous visit returns expanded — but OnExpand only fires on
+		// the collapsed→expanded transition, never on the initial render.
+		// Result: an empty drawer is open on page load until the user
+		// manually collapses + reopens it.  Mount the playground here
+		// (matching what OnExpand would have done) so the persisted-
+		// expanded case lands with content already in the drawer.
+		let tmpPanel = this._shell.getPanel('playground-drawer');
+		if (tmpPanel && !tmpPanel.Collapsed)
+		{
+			this._onPlaygroundDrawerExpand();
+		}
 	}
 
 	/**
@@ -276,10 +319,63 @@ class DocuserveLayoutView extends libPictView
 
 	getPlaygroundPanel() { return this._shell ? this._shell.getPanel('playground-drawer') : null; }
 
+	/**
+	 * Show/hide the bottom playground drawer based on the current
+	 * module's opt-in state.  When pEnabled is false the panel is
+	 * suppressed via the `docuserve-playground-disabled` class — the
+	 * panel object stays in the shell so expanding it later (via
+	 * `expandPlayground()` from a "Try in Playground" button on a
+	 * playground-enabled page) still works, but the collapsed tab
+	 * strip stops occupying the bottom 24px of the center column.
+	 *
+	 * Idempotent — safe to call on every navigation.
+	 *
+	 * @param {boolean} pEnabled
+	 */
+	setPlaygroundEnabled(pEnabled)
+	{
+		let tmpMount = document.getElementById('Docuserve-Layout-Mount');
+		if (!tmpMount) { return; }
+		if (pEnabled) { tmpMount.classList.remove('docuserve-playground-disabled'); }
+		else
+		{
+			tmpMount.classList.add('docuserve-playground-disabled');
+			// If the user previously left the panel expanded, force it
+			// collapsed when navigating into a non-opted-in module so
+			// nothing peeks through on the next module visit.
+			let tmpPanel = this.getPlaygroundPanel();
+			if (tmpPanel && typeof tmpPanel.collapse === 'function') { tmpPanel.collapse(); }
+		}
+	}
+
 	expandPlayground()
 	{
 		let tmpPanel = this.getPlaygroundPanel();
 		if (tmpPanel && typeof tmpPanel.expand === 'function') { tmpPanel.expand(); }
+	}
+
+	/**
+	 * Set the playground drawer's tab-strip label.  pict-section-modal
+	 * builds the collapse-tab's innerHTML once at construction time and
+	 * exposes no setter, so we reach into the panel's element directly
+	 * and rewrite the title span.  Idempotent — safe to call on every
+	 * navigation.
+	 *
+	 * @param {string} pTitle - The label to show on the collapsed tab.
+	 */
+	setPlaygroundTitle(pTitle)
+	{
+		let tmpPanel = this.getPlaygroundPanel();
+		if (!tmpPanel || !tmpPanel.El) { return; }
+		let tmpClean = (typeof pTitle === 'string' && pTitle.length > 0) ? pTitle : 'JS Playground';
+		tmpPanel.Title = tmpClean;
+		if (tmpPanel._collapseTab)
+		{
+			tmpPanel._collapseTab.setAttribute('aria-label', 'Toggle ' + tmpClean);
+			tmpPanel._collapseTab.title = tmpClean;
+			let tmpTitleEl = tmpPanel._collapseTab.querySelector('.pict-modal-shell-panel-collapse-tab-title');
+			if (tmpTitleEl) { tmpTitleEl.textContent = tmpClean; }
+		}
 	}
 
 	collapsePlayground()

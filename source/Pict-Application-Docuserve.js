@@ -331,6 +331,7 @@ class DocuserveApplication extends libPictApplication
 				tmpSidebarView.renderModuleNav(pGroup, pModule);
 			}
 		}
+		this._syncPlaygroundVisibility();
 	}
 
 	/**
@@ -348,9 +349,14 @@ class DocuserveApplication extends libPictApplication
 		if (pKind === 'fable')
 		{
 			// Send the user to the explainer page so a deep-link to
-			// #/playground/fable lands somewhere readable, then expand
-			// the drawer.
+			// #/playground/fable lands somewhere readable, then force
+			// the drawer visible (overriding the per-module opt-in
+			// suppression — explicit user intent wins) and expand it.
 			this.navigateToPage('fable-playground');
+			if (tmpLayout && typeof tmpLayout.setPlaygroundEnabled === 'function')
+			{
+				tmpLayout.setPlaygroundEnabled(true);
+			}
 			if (tmpLayout && typeof tmpLayout.expandPlayground === 'function')
 			{
 				tmpLayout.expandPlayground();
@@ -400,6 +406,56 @@ class DocuserveApplication extends libPictApplication
 			this.pict.views['Docuserve-Sidebar'].clearModuleNav();
 			this.pict.views['Docuserve-Sidebar'].renderSidebarGroups();
 		}
+		this._syncPlaygroundVisibility();
+	}
+
+	/**
+	 * Toggle the bottom playground drawer's visibility based on whether
+	 * the current group/module opts in (via a "Code Playground" entry in
+	 * its _sidebar.md / catalog Sidebar).  Invoked at the tail of every
+	 * navigation method so the panel doesn't reserve space on modules
+	 * that haven't opted in.
+	 */
+	_syncPlaygroundVisibility()
+	{
+		let tmpLayout = this.pict.views['Docuserve-Layout'];
+		let tmpDoc    = this.pict.providers['Docuserve-Documentation'];
+		if (!tmpLayout || typeof tmpLayout.setPlaygroundEnabled !== 'function') { return; }
+		let tmpGroup  = this.pict.AppData.Docuserve.CurrentGroup;
+		let tmpModule = this.pict.AppData.Docuserve.CurrentModule;
+		let tmpEnabled = (tmpDoc && typeof tmpDoc.isPlaygroundEnabled === 'function')
+			? tmpDoc.isPlaygroundEnabled(tmpGroup, tmpModule)
+			: false;
+		tmpLayout.setPlaygroundEnabled(tmpEnabled);
+		if (typeof tmpLayout.setPlaygroundTitle === 'function')
+		{
+			tmpLayout.setPlaygroundTitle(tmpModule
+				? ('JS Playground: ' + tmpModule)
+				: 'JS Playground');
+		}
+		// Load the module's _playground.json (cached after first load).
+		// Stash the config in AppData so the playground view's require
+		// shim and the per-run capture logic can consult it.  We don't
+		// gate the playground on the config landing — it's purely
+		// informative right now since all fable modules are bundled.
+		if (tmpEnabled && tmpDoc && typeof tmpDoc.loadPlaygroundConfig === 'function')
+		{
+			tmpDoc.loadPlaygroundConfig(tmpGroup, tmpModule).then((pConfig) =>
+			{
+				if (!this.pict.AppData.Docuserve.Playground)
+				{
+					this.pict.AppData.Docuserve.Playground = {};
+				}
+				this.pict.AppData.Docuserve.Playground.Config = pConfig || null;
+			});
+		}
+		else
+		{
+			if (this.pict.AppData.Docuserve.Playground)
+			{
+				this.pict.AppData.Docuserve.Playground.Config = null;
+			}
+		}
 	}
 
 	/**
@@ -438,6 +494,7 @@ class DocuserveApplication extends libPictApplication
 		// Update sidebar to show active module and module-specific nav
 		tmpSidebarView.renderSidebarGroups();
 		tmpSidebarView.renderModuleNav(pGroup, pModule);
+		this._syncPlaygroundVisibility();
 
 		// Resolve the document URL and fetch it
 		let tmpURL = tmpDocProvider.resolveDocumentURL(pGroup, pModule, pPath || 'README.md');
@@ -492,6 +549,7 @@ class DocuserveApplication extends libPictApplication
 		// Clear module-specific sidebar nav
 		tmpSidebarView.clearModuleNav();
 		tmpSidebarView.renderSidebarGroups();
+		this._syncPlaygroundVisibility();
 
 		// Fetch the local document
 		let tmpPath = pDocPath;
@@ -530,6 +588,7 @@ class DocuserveApplication extends libPictApplication
 		// Render the search view with the query
 		tmpSearchView.render();
 		tmpSearchView.showSearch(pQuery || '');
+		this._syncPlaygroundVisibility();
 	}
 }
 
