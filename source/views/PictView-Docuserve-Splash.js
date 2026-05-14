@@ -18,30 +18,30 @@ const _ViewConfiguration =
 			min-height: calc(100vh - 56px);
 			padding: 3em 2em;
 			text-align: center;
-			background: var(--docuserve-bg);
+			background: var(--theme-color-background-primary, #FDFBF7);
 		}
 		.docuserve-splash h1 {
 			font-size: 3em;
 			font-weight: 700;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 			margin: 0 0 0.25em 0;
 		}
 		.docuserve-splash h1 small {
 			font-size: 0.4em;
 			font-weight: 400;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			vertical-align: middle;
 			margin-left: 0.15em;
 		}
 		.docuserve-splash-tagline {
 			font-size: 1.25em;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			margin-bottom: 1.5em;
 			font-style: italic;
 		}
 		.docuserve-splash-description {
 			font-size: 1em;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			max-width: 600px;
 			line-height: 1.7;
 			margin-bottom: 2em;
@@ -55,8 +55,8 @@ const _ViewConfiguration =
 			margin-bottom: 2.5em;
 		}
 		.docuserve-splash-highlight-card {
-			background: var(--docuserve-bg-elevated);
-			border: 1px solid var(--docuserve-border);
+			background: var(--theme-color-background-panel, #FFFFFF);
+			border: 1px solid var(--theme-color-border-default, #DDD6CA);
 			border-radius: 8px;
 			padding: 1.25em;
 			text-align: left;
@@ -64,16 +64,16 @@ const _ViewConfiguration =
 		}
 		.docuserve-splash-highlight-card:hover {
 			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-			border-color: var(--docuserve-accent);
+			border-color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-splash-highlight-card h3 {
 			margin: 0 0 0.5em 0;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 			font-size: 1em;
 		}
 		.docuserve-splash-highlight-card p {
 			margin: 0;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			font-size: 0.85em;
 			line-height: 1.5;
 		}
@@ -94,20 +94,20 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-splash-actions .primary {
-			background-color: var(--docuserve-accent);
+			background-color: var(--theme-color-brand-primary, #2E7D74);
 			color: var(--theme-color-background-panel, #fff);
 		}
 		.docuserve-splash-actions .primary:hover {
-			background-color: var(--docuserve-accent-hover);
+			background-color: var(--theme-color-brand-primary-hover, #236660);
 		}
 		.docuserve-splash-actions .secondary {
-			background-color: var(--docuserve-bg-elevated);
-			color: var(--docuserve-text-strong);
-			border: 2px solid var(--docuserve-accent);
+			background-color: var(--theme-color-background-panel, #FFFFFF);
+			color: var(--theme-color-text-primary, #3D3229);
+			border: 2px solid var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-splash-actions .secondary:hover {
-			border-color: var(--docuserve-accent-hover);
-			color: var(--docuserve-accent);
+			border-color: var(--theme-color-brand-primary-hover, #236660);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 	`,
 

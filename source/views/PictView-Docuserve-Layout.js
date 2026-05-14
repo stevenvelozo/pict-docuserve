@@ -34,13 +34,32 @@ const _ViewConfiguration =
 	AutoRender: false,
 
 	CSS: /*css*/`
-		html, body { height: 100%; margin: 0; padding: 0; }
+		/* Global resets — these used to live in css/docuserve.css.  Now
+		   that docuserve ships its theming entirely through view CSSMap
+		   (no external <link> required), the resets travel with the JS
+		   bundle so consumers can't forget to load them. */
+		*, *::before, *::after { box-sizing: border-box; }
+		html, body
+		{
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			font-family: var(--theme-typography-family-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+			font-size: 16px;
+			line-height: 1.5;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
 		body
 		{
 			background: var(--theme-color-background-primary, #FDFBF7);
 			color:      var(--theme-color-text-primary,       #2A241E);
-			font-family: var(--theme-typography-family-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+			transition: background-color 0.15s ease, color 0.15s ease;
 		}
+		::-webkit-scrollbar         { width: 8px; height: 8px; }
+		::-webkit-scrollbar-track   { background: var(--theme-color-scrollbar-track, #F5F0E8); }
+		::-webkit-scrollbar-thumb   { background: var(--theme-color-scrollbar-thumb, #D4CCBE); border-radius: 4px; }
+		::-webkit-scrollbar-thumb:hover { background: var(--theme-color-scrollbar-hover, #B5AA9A); }
 		/* height: 100% (not 100vh) — Theme-Scale applies CSS zoom on
 		   <html>; vh units render against the un-zoomed viewport and
 		   push panels off-screen at non-1.0 scale. */
@@ -74,7 +93,7 @@ const _ViewConfiguration =
 			height: 100%;
 			min-height: 0;
 			overflow-y: auto;
-			background: var(--theme-color-background-secondary, var(--docuserve-sidebar-bg, #FAF7F1));
+			background: var(--theme-color-background-secondary, #FAF7F1);
 		}
 	`,
 
@@ -174,8 +193,49 @@ class DocuserveLayoutView extends libPictView
 			ResponsiveDrawer: 900
 		});
 
+		// Bottom — playground drawer.  Scope: 'center' mounts the panel
+		// inside the center column instead of pict-section-modal's
+		// full-width bottom row, so the drawer aligns with the content
+		// area and doesn't cover the sidebar.  Collapsed by default so
+		// the doc content sits on the full viewport; the 'Playground'
+		// tab strip shows at the bottom of the content area.  Click it
+		// (or call `expandPlayground()` from anywhere) to slide the
+		// drawer up.  The playground view mounts itself into the
+		// destination div on first expand via the OnExpand callback.
+		this._shell.addPanel(
+		{
+			Hash: 'playground-drawer',
+			Side: 'bottom',
+			Scope: 'center',
+			Mode: 'resizable',
+			Size: 380,
+			MinSize: 200,
+			MaxSize: 700,
+			Collapsed: true,
+			Title: 'Playground',
+			ContentDestinationId: 'Docuserve-Playground-Drawer-Content',
+			OnExpand: () => { this._onPlaygroundDrawerExpand(); }
+		});
+
 		// Center — the content area where splash / content / search render.
 		this._shell.center({ ContentDestinationId: 'Docuserve-Content-Container' });
+	}
+
+	/**
+	 * Fires when the playground drawer first expands.  Lazy-mounts the
+	 * Fable-Playground view into the drawer's content destination.
+	 * Subsequent expand/collapse cycles re-use the existing mount; the
+	 * DOM is just visually hidden / shown by the shell's collapse chrome.
+	 */
+	_onPlaygroundDrawerExpand()
+	{
+		if (this._playgroundMounted) { return; }
+		let tmpView = this.pict.views['Docuserve-Fable-Playground'];
+		if (tmpView && typeof tmpView.mountIntoDrawer === 'function')
+		{
+			tmpView.mountIntoDrawer();
+			this._playgroundMounted = true;
+		}
 	}
 
 	_wireHashChangeListener()
@@ -183,6 +243,9 @@ class DocuserveLayoutView extends libPictView
 		if (this._hashListenerBound) { return; }
 		this._hashListenerBound = true;
 		let tmpSelf = this;
+		// hashchange is a window-level event with no inline-handler equivalent;
+		// pict CLAUDE.md documents this as a legitimate exception to the
+		// "no addEventListener" rule.
 		window.addEventListener('hashchange', () =>
 		{
 			tmpSelf.pict.PictApplication.resolveHash();
@@ -200,6 +263,35 @@ class DocuserveLayoutView extends libPictView
 	{
 		let tmpPanel = this.getSidebarPanel();
 		if (tmpPanel) { tmpPanel.toggle(); }
+	}
+
+	// ─────────────────────────────────────────────
+	//  Playground drawer accessors.
+	//
+	//  Doc-page buttons (e.g., "Open playground" in fable-playground.md)
+	//  and the application's hash router (e.g., #/playground/fable) call
+	//  expandPlayground() to slide the drawer up; users collapse it back
+	//  by clicking the panel's chrome.
+	// ─────────────────────────────────────────────
+
+	getPlaygroundPanel() { return this._shell ? this._shell.getPanel('playground-drawer') : null; }
+
+	expandPlayground()
+	{
+		let tmpPanel = this.getPlaygroundPanel();
+		if (tmpPanel && typeof tmpPanel.expand === 'function') { tmpPanel.expand(); }
+	}
+
+	collapsePlayground()
+	{
+		let tmpPanel = this.getPlaygroundPanel();
+		if (tmpPanel && typeof tmpPanel.collapse === 'function') { tmpPanel.collapse(); }
+	}
+
+	togglePlayground()
+	{
+		let tmpPanel = this.getPlaygroundPanel();
+		if (tmpPanel && typeof tmpPanel.toggle === 'function') { tmpPanel.toggle(); }
 	}
 }
 

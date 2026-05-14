@@ -10,6 +10,7 @@
   - [Configuration](configuration.md)
   - [Diagrams](diagrams.md)
   - [LaTeX Equations](latex.md)
+  - [Fable Playground](fable-playground.md)
 
 - Retold Ecosystem
 

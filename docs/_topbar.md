@@ -5,4 +5,5 @@
 - [Architecture](architecture.md)
 - [Deployment](deployment.md)
 - [Configuration](configuration.md)
+- [Fable Playground](fable-playground.md)
 - [GitHub](https://github.com/stevenvelozo/pict-docuserve)

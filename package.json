@@ -1,74 +1,94 @@
 {
-    "name": "pict-docuserve",
-    "version": "1.0.1",
-    "description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
-    "main": "source/Pict-Application-Docuserve.js",
-    "bin": {
-        "pict-docuserve": "source/cli/Docuserve-CLI-Run.js"
-    },
-    "files": [
-        "source/",
-        "dist/",
-        "css/",
-        "html/"
-    ],
-    "scripts": {
-        "start": "node source/Pict-Application-Docuserve.js",
-        "build": "npx quack build && npx quack copy",
-        "build-docs": "npx quack build && npx quack copy && node source/cli/Docuserve-CLI-Run.js inject ./docs && node example_applications/build-examples.js stage-docs",
-        "serve-docs": "node source/cli/Docuserve-CLI-Run.js serve ./docs",
-        "serve-examples": "node example_applications/build-examples.js",
-        "test": "npx quack test",
-        "tests": "npx quack test -g",
-        "coverage": "npx quack coverage",
-        "prepublishOnly": "npx quack build && npx quack copy"
-    },
-    "author": "steven velozo <steven@velozo.com>",
-    "license": "MIT",
-    "dependencies": {
-        "lunr": "^2.3.9",
-        "pict": "^1.0.368",
-        "pict-application": "^1.0.34",
-        "pict-provider": "^1.0.13",
-        "pict-section-content": "^1.0.1",
-        "pict-section-modal": "^1.0.1",
-        "pict-section-theme": "^1.0.1",
-        "pict-service-commandlineutility": "^1.0.19",
-        "pict-view": "^1.0.68"
-    },
-    "devDependencies": {
-        "pict-docuserve": "^1.0.0",
-        "quackage": "^1.2.3"
-    },
-    "copyFilesSettings": {
-        "whenFileExists": "overwrite"
-    },
-    "copyFiles": [
-        {
-            "from": "./html/*",
-            "to": "./dist/"
-        },
-        {
-            "from": "./css/**",
-            "to": "./dist/css/"
-        }
-    ],
-    "mocha": {
-        "diff": true,
-        "extension": [
-            "js"
-        ],
-        "package": "./package.json",
-        "reporter": "spec",
-        "slow": "75",
-        "timeout": "5000",
-        "ui": "tdd",
-        "watch-files": [
-            "source/**/*.js",
-            "test/**/*.js"
-        ],
-        "watch-ignore": [
-            "lib/vendor"
-        ]
-    }
+	"name": "pict-docuserve",
+	"version": "1.1.0",
+	"description": "Pict Documentation Server - A single-page documentation viewer built on Pict",
+	"main": "source/Pict-Application-Docuserve.js",
+	"bin": {
+		"pict-docuserve": "source/cli/Docuserve-CLI-Run.js"
+	},
+	"files": [
+		"source/",
+		"dist/",
+		"html/"
+	],
+	"scripts": {
+		"start": "node source/cli/Docuserve-CLI-Run.js serve",
+		"brand": "node node_modules/pict-section-theme/bin/pict-section-theme-brand.js --manifest ../../../Retold-Modules-Manifest.json --module pict-docuserve",
+		"prebuild": "npm run brand",
+		"build": "npx quack build && npx quack copy",
+		"prebuild-docs": "npm run brand",
+		"build-docs": "npx quack build && npx quack copy && node source/cli/Docuserve-CLI-Run.js inject ./docs && node example_applications/build-examples.js stage-docs",
+		"serve-docs": "node source/cli/Docuserve-CLI-Run.js serve ./docs",
+		"serve-examples": "node example_applications/build-examples.js",
+		"test": "npx quack test",
+		"tests": "npx quack test -g",
+		"coverage": "npx quack coverage",
+		"prepublishOnly": "npm run build"
+	},
+	"author": "steven velozo <steven@velozo.com>",
+	"license": "MIT",
+	"dependencies": {
+		"fable-serviceproviderbase": "^3.0.19",
+		"lunr": "^2.3.9",
+		"pict": "^1.0.368",
+		"pict-application": "^1.0.34",
+		"pict-provider": "^1.0.13",
+		"pict-section-code": "^1.0.10",
+		"pict-section-content": "^1.0.1",
+		"pict-section-modal": "^1.0.1",
+		"pict-section-theme": "^1.0.1",
+		"pict-service-commandlineutility": "^1.0.19",
+		"pict-view": "^1.0.68"
+	},
+	"devDependencies": {
+		"pict-docuserve": "^1.0.0",
+		"quackage": "^1.2.3"
+	},
+	"copyFilesSettings": {
+		"whenFileExists": "overwrite"
+	},
+	"copyFiles": [
+		{
+			"from": "./html/*",
+			"to": "./dist/"
+		}
+	],
+	"mocha": {
+		"diff": true,
+		"extension": [
+			"js"
+		],
+		"package": "./package.json",
+		"reporter": "spec",
+		"slow": "75",
+		"timeout": "5000",
+		"ui": "tdd",
+		"watch-files": [
+			"source/**/*.js",
+			"test/**/*.js"
+		],
+		"watch-ignore": [
+			"lib/vendor"
+		]
+	},
+	"retold": {
+		"brand": {
+			"Hash": "pict-docuserve",
+			"Name": "Pict Docuserve",
+			"Tagline": "A documentation viewer built on Pict",
+			"Palette": "default",
+			"Icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" width=\"96\" height=\"96\">\n\t\t<defs>\n\t\t\t<clipPath id=\"frame-pict-docuserve-filled-light\">\n\t\t\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\"/>\n\t\t\t</clipPath>\n\t\t</defs>\n\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\" fill=\"#692bbf\"/>\n\t\t<g clip-path=\"url(#frame-pict-docuserve-filled-light)\"><rect x=\"18\" y=\"30\" width=\"48\" height=\"48\" rx=\"8\" fill=\"#c13ccd\" opacity=\"0.9\"/>\n\t\t\t\t\t<rect x=\"30\" y=\"18\" width=\"48\" height=\"48\" rx=\"8\" fill=\"rgba(255,255,255,0.18)\"/></g>\n\t\t<text x=\"48\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"central\"\n\t\t\tfont-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\"\n\t\t\tfont-size=\"38\" font-weight=\"600\"\n\t\t\tfill=\"#ffffff\" letter-spacing=\"-1\">PD</text>\n\t</svg>",
+			"IconType": "svg",
+			"Favicon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" width=\"96\" height=\"96\">\n\t\t<defs>\n\t\t\t<clipPath id=\"fav-pict-docuserve-light\">\n\t\t\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\"/>\n\t\t\t</clipPath>\n\t\t</defs>\n\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\" fill=\"#692bbf\"/>\n\t\t<g clip-path=\"url(#fav-pict-docuserve-light)\"><rect x=\"28\" y=\"16\" width=\"52\" height=\"52\" rx=\"9\" fill=\"rgba(255,255,255,0.22)\"/></g>\n\t\t<text x=\"48\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"central\"\n\t\t\tfont-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\"\n\t\t\tfont-size=\"60\" font-weight=\"800\"\n\t\t\tfill=\"#ffffff\" letter-spacing=\"-1\">P</text>\n\t</svg>",
+			"FaviconDark": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" width=\"96\" height=\"96\">\n\t\t<defs>\n\t\t\t<clipPath id=\"fav-pict-docuserve-dark\">\n\t\t\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\"/>\n\t\t\t</clipPath>\n\t\t</defs>\n\t\t<path d=\"M 2 48\n\t\t\tC 2 18.0222416, 18.0222416 2, 48 2\n\t\t\tC 77.9777584 2, 94 18.0222416, 94 48\n\t\t\tC 94 77.9777584, 77.9777584 94, 48 94\n\t\t\tC 18.0222416 94, 2 77.9777584, 2 48 Z\" fill=\"#9a6fd8\"/>\n\t\t<g clip-path=\"url(#fav-pict-docuserve-dark)\"><rect x=\"28\" y=\"16\" width=\"52\" height=\"52\" rx=\"9\" fill=\"rgba(255,255,255,0.22)\"/></g>\n\t\t<text x=\"48\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"central\"\n\t\t\tfont-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\"\n\t\t\tfont-size=\"60\" font-weight=\"800\"\n\t\t\tfill=\"#101418\" letter-spacing=\"-1\">P</text>\n\t</svg>",
+			"Colors": {
+				"Primary": "#692bbf",
+				"Secondary": "#c13ccd",
+				"PrimaryLight": "#692bbf",
+				"PrimaryDark": "#9a6fd8",
+				"SecondaryLight": "#c13ccd",
+				"SecondaryDark": "#d48adb"
+			}
+		}
+	}
 }

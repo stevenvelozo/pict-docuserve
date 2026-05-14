@@ -51,6 +51,34 @@ function serveFile(pFilePath, pResponse, fNotFound)
 	});
 }
 
+/**
+ * Serve an HTML file with the jsDelivr CDN reference to pict-docuserve
+ * rewritten to a local relative path.  Used for index.html so that
+ * `npm start -- ../somewhere/docs` picks up the dev build sitting in
+ * dist/ rather than the last-published version on the CDN — otherwise
+ * every code edit would need a publish before it could be tested
+ * against another module's docs.
+ *
+ * The original file on disk is unchanged; this is a server-side
+ * transform only.
+ */
+function serveIndexHTMLWithLocalBundle(pFilePath, pResponse, fNotFound)
+{
+	libFS.readFile(pFilePath, 'utf8', (pError, pData) =>
+	{
+		if (pError)
+		{
+			return fNotFound();
+		}
+		let tmpRewritten = pData.replace(
+			/https:\/\/cdn\.jsdelivr\.net\/npm\/pict-docuserve@[^/]+\/dist\/pict-docuserve\.min\.js/g,
+			'./pict-docuserve.min.js'
+		);
+		pResponse.writeHead(200, { 'Content-Type': 'text/html' });
+		pResponse.end(tmpRewritten);
+	});
+}
+
 class DocuserveCommandServe extends libCommandLineCommand
 {
 	constructor(pFable, pManifest, pServiceHash)
@@ -67,9 +95,54 @@ class DocuserveCommandServe extends libCommandLineCommand
 		this.addCommand();
 	}
 
+	/**
+	 * Translate the user-supplied path into the actual docs folder to
+	 * serve.  Accepted shapes:
+	 *
+	 *   1. A docs folder directly (the historical default — markdown
+	 *      files at the top level).  Used as-is.
+	 *   2. A `package.json` file path.  Resolves to `<dirname>/docs`
+	 *      so `npm start -- ../some/module/package.json` works.
+	 *   3. A module-root directory (contains a `package.json` AND a
+	 *      `docs/` subdirectory).  Resolves to `<root>/docs` so
+	 *      `npm start -- ../some/module` works.
+	 *   4. Anything else falls through to the original path; the
+	 *      caller-level existence check then surfaces a clear error.
+	 */
+	_resolveDocsPath(pArgPath)
+	{
+		let tmpStats = null;
+		try { tmpStats = libFS.statSync(pArgPath); }
+		catch (pError) { return pArgPath; }
+
+		// Case 2: pointed straight at a package.json file.
+		if (tmpStats.isFile() && libPath.basename(pArgPath).toLowerCase() === 'package.json')
+		{
+			return libPath.join(libPath.dirname(pArgPath), 'docs');
+		}
+
+		if (tmpStats.isDirectory())
+		{
+			// Case 3: module root — has a package.json AND a docs/ child.
+			// Both signals required so we don't accidentally redirect
+			// a docs folder that happens to live next to a stray
+			// package.json.
+			let tmpHasPackageJSON = libFS.existsSync(libPath.join(pArgPath, 'package.json'));
+			let tmpHasDocsSubdir  = libFS.existsSync(libPath.join(pArgPath, 'docs'));
+			if (tmpHasPackageJSON && tmpHasDocsSubdir)
+			{
+				return libPath.join(pArgPath, 'docs');
+			}
+		}
+
+		// Case 1 / 4: use as-is.
+		return pArgPath;
+	}
+
 	onRun()
 	{
-		let tmpDocsPath = libPath.resolve(this.ArgumentString || './docs/');
+		let tmpArgPath = libPath.resolve(this.ArgumentString || './docs/');
+		let tmpDocsPath = this._resolveDocsPath(tmpArgPath);
 		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'dist');
 		let tmpPort = parseInt(this.CommandOptions.port, 10) || 3333;
 
@@ -105,6 +178,24 @@ class DocuserveCommandServe extends libCommandLineCommand
 
 			let tmpDocsFilePath = libPath.join(tmpDocsPath, tmpURLPath);
 			let tmpDistFilePath = libPath.join(tmpDistPath, tmpURLPath);
+
+			// index.html gets a server-side rewrite so the dev bundle
+			// (dist/pict-docuserve.min.js) loads instead of the
+			// published CDN version.  Lets `npm start -- ../some/docs`
+			// test the local build against any module's docs without a
+			// publish cycle.
+			if (tmpURLPath === '/index.html')
+			{
+				serveIndexHTMLWithLocalBundle(tmpDocsFilePath, pResponse, () =>
+				{
+					serveIndexHTMLWithLocalBundle(tmpDistFilePath, pResponse, () =>
+					{
+						pResponse.writeHead(404, { 'Content-Type': 'text/plain' });
+						pResponse.end('Not Found');
+					});
+				});
+				return;
+			}
 
 			// Overlay: try the docs folder first, fall back to dist/
 			serveFile(tmpDocsFilePath, pResponse, () =>

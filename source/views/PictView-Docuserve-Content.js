@@ -19,46 +19,46 @@ const _ViewConfiguration =
 			padding: 2em 3em;
 			max-width: 900px;
 			margin: 0 auto;
-			color: var(--docuserve-text);
+			color: var(--theme-color-text-primary, #2A241E);
 		}
 		.pict-content-loading {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			min-height: 200px;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			font-size: 1em;
 		}
 		.pict-content h1 {
 			font-size: 2em;
-			color: var(--docuserve-text-strong);
-			border-bottom: 1px solid var(--docuserve-border);
+			color: var(--theme-color-text-primary, #3D3229);
+			border-bottom: 1px solid var(--theme-color-border-default, #DDD6CA);
 			padding-bottom: 0.3em;
 			margin-top: 0;
 		}
 		.pict-content h2 {
 			font-size: 1.5em;
-			color: var(--docuserve-text-strong);
-			border-bottom: 1px solid var(--docuserve-border-soft);
+			color: var(--theme-color-text-primary, #3D3229);
+			border-bottom: 1px solid var(--theme-color-border-light, #EAE3D8);
 			padding-bottom: 0.25em;
 			margin-top: 1.5em;
 		}
 		.pict-content h3 {
 			font-size: 1.25em;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 			margin-top: 1.25em;
 		}
 		.pict-content h4, .pict-content h5, .pict-content h6 {
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			margin-top: 1em;
 		}
 		.pict-content p {
 			line-height: 1.7;
-			color: var(--docuserve-text);
+			color: var(--theme-color-text-primary, #2A241E);
 			margin: 0.75em 0;
 		}
 		.pict-content a {
-			color: var(--docuserve-accent);
+			color: var(--theme-color-brand-primary, #2E7D74);
 			text-decoration: none;
 		}
 		.pict-content a:hover {
@@ -66,22 +66,22 @@ const _ViewConfiguration =
 		}
 		/* Plain <pre> (no wrap) - rare; keep for safety */
 		.pict-content pre {
-			background: var(--docuserve-code-bg);
-			color: var(--docuserve-code-text);
+			background: var(--theme-color-background-secondary, #F6F3EE);
+			color: var(--theme-color-text-primary, #2A241E);
 			padding: 1.25em;
 			border-radius: 6px;
-			border: 1px solid var(--docuserve-code-border);
+			border: 1px solid var(--theme-color-border-light, #E5DED1);
 			overflow-x: auto;
 			line-height: 1.5;
 			font-size: 0.9em;
 		}
 		/* Inline code */
 		.pict-content code {
-			background: var(--docuserve-inline-code-bg);
+			background: var(--theme-color-background-tertiary, #F0ECE4);
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
-			color: var(--docuserve-inline-code-text);
+			color: var(--theme-color-syntax-property, #9E3A50);
 			font-family: 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
 		}
 		.pict-content pre code {
@@ -97,10 +97,10 @@ const _ViewConfiguration =
 			font-size: 14px;
 			line-height: 1.5;
 			border-radius: 6px;
-			border: 1px solid var(--docuserve-code-border);
+			border: 1px solid var(--theme-color-border-light, #E5DED1);
 			overflow: auto;
 			margin: 1em 0;
-			background: var(--docuserve-code-bg);
+			background: var(--theme-color-background-secondary, #F6F3EE);
 		}
 		.pict-content-code-wrap .pict-content-code-line-numbers {
 			position: absolute;
@@ -109,9 +109,9 @@ const _ViewConfiguration =
 			width: 40px;
 			padding: 1.25em 0;
 			text-align: right;
-			background: var(--docuserve-code-gutter-bg);
-			border-right: 1px solid var(--docuserve-code-gutter-border);
-			color: var(--docuserve-code-gutter-text);
+			background: var(--theme-color-background-tertiary, #EFEAE0);
+			border-right: 1px solid var(--theme-color-border-default, #DDD6CA);
+			color: var(--theme-color-text-muted, #A59986);
 			font-family: inherit;
 			font-size: inherit;
 			line-height: inherit;
@@ -125,8 +125,8 @@ const _ViewConfiguration =
 		}
 		.pict-content-code-wrap pre {
 			margin: 0;
-			background: var(--docuserve-code-bg);
-			color: var(--docuserve-code-text);
+			background: var(--theme-color-background-secondary, #F6F3EE);
+			color: var(--theme-color-text-primary, #2A241E);
 			padding: 1.25em 1.25em 1.25em 52px;
 			border: none;
 			border-radius: 0;
@@ -145,33 +145,33 @@ const _ViewConfiguration =
 		   pict-section-code's highlighter.  Also apply without .pict-content-code-wrap
 		   as a belt-and-suspenders for any <pre><code> not emitted from a fence. */
 		.pict-content-code-wrap .keyword,
-		.pict-content pre code .keyword { color: var(--docuserve-tok-keyword); }
+		.pict-content pre code .keyword { color: var(--theme-color-syntax-keyword, #A03472); }
 		.pict-content-code-wrap .string,
-		.pict-content pre code .string { color: var(--docuserve-tok-string); }
+		.pict-content pre code .string { color: var(--theme-color-syntax-string, #1A6640); }
 		.pict-content-code-wrap .number,
-		.pict-content pre code .number { color: var(--docuserve-tok-number); }
+		.pict-content pre code .number { color: var(--theme-color-syntax-number, #B25A00); }
 		.pict-content-code-wrap .comment,
-		.pict-content pre code .comment { color: var(--docuserve-tok-comment); font-style: italic; }
+		.pict-content pre code .comment { color: var(--theme-color-syntax-comment, #8A7F72); font-style: italic; }
 		.pict-content-code-wrap .operator,
-		.pict-content pre code .operator { color: var(--docuserve-tok-operator); }
+		.pict-content pre code .operator { color: var(--theme-color-syntax-operator, #2E7D74); }
 		.pict-content-code-wrap .punctuation,
-		.pict-content pre code .punctuation { color: var(--docuserve-tok-punctuation); }
+		.pict-content pre code .punctuation { color: var(--theme-color-syntax-punctuation, #2A241E); }
 		.pict-content-code-wrap .function-name,
-		.pict-content pre code .function-name { color: var(--docuserve-tok-function); }
+		.pict-content pre code .function-name { color: var(--theme-color-syntax-function, #2A5DB0); }
 		.pict-content-code-wrap .property,
-		.pict-content pre code .property { color: var(--docuserve-tok-property); }
+		.pict-content pre code .property { color: var(--theme-color-syntax-property, #9E3A50); }
 		.pict-content-code-wrap .tag,
-		.pict-content pre code .tag { color: var(--docuserve-tok-tag); }
+		.pict-content pre code .tag { color: var(--theme-color-syntax-tag, #9E3A50); }
 		.pict-content-code-wrap .attr-name,
-		.pict-content pre code .attr-name { color: var(--docuserve-tok-attr-name); }
+		.pict-content pre code .attr-name { color: var(--theme-color-syntax-attrname, #B25A00); }
 		.pict-content-code-wrap .attr-value,
-		.pict-content pre code .attr-value { color: var(--docuserve-tok-attr-value); }
+		.pict-content pre code .attr-value { color: var(--theme-color-syntax-attrvalue, #1A6640); }
 		.pict-content blockquote {
-			border-left: 4px solid var(--docuserve-blockquote-border);
+			border-left: 4px solid var(--theme-color-brand-primary, #2E7D74);
 			margin: 1em 0;
 			padding: 0.5em 1em;
-			background: var(--docuserve-blockquote-bg);
-			color: var(--docuserve-blockquote-text);
+			background: var(--theme-color-background-secondary, #F7F5F0);
+			color: var(--theme-color-text-secondary, #5E5549);
 		}
 		.pict-content blockquote p {
 			margin: 0.25em 0;
@@ -182,11 +182,11 @@ const _ViewConfiguration =
 		}
 		.pict-content li {
 			margin: 0.25em 0;
-			color: var(--docuserve-text);
+			color: var(--theme-color-text-primary, #2A241E);
 		}
 		.pict-content hr {
 			border: none;
-			border-top: 1px solid var(--docuserve-border);
+			border-top: 1px solid var(--theme-color-border-default, #DDD6CA);
 			margin: 2em 0;
 		}
 		.pict-content table {
@@ -195,31 +195,31 @@ const _ViewConfiguration =
 			margin: 1em 0;
 		}
 		.pict-content table th {
-			background: var(--docuserve-table-header-bg);
-			border: 1px solid var(--docuserve-border);
+			background: var(--theme-color-background-tertiary, #F5F0E8);
+			border: 1px solid var(--theme-color-border-default, #DDD6CA);
 			padding: 0.6em 0.8em;
 			text-align: left;
 			font-weight: 600;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-content table td {
-			border: 1px solid var(--docuserve-border);
+			border: 1px solid var(--theme-color-border-default, #DDD6CA);
 			padding: 0.5em 0.8em;
-			color: var(--docuserve-text);
+			color: var(--theme-color-text-primary, #2A241E);
 		}
 		.pict-content table tr:nth-child(even) {
-			background: var(--docuserve-table-row-alt-bg);
+			background: var(--theme-color-background-secondary, #F9F6F0);
 		}
 		.pict-content img {
 			max-width: 100%;
 			height: auto;
 		}
 		.pict-content pre.mermaid {
-			background: var(--docuserve-mermaid-bg);
+			background: var(--theme-color-background-panel, #FFFFFF);
 			color: var(--theme-color-text-primary, #2A241E);
 			text-align: center;
 			padding: 1em;
-			border: 1px solid var(--docuserve-border-soft);
+			border: 1px solid var(--theme-color-border-light, #EAE3D8);
 		}
 		/* Force dark text inside mermaid SVGs so diagrams stay readable
 		   in dark mode (mermaid bg is always light). */
@@ -312,12 +312,12 @@ const _ViewConfiguration =
 		.docuserve-module-external-link {
 			padding: 0.5em 0;
 			margin-bottom: 0.5em;
-			border-bottom: 1px solid var(--docuserve-border-soft);
+			border-bottom: 1px solid var(--theme-color-border-light, #EAE3D8);
 			font-size: 0.85em;
 			text-align: right;
 		}
 		.docuserve-module-external-link a {
-			color: var(--docuserve-accent);
+			color: var(--theme-color-brand-primary, #2E7D74);
 			text-decoration: none;
 		}
 		.docuserve-module-external-link a:hover {
@@ -326,19 +326,19 @@ const _ViewConfiguration =
 		.docuserve-not-found {
 			text-align: center;
 			padding: 3em 1em;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 		}
 		.docuserve-not-found h2 {
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			font-size: 1.5em;
 			border-bottom: none;
 		}
 		.docuserve-not-found code {
-			background: var(--docuserve-inline-code-bg);
+			background: var(--theme-color-background-tertiary, #F0ECE4);
 			padding: 0.15em 0.4em;
 			border-radius: 3px;
 			font-size: 0.9em;
-			color: var(--docuserve-inline-code-text);
+			color: var(--theme-color-syntax-property, #9E3A50);
 		}
 
 		/* Fullscreen viewer for images and mermaid diagrams (click-to-zoom) */
@@ -350,7 +350,7 @@ const _ViewConfiguration =
 			transition: outline-color 0.15s ease;
 		}
 		.pict-content [data-fullscreen-source]:hover {
-			outline-color: var(--docuserve-accent);
+			outline-color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		/* Code block container with hover-revealed action buttons */
 		.pict-content-code-container {
@@ -392,9 +392,9 @@ const _ViewConfiguration =
 			width: 28px;
 			height: 28px;
 			padding: 0;
-			background: var(--docuserve-bg-elevated);
-			color: var(--docuserve-text-muted);
-			border: 1px solid var(--docuserve-border);
+			background: var(--theme-color-background-panel, #FFFFFF);
+			color: var(--theme-color-text-secondary, #5E5549);
+			border: 1px solid var(--theme-color-border-default, #DDD6CA);
 			border-radius: 6px;
 			cursor: pointer;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -411,24 +411,35 @@ const _ViewConfiguration =
 			stroke-linejoin: round;
 		}
 		.pict-content-code-action-btn:hover {
-			background: var(--docuserve-accent);
+			background: var(--theme-color-brand-primary, #2E7D74);
 			color: var(--theme-color-background-panel, #FFFFFF);
-			border-color: var(--docuserve-accent);
+			border-color: var(--theme-color-brand-primary, #2E7D74);
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 		}
 		.pict-content-code-action-btn:focus-visible {
-			outline: 2px solid var(--docuserve-accent);
+			outline: 2px solid var(--theme-color-brand-primary, #2E7D74);
 			outline-offset: 2px;
 		}
 		.pict-content-code-action-btn.is-copied {
-			background: var(--docuserve-accent);
+			background: var(--theme-color-brand-primary, #2E7D74);
 			color: var(--theme-color-background-panel, #FFFFFF);
-			border-color: var(--docuserve-accent);
+			border-color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.pict-content-code-action-btn.is-copy-failed {
 			background: #B23A3A;
 			color: var(--theme-color-background-panel, #FFFFFF);
 			border-color: #B23A3A;
+		}
+		/* Try-in-playground button — appended to JS code blocks.  The
+		   triangle is filled (vs. the other action icons which are
+		   stroke-only) to read as a "play" affordance. */
+		.docuserve-tryplay-btn svg polygon {
+			fill: currentColor;
+			stroke: none;
+		}
+		.docuserve-tryplay-btn svg {
+			width: 12px;
+			height: 12px;
 		}
 		.pict-fullscreen-overlay {
 			position: fixed;
@@ -439,7 +450,7 @@ const _ViewConfiguration =
 			background: rgba(0, 0, 0, 0.62);
 			backdrop-filter: blur(6px);
 			-webkit-backdrop-filter: blur(6px);
-			color: var(--docuserve-text);
+			color: var(--theme-color-text-primary, #2A241E);
 		}
 		.pict-fullscreen-overlay[hidden] {
 			display: none;
@@ -451,9 +462,9 @@ const _ViewConfiguration =
 			gap: 1em;
 			height: 48px;
 			padding: 0 1em;
-			background: var(--docuserve-bg-elevated);
-			color: var(--docuserve-text-strong);
-			border-bottom: 1px solid var(--docuserve-border);
+			background: var(--theme-color-background-panel, #FFFFFF);
+			color: var(--theme-color-text-primary, #3D3229);
+			border-bottom: 1px solid var(--theme-color-border-default, #DDD6CA);
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 			flex: 0 0 auto;
 		}
@@ -465,7 +476,7 @@ const _ViewConfiguration =
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-fullscreen-controls {
 			display: inline-flex;
@@ -482,7 +493,7 @@ const _ViewConfiguration =
 			background: transparent;
 			border: 1px solid transparent;
 			border-radius: 6px;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			cursor: pointer;
 			transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 		}
@@ -497,15 +508,15 @@ const _ViewConfiguration =
 			stroke-linejoin: round;
 		}
 		.pict-fullscreen-btn:hover {
-			background: var(--docuserve-border-soft);
-			color: var(--docuserve-text-strong);
+			background: var(--theme-color-border-light, #EAE3D8);
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.pict-fullscreen-btn:focus-visible {
-			outline: 2px solid var(--docuserve-accent);
+			outline: 2px solid var(--theme-color-brand-primary, #2E7D74);
 			outline-offset: 2px;
 		}
 		.pict-fullscreen-close:hover {
-			background: var(--docuserve-accent);
+			background: var(--theme-color-brand-primary, #2E7D74);
 			color: var(--theme-color-background-panel, #FFFFFF);
 		}
 		.pict-fullscreen-stage {
@@ -543,7 +554,7 @@ const _ViewConfiguration =
 			width: auto;
 			height: auto;
 			object-fit: contain;
-			background: var(--docuserve-bg-elevated);
+			background: var(--theme-color-background-panel, #FFFFFF);
 			padding: 12px;
 			border-radius: 6px;
 		}
@@ -551,7 +562,7 @@ const _ViewConfiguration =
 			width: min(90vw, 1400px);
 			height: auto;
 			max-height: calc(100vh - 96px);
-			background: var(--docuserve-mermaid-bg);
+			background: var(--theme-color-background-panel, #FFFFFF);
 			color: var(--theme-color-text-primary, #2A241E);
 			padding: 16px;
 			border-radius: 6px;
@@ -639,6 +650,114 @@ class DocuserveContentView extends libPictContentView
 		}
 
 		super.displayContent(tmpHTML, 'Docuserve-Content-Body');
+
+		// Scan the freshly rendered markdown for inline-widget markers
+		// (e.g. `<div data-docuserve-playground="fable"></div>`) and
+		// dispatch each to the matching view's `mountInto()` method.
+		this._mountInlineWidgets();
+	}
+
+	/**
+	 * Walk the rendered content for known inline-widget markers and
+	 * delegate the mount to the matching docuserve view.  This is the
+	 * MVP wedge for the eventual ```fable-example / ```pict-example
+	 * fenced-code-block syntax — same plumbing, the markdown extension
+	 * for fenced blocks will land later.
+	 */
+	_mountInlineWidgets()
+	{
+		// Scope the scan to the just-rendered content body so we don't
+		// accidentally pick up markers elsewhere in the page chrome.
+		let tmpBody = document.getElementById('Docuserve-Content-Body');
+		if (!tmpBody) { return; }
+		// Skip embeds that have already been mounted on a previous pass
+		// (e.g., a markdown parser quirk emits two markers for the same
+		// snippet, or displayContent fires twice in some lifecycle path).
+		let tmpEmbeds = tmpBody.querySelectorAll('[data-docuserve-playground]:not([data-docuserve-mounted])');
+		for (let i = 0; i < tmpEmbeds.length; i++)
+		{
+			let tmpEl   = tmpEmbeds[i];
+			let tmpKind = tmpEl.getAttribute('data-docuserve-playground');
+			let tmpView = null;
+			if (tmpKind === 'fable')
+			{
+				tmpView = this.pict.views['Docuserve-Fable-Playground'];
+			}
+			// (future) `pict` once the Pict-Playground view lands.
+			if (tmpView && typeof tmpView.mountInto === 'function')
+			{
+				tmpEl.setAttribute('data-docuserve-mounted', '1');
+				tmpView.mountInto(tmpEl);
+			}
+		}
+
+		// Add a "Try in Fable Playground" action button to every
+		// JavaScript code block.  The button sits alongside the existing
+		// Copy / Fullscreen buttons in the hover-revealed action strip.
+		this._addPlaygroundButtonsToCodeBlocks();
+	}
+
+	/**
+	 * Scan the rendered content body for `<code class="language-javascript">`
+	 * (and `language-js`) blocks and inject a "▶ Try in Fable Playground"
+	 * action button into each one's existing
+	 * `.pict-content-code-actions` container.  Clicking the button
+	 * pipes the block's textContent into
+	 * `Docuserve-Fable-Playground.loadCode()`, which slides the drawer
+	 * up with the code preloaded.
+	 *
+	 * Containers are tagged with `data-tryplay-wired="true"` so re-scans
+	 * (e.g., the user navigates away and back) skip already-wired
+	 * blocks.
+	 */
+	_addPlaygroundButtonsToCodeBlocks()
+	{
+		let tmpBody = document.getElementById('Docuserve-Content-Body');
+		if (!tmpBody) { return; }
+		let tmpContainers = tmpBody.querySelectorAll('.pict-content-code-container:not([data-tryplay-wired])');
+		for (let i = 0; i < tmpContainers.length; i++)
+		{
+			let tmpContainer = tmpContainers[i];
+			let tmpCodeEl = tmpContainer.querySelector('code.language-javascript, code.language-js');
+			if (!tmpCodeEl) { continue; }
+			let tmpActions = tmpContainer.querySelector('.pict-content-code-actions');
+			if (!tmpActions) { continue; }
+			let tmpBtn = document.createElement('button');
+			tmpBtn.type = 'button';
+			tmpBtn.className = 'pict-content-code-action-btn docuserve-tryplay-btn';
+			tmpBtn.title = 'Try in Fable Playground';
+			tmpBtn.setAttribute('aria-label', 'Try this code in the Fable Playground');
+			tmpBtn.setAttribute('onclick', "_Pict.views['Docuserve-Content'].tryInPlayground(this)");
+			tmpBtn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><polygon points="5,3 13,8 5,13"></polygon></svg>';
+			// Append (vs. insertBefore actions.firstChild) so the Try
+			// button sits at the bottom of the strip — under Copy and
+			// Fullscreen — keeping the existing muscle memory for those
+			// two and giving Try its own visually-distinct slot.
+			tmpActions.appendChild(tmpBtn);
+			tmpContainer.setAttribute('data-tryplay-wired', 'true');
+		}
+	}
+
+	/**
+	 * Inline-onclick target for the per-block Try button.  Walks up
+	 * from the clicked element to the code container, extracts the
+	 * source from the adjacent `<code>` element, hands off to the
+	 * playground.
+	 *
+	 * @param {HTMLElement} pButtonEl - The Try button that was clicked.
+	 */
+	tryInPlayground(pButtonEl)
+	{
+		if (!pButtonEl) { return; }
+		let tmpContainer = pButtonEl.closest('.pict-content-code-container');
+		if (!tmpContainer) { return; }
+		let tmpCodeEl = tmpContainer.querySelector('code');
+		if (!tmpCodeEl) { return; }
+		let tmpPlayground = this.pict.views['Docuserve-Fable-Playground'];
+		if (tmpPlayground && typeof tmpPlayground.loadCode === 'function')
+		{
+			tmpPlayground.loadCode(tmpCodeEl.textContent);
+		}
 	}
 
 	/**

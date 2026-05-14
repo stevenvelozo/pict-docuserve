@@ -13,8 +13,8 @@ const _ViewConfiguration =
 		.docuserve-sidebar {
 			display: flex;
 			flex-direction: column;
-			background: var(--docuserve-sidebar-bg);
-			border-right: 1px solid var(--docuserve-sidebar-border);
+			background: var(--theme-color-background-secondary, #FAF7F1);
+			border-right: 1px solid var(--theme-color-border-default, #DDD6CA);
 			padding: 1em 0;
 			padding-top: 0;
 			min-height: 100%;
@@ -27,35 +27,38 @@ const _ViewConfiguration =
 			padding: 0.4em 0.5em 0;
 		}
 		.docuserve-sidebar-close {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
 			background: none;
 			border: none;
-			color: var(--docuserve-text-dim);
-			font-size: 1.2em;
+			color: var(--theme-color-text-muted, #8A7F72);
+			font-size: 1.1em;
 			cursor: pointer;
 			padding: 0.2em 0.4em;
 			line-height: 1;
 		}
 		.docuserve-sidebar-close:hover {
-			color: var(--docuserve-accent);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-search {
 			padding: 0 1em 1em 1em;
-			border-bottom: 1px solid var(--docuserve-sidebar-border-soft);
+			border-bottom: 1px solid var(--theme-color-border-light, #E5DED1);
 			margin-bottom: 0.5em;
 		}
 		.docuserve-sidebar-search input {
 			width: 100%;
 			padding: 0.5em 0.75em;
-			background: var(--docuserve-sidebar-search-bg);
-			color: var(--docuserve-text);
-			border: 1px solid var(--docuserve-sidebar-search-border);
+			background: var(--theme-color-background-panel, #FFFFFF);
+			color: var(--theme-color-text-primary, #2A241E);
+			border: 1px solid var(--theme-color-border-default, #DDD6CA);
 			border-radius: 4px;
 			font-size: 0.85em;
 			outline: none;
 			box-sizing: border-box;
 		}
 		.docuserve-sidebar-search input:focus {
-			border-color: var(--docuserve-accent);
+			border-color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-search-results {
 			margin-top: 0.5em;
@@ -63,7 +66,7 @@ const _ViewConfiguration =
 		.docuserve-sidebar-search-results a {
 			display: block;
 			padding: 0.4em 0.5em;
-			color: var(--docuserve-sidebar-text);
+			color: var(--theme-color-text-primary, #423D37);
 			text-decoration: none;
 			font-size: 0.82em;
 			border-radius: 3px;
@@ -71,34 +74,39 @@ const _ViewConfiguration =
 			cursor: pointer;
 		}
 		.docuserve-sidebar-search-results a:hover {
-			background-color: var(--docuserve-sidebar-hover-bg);
-			color: var(--docuserve-sidebar-hover-text);
+			background-color: var(--theme-color-background-hover, #EAE3D8);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-search-result-title {
 			font-weight: 600;
-			color: var(--docuserve-text-strong);
+			color: var(--theme-color-text-primary, #3D3229);
 		}
 		.docuserve-sidebar-search-results a:hover .docuserve-sidebar-search-result-title {
-			color: var(--docuserve-sidebar-hover-text);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-search-result-meta {
 			font-size: 0.9em;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 		}
 		.docuserve-sidebar-search-all {
 			display: block;
 			padding: 0.4em 0.5em;
 			font-size: 0.82em;
-			color: var(--docuserve-accent);
+			color: var(--theme-color-brand-primary, #2E7D74);
 			text-decoration: none;
 			font-weight: 600;
 			cursor: pointer;
-			border-top: 1px solid var(--docuserve-sidebar-border-soft);
+			border-top: 1px solid var(--theme-color-border-light, #E5DED1);
 			margin-top: 0.25em;
 			padding-top: 0.5em;
 		}
 		.docuserve-sidebar-search-all:hover {
 			text-decoration: underline;
+		}
+		.docuserve-sidebar-search-empty {
+			padding: 0.4em 0.5em;
+			font-size: 0.82em;
+			color: var(--theme-color-text-muted, #8A7F72);
 		}
 		.docuserve-sidebar-home {
 			padding: 0.5em 1.25em;
@@ -108,13 +116,13 @@ const _ViewConfiguration =
 			letter-spacing: 0.03em;
 		}
 		.docuserve-sidebar-home a {
-			color: var(--docuserve-sidebar-module-text);
+			color: var(--theme-color-text-secondary, #5E5549);
 			text-decoration: none;
 			cursor: pointer;
 			user-select: none;
 		}
 		.docuserve-sidebar-home a:hover {
-			color: var(--docuserve-sidebar-hover-text);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-group {
 			margin-top: 0.25em;
@@ -124,7 +132,7 @@ const _ViewConfiguration =
 			padding: 0.5em 1.25em;
 			font-weight: 600;
 			font-size: 0.85em;
-			color: var(--docuserve-sidebar-group-title);
+			color: var(--theme-color-text-primary, #3D3229);
 			text-decoration: none;
 			text-transform: uppercase;
 			letter-spacing: 0.03em;
@@ -133,12 +141,12 @@ const _ViewConfiguration =
 			transition: background-color 0.1s, color 0.1s;
 		}
 		.docuserve-sidebar-group-title:hover {
-			color: var(--docuserve-sidebar-hover-text);
-			background-color: var(--docuserve-sidebar-hover-bg);
+			color: var(--theme-color-brand-primary, #2E7D74);
+			background-color: var(--theme-color-background-hover, #EAE3D8);
 		}
 		a.docuserve-sidebar-group-title.active {
-			color: var(--docuserve-sidebar-active-text);
-			background-color: var(--docuserve-sidebar-active-bg);
+			color: var(--theme-color-brand-primary, #2E7D74);
+			background-color: var(--theme-color-background-tertiary, #E5DED1);
 		}
 		.docuserve-sidebar-modules {
 			list-style: none;
@@ -151,57 +159,65 @@ const _ViewConfiguration =
 		.docuserve-sidebar-modules a {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: var(--docuserve-sidebar-module-text);
+			color: var(--theme-color-text-secondary, #5E5549);
 			text-decoration: none;
 			font-size: 0.85em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-modules a:hover {
-			background-color: var(--docuserve-sidebar-hover-bg);
-			color: var(--docuserve-sidebar-hover-text);
+			background-color: var(--theme-color-background-hover, #EAE3D8);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-sidebar-modules a.active {
-			color: var(--docuserve-sidebar-active-text);
+			color: var(--theme-color-brand-primary, #2E7D74);
 			font-weight: 600;
-			background-color: var(--docuserve-sidebar-active-bg);
+			background-color: var(--theme-color-background-tertiary, #E5DED1);
 		}
 		.docuserve-sidebar-modules .no-docs {
 			display: block;
 			padding: 0.3em 1.25em 0.3em 2em;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			font-size: 0.85em;
 		}
 		.docuserve-sidebar-module-nav {
-			border-top: 1px solid var(--docuserve-sidebar-border-soft);
+			border-top: 1px solid var(--theme-color-border-light, #E5DED1);
 			margin-top: 0.5em;
 			padding-top: 0.5em;
+		}
+		.docuserve-sidebar-module-nav:empty {
+			display: none;
 		}
 		.docuserve-sidebar-module-nav-section {
 			padding: 0.4em 1.25em;
 			font-weight: 600;
 			font-size: 0.8em;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			text-transform: uppercase;
 			letter-spacing: 0.02em;
 		}
 		.docuserve-sidebar-module-nav a {
 			display: block;
 			padding: 0.25em 1.25em 0.25em 2.25em;
-			color: var(--docuserve-sidebar-module-text);
+			color: var(--theme-color-text-secondary, #5E5549);
 			text-decoration: none;
 			font-size: 0.82em;
 			transition: background-color 0.1s, color 0.1s;
 			cursor: pointer;
 		}
 		.docuserve-sidebar-module-nav a:hover {
-			background-color: var(--docuserve-sidebar-hover-bg);
-			color: var(--docuserve-sidebar-hover-text);
+			background-color: var(--theme-color-background-hover, #EAE3D8);
+			color: var(--theme-color-brand-primary, #2E7D74);
+		}
+		.docuserve-sidebar-module-nav a.active {
+			color: var(--theme-color-brand-primary, #2E7D74);
+			font-weight: 600;
+			background-color: var(--theme-color-background-tertiary, #E5DED1);
 		}
 		.docuserve-sidebar-footer {
 			margin-top: auto;
 			padding: 0.9em 1.25em 1em 1.25em;
-			border-top: 1px solid var(--docuserve-sidebar-border-soft);
+			border-top: 1px solid var(--theme-color-border-light, #E5DED1);
 		}
 		.docuserve-sidebar-footer:empty {
 			display: none;
@@ -213,17 +229,17 @@ const _ViewConfiguration =
 		.docuserve-version-name {
 			font-size: 0.78em;
 			font-weight: 600;
-			color: var(--docuserve-text-muted);
+			color: var(--theme-color-text-secondary, #5E5549);
 			letter-spacing: 0.02em;
 		}
 		.docuserve-version-number {
 			font-size: 0.82em;
 			font-weight: 500;
-			color: var(--docuserve-accent);
+			color: var(--theme-color-brand-primary, #2E7D74);
 		}
 		.docuserve-version-meta {
 			font-size: 0.7em;
-			color: var(--docuserve-text-dim);
+			color: var(--theme-color-text-muted, #8A7F72);
 			margin-top: 0.15em;
 		}
 	`,
@@ -235,20 +251,110 @@ const _ViewConfiguration =
 			Template: /*html*/`
 <div class="docuserve-sidebar">
 	<div class="docuserve-sidebar-header">
-		<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()">&times;</button>
+		<button class="docuserve-sidebar-close" onclick="{~P~}.views['Docuserve-Sidebar'].toggleSidebar()" aria-label="Close sidebar">{~I:Close~}</button>
 	</div>
-	<div id="Docuserve-Sidebar-Search" class="docuserve-sidebar-search" style="display:none;">
-		<input type="text" placeholder="Search docs..." id="Docuserve-Sidebar-Search-Input">
-		<div id="Docuserve-Sidebar-Search-Results" class="docuserve-sidebar-search-results"></div>
-	</div>
+	{~TS:Docuserve-Sidebar-Search-Slot-Template:AppData.Docuserve.SidebarSearchSlot~}
 	<div class="docuserve-sidebar-home">
 		<a onclick="{~P~}.PictApplication.navigateTo('/Home')">Home</a>
 	</div>
-	<div id="Docuserve-Sidebar-Groups"></div>
-	<div id="Docuserve-Sidebar-ModuleNav"></div>
-	<div id="Docuserve-Sidebar-Footer" class="docuserve-sidebar-footer"></div>
+	<div id="Docuserve-Sidebar-Groups">
+		{~TS:Docuserve-Sidebar-Group-Template:AppData.Docuserve.SidebarGroupRecords~}
+	</div>
+	<div id="Docuserve-Sidebar-ModuleNav" class="docuserve-sidebar-module-nav">
+		{~TS:Docuserve-Sidebar-ModuleNav-Section-Template:AppData.Docuserve.ModuleNavSections~}
+	</div>
+	<div class="docuserve-sidebar-footer">
+		{~TS:Docuserve-Sidebar-Footer-Template:AppData.Docuserve.FooterSlot~}
+	</div>
 </div>
 `
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-Slot-Template",
+			Template: /*html*/`<div id="Docuserve-Sidebar-Search" class="docuserve-sidebar-search">
+	<input type="text" placeholder="Search docs..." id="Docuserve-Sidebar-Search-Input" oninput="{~P~}.views['Docuserve-Sidebar'].onSidebarSearchInput(this.value)">
+	<div id="Docuserve-Sidebar-Search-Results" class="docuserve-sidebar-search-results"></div>
+</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Group-Template",
+			Template: /*html*/`<div class="docuserve-sidebar-group">
+	{~TS:Docuserve-Sidebar-Group-Title-Link-Template:Record.TitleLink~}{~TS:Docuserve-Sidebar-Group-Title-Plain-Template:Record.TitlePlain~}
+	<ul class="docuserve-sidebar-modules">
+		{~TS:Docuserve-Sidebar-Module-Doc-Template:Record.Modules~}
+	</ul>
+</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Group-Title-Link-Template",
+			Template: /*html*/`<a class="docuserve-sidebar-group-title{~D:Record.ActiveClass~}" href="{~D:Record.Route~}">{~D:Record.Name~}</a>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Group-Title-Plain-Template",
+			Template: /*html*/`<div class="docuserve-sidebar-group-title">{~D:Record.Name~}</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Module-Doc-Template",
+			Template: /*html*/`<li>{~TS:Docuserve-Sidebar-Module-Link-Template:Record.LinkSlot~}{~TS:Docuserve-Sidebar-Module-NoDoc-Template:Record.NoDocSlot~}</li>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Module-Link-Template",
+			Template: /*html*/`<a class="{~D:Record.ActiveClass~}" href="{~D:Record.Route~}">{~D:Record.Name~}</a>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Module-NoDoc-Template",
+			Template: /*html*/`<span class="no-docs">{~D:Record.Name~}</span>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-ModuleNav-Section-Template",
+			Template: /*html*/`{~TS:Docuserve-Sidebar-ModuleNav-SectionTitle-Template:Record.TitleSlot~}{~TS:Docuserve-Sidebar-ModuleNav-Item-Template:Record.Items~}`
+		},
+		{
+			Hash: "Docuserve-Sidebar-ModuleNav-SectionTitle-Template",
+			Template: /*html*/`<div class="docuserve-sidebar-module-nav-section">{~D:Record.Title~}</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-ModuleNav-Item-Template",
+			Template: /*html*/`<a class="{~D:Record.ActiveClass~}" href="{~D:Record.Route~}">{~D:Record.Title~}</a>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Footer-Template",
+			Template: /*html*/`<div class="docuserve-version-placard">
+	{~TS:Docuserve-Sidebar-Footer-Name-Template:Record.NameSlot~}
+	<div class="docuserve-version-number">v{~D:Record.Version~}</div>
+	{~TS:Docuserve-Sidebar-Footer-Meta-Template:Record.MetaSlot~}
+</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Footer-Name-Template",
+			Template: /*html*/`<div class="docuserve-version-name">{~D:Record.Name~}</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Footer-Meta-Template",
+			Template: /*html*/`<div class="docuserve-version-meta">{~D:Record.Meta~}</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-ResultsBody-Template",
+			Template: /*html*/`{~TS:Docuserve-Sidebar-Search-Result-Template:AppData.Docuserve.SidebarSearchResults~}{~TS:Docuserve-Sidebar-Search-Overflow-Template:AppData.Docuserve.SidebarSearchOverflow~}{~TS:Docuserve-Sidebar-Search-Empty-Template:AppData.Docuserve.SidebarSearchEmpty~}`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-Result-Template",
+			Template: /*html*/`<a href="{~D:Record.Route~}">
+	<div class="docuserve-sidebar-search-result-title">{~D:Record.Title~}</div>
+	{~TS:Docuserve-Sidebar-Search-Result-Meta-Template:Record.MetaSlot~}
+</a>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-Result-Meta-Template",
+			Template: /*html*/`<div class="docuserve-sidebar-search-result-meta">{~D:Record.Meta~}</div>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-Overflow-Template",
+			Template: /*html*/`<a class="docuserve-sidebar-search-all" href="#/search/{~D:Record.EncodedQuery~}">See all {~D:Record.TotalCount~} results</a>`
+		},
+		{
+			Hash: "Docuserve-Sidebar-Search-Empty-Template",
+			Template: /*html*/`<div class="docuserve-sidebar-search-empty">No results found.</div>`
 		}
 	],
 
@@ -272,292 +378,67 @@ class DocusserveSidebarView extends libPictView
 		this._SidebarSearchDebounceTimer = null;
 	}
 
-	onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent)
+	onBeforeRender(pRenderable)
 	{
-		this.renderSidebarGroups();
-		this.renderSidebarFooter();
+		// Derive every template-iteration record from raw AppData state.
+		// Each refresh writes a single AppData address that drives one
+		// {~TS:~} tag in the template tree.  Doing this here keeps the
+		// public surface tiny — callers just set the navigation state
+		// and call render(), and every derived field updates atomically.
+		this._refreshSearchSlot();
+		this._refreshFooterSlot();
+		this._refreshSidebarGroupRecords();
+		this._refreshModuleNavSections();
 
-		// Conditionally show the search box if the keyword index is loaded
-		let tmpSearchContainer = document.getElementById('Docuserve-Sidebar-Search');
-		if (tmpSearchContainer && this.pict.AppData.Docuserve.KeywordIndexLoaded)
-		{
-			tmpSearchContainer.style.display = '';
-
-			let tmpInput = document.getElementById('Docuserve-Sidebar-Search-Input');
-			if (tmpInput)
-			{
-				tmpInput.addEventListener('input', () =>
-				{
-					if (this._SidebarSearchDebounceTimer)
-					{
-						clearTimeout(this._SidebarSearchDebounceTimer);
-					}
-
-					this._SidebarSearchDebounceTimer = setTimeout(() =>
-					{
-						this.performSidebarSearch(tmpInput.value);
-					}, 250);
-				});
-			}
-		}
-
-		return super.onAfterRender(pRenderable, pRenderDestinationAddress, pRecord, pContent);
+		return super.onBeforeRender(pRenderable);
 	}
 
-	/**
-	 * Render the sidebar footer placard showing module name, version,
-	 * build timestamp and git commit from _version.json.  Hides the
-	 * footer entirely when no version data is loaded.
-	 */
-	renderSidebarFooter()
-	{
-		let tmpFooterEl = document.getElementById('Docuserve-Sidebar-Footer');
-		if (!tmpFooterEl)
-		{
-			return;
-		}
-		let tmpDocuserve = this.pict.AppData.Docuserve;
-		if (!tmpDocuserve.VersionLoaded || !tmpDocuserve.Version || !tmpDocuserve.Version.Version)
-		{
-			tmpFooterEl.innerHTML = '';
-			return;
-		}
-		let tmpVersion = tmpDocuserve.Version;
-		let tmpHTML = '<div class="docuserve-version-placard">';
-		if (tmpVersion.Name)
-		{
-			tmpHTML += '<div class="docuserve-version-name">' + this.escapeHTML(tmpVersion.Name) + '</div>';
-		}
-		tmpHTML += '<div class="docuserve-version-number">v' + this.escapeHTML(tmpVersion.Version) + '</div>';
-		let tmpMetaParts = [];
-		if (tmpVersion.GeneratedAt)
-		{
-			let tmpDate = String(tmpVersion.GeneratedAt).match(/^(\d{4}-\d{2}-\d{2})/);
-			if (tmpDate)
-			{
-				tmpMetaParts.push('built ' + tmpDate[1]);
-			}
-		}
-		if (tmpVersion.GitCommit)
-		{
-			tmpMetaParts.push(tmpVersion.GitCommit);
-		}
-		if (tmpMetaParts.length > 0)
-		{
-			tmpHTML += '<div class="docuserve-version-meta">' + this.escapeHTML(tmpMetaParts.join(' · ')) + '</div>';
-		}
-		tmpHTML += '</div>';
-		tmpFooterEl.innerHTML = tmpHTML;
-	}
+	// ─────────────────────────────────────────────
+	//  Public API consumed by the application.
+	//
+	//  These are thin render-triggers — the actual derivation runs in
+	//  onBeforeRender.  Kept as named methods for API back-compat with
+	//  consumers that called them directly on the previous version.
+	// ─────────────────────────────────────────────
+
+	renderSidebarGroups()    { this.render(); }
+	renderModuleNav()        { this.render(); }
+	clearModuleNav()         { this.render(); }
 
 	/**
-	 * Render the sidebar group navigation from catalog data.
-	 */
-	renderSidebarGroups()
-	{
-		let tmpGroups = this.pict.AppData.Docuserve.SidebarGroups;
-
-		if (!tmpGroups || tmpGroups.length < 1)
-		{
-			// Empty sidebar -- don't show a permanent loading message
-			this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-Groups', '');
-			return;
-		}
-
-		let tmpHTML = '';
-
-		for (let i = 0; i < tmpGroups.length; i++)
-		{
-			let tmpGroup = tmpGroups[i];
-			tmpHTML += '<div class="docuserve-sidebar-group">';
-
-			// Determine the route for the group title: use the group's own route,
-			// or fall back to the first module with docs.
-			let tmpGroupRoute = tmpGroup.Route || '';
-			if (!tmpGroupRoute)
-			{
-				for (let k = 0; k < tmpGroup.Modules.length; k++)
-				{
-					if (tmpGroup.Modules[k].HasDocs && tmpGroup.Modules[k].Route)
-					{
-						tmpGroupRoute = tmpGroup.Modules[k].Route;
-						break;
-					}
-				}
-			}
-
-			if (tmpGroupRoute)
-			{
-				let tmpGroupActiveClass = '';
-				let tmpCurrentHash = window.location.hash || '';
-				if (this.pict.AppData.Docuserve.CurrentGroup === tmpGroup.Key
-					|| tmpCurrentHash === tmpGroupRoute)
-				{
-					tmpGroupActiveClass = ' active';
-				}
-				tmpHTML += '<a class="docuserve-sidebar-group-title' + tmpGroupActiveClass + '" href="' + tmpGroupRoute + '">' + this.escapeHTML(tmpGroup.Name) + '</a>';
-			}
-			else
-			{
-				tmpHTML += '<div class="docuserve-sidebar-group-title">' + this.escapeHTML(tmpGroup.Name) + '</div>';
-			}
-			tmpHTML += '<ul class="docuserve-sidebar-modules">';
-
-			for (let j = 0; j < tmpGroup.Modules.length; j++)
-			{
-				let tmpModule = tmpGroup.Modules[j];
-				if (tmpModule.HasDocs)
-				{
-					let tmpActiveClass = '';
-					if (this.pict.AppData.Docuserve.CurrentGroup === tmpModule.Group && this.pict.AppData.Docuserve.CurrentModule === tmpModule.Name)
-					{
-						tmpActiveClass = ' class="active"';
-					}
-					tmpHTML += '<li><a' + tmpActiveClass + ' href="' + tmpModule.Route + '">' + this.escapeHTML(tmpModule.Name) + '</a></li>';
-				}
-				else
-				{
-					tmpHTML += '<li><span class="no-docs">' + this.escapeHTML(tmpModule.Name) + '</span></li>';
-				}
-			}
-
-			tmpHTML += '</ul>';
-			tmpHTML += '</div>';
-		}
-
-		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-Groups', tmpHTML);
-	}
-
-	/**
-	 * Render module-specific sub-navigation when viewing a module.
+	 * Inline handler for the sidebar search input.  Debounces the live
+	 * search dispatch so we don't run the lunr index on every keystroke.
 	 *
-	 * @param {string} pGroup - The group key
-	 * @param {string} pModule - The module name
+	 * @param {string} pValue - The current value of the input
 	 */
-	renderModuleNav(pGroup, pModule)
+	onSidebarSearchInput(pValue)
 	{
-		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
-		let tmpDemosProvider = this.pict.providers['Docuserve-Demos'];
-
-		let tmpSidebar = tmpDocProvider ? tmpDocProvider.getModuleSidebar(pGroup, pModule) : null;
-		let tmpDemos = tmpDemosProvider ? tmpDemosProvider.listByModule(pGroup, pModule) : [];
-
-		if ((!tmpSidebar || tmpSidebar.length < 1) && tmpDemos.length < 1)
+		if (this._SidebarSearchDebounceTimer)
 		{
-			this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', '');
-			return;
+			clearTimeout(this._SidebarSearchDebounceTimer);
 		}
-
-		let tmpRoutePrefix = '#/doc/' + pGroup + '/' + pModule + '/';
-		let tmpDemoPrefix  = '#/demo/' + pGroup + '/' + pModule + '/';
-		let tmpCurrentDemo = this.pict.AppData.Docuserve.CurrentDemo || '';
-		let tmpHTML = '<div class="docuserve-sidebar-module-nav">';
-
-		if (tmpSidebar && tmpSidebar.length > 0)
+		this._SidebarSearchDebounceTimer = setTimeout(() =>
 		{
-			for (let i = 0; i < tmpSidebar.length; i++)
-			{
-				let tmpEntry = tmpSidebar[i];
-
-				if (tmpEntry.Children)
-				{
-					tmpHTML += '<div class="docuserve-sidebar-module-nav-section">' + this.escapeHTML(tmpEntry.Title) + '</div>';
-
-					for (let j = 0; j < tmpEntry.Children.length; j++)
-					{
-						let tmpChild = tmpEntry.Children[j];
-						if (tmpChild.Path)
-						{
-							tmpHTML += '<a href="' + tmpRoutePrefix + tmpChild.Path + '">' + this.escapeHTML(tmpChild.Title) + '</a>';
-						}
-					}
-				}
-				else if (tmpEntry.Path)
-				{
-					tmpHTML += '<a href="' + tmpRoutePrefix + tmpEntry.Path + '">' + this.escapeHTML(tmpEntry.Title) + '</a>';
-				}
-			}
-		}
-
-		// Demos sub-section appears at the bottom of the module nav when
-		// the Docuserve-Demos provider has entries for this (group, module).
-		// Active demo gets the same `active` styling as a regular page link.
-		if (tmpDemos.length > 0)
-		{
-			tmpHTML += '<div class="docuserve-sidebar-module-nav-section">Demos</div>';
-			for (let i = 0; i < tmpDemos.length; i++)
-			{
-				let tmpDemo = tmpDemos[i];
-				let tmpActive = (tmpDemo.Hash === tmpCurrentDemo) ? ' class="active"' : '';
-				tmpHTML += '<a' + tmpActive + ' href="' + tmpDemoPrefix + this.escapeHTML(tmpDemo.Hash) + '">'
-					+ this.escapeHTML(tmpDemo.Name || tmpDemo.Hash) + '</a>';
-			}
-		}
-
-		tmpHTML += '</div>';
-
-		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', tmpHTML);
+			this.performSidebarSearch(pValue);
+		}, 250);
 	}
 
 	/**
-	 * Perform a sidebar search and render inline results.
+	 * Run a sidebar search and update the results region.  Top 8 results
+	 * become live links; if there are more, an overflow row links to the
+	 * full search page.  Empty-string queries clear the results.
 	 *
-	 * Shows up to 8 results as compact links.  If there are results, also
-	 * shows a "See all results" link to the dedicated search page.
+	 * Updates AppData and re-renders only the search-results destination
+	 * so the typing focus is preserved.
 	 *
 	 * @param {string} pQuery - The search query
 	 */
 	performSidebarSearch(pQuery)
 	{
-		let tmpResultsEl = document.getElementById('Docuserve-Sidebar-Search-Results');
-		if (!tmpResultsEl)
-		{
-			return;
-		}
+		this._refreshSearchResults(pQuery);
 
-		if (!pQuery || !pQuery.trim())
-		{
-			tmpResultsEl.innerHTML = '';
-			return;
-		}
-
-		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
-		let tmpResults = tmpDocProvider.search(pQuery);
-
-		if (tmpResults.length === 0)
-		{
-			tmpResultsEl.innerHTML = '<div style="padding: 0.4em 0.5em; font-size: 0.82em; color: #8A7F72;">No results found.</div>';
-			return;
-		}
-
-		let tmpMaxResults = 8;
-		let tmpHTML = '';
-
-		for (let i = 0; i < tmpResults.length && i < tmpMaxResults; i++)
-		{
-			let tmpResult = tmpResults[i];
-			let tmpMeta = '';
-			if (tmpResult.Group && tmpResult.Module)
-			{
-				tmpMeta = tmpResult.Group + ' / ' + tmpResult.Module;
-			}
-
-			tmpHTML += '<a href="' + tmpResult.Route + '">';
-			tmpHTML += '<div class="docuserve-sidebar-search-result-title">' + this.escapeHTML(tmpResult.Title) + '</div>';
-			if (tmpMeta)
-			{
-				tmpHTML += '<div class="docuserve-sidebar-search-result-meta">' + this.escapeHTML(tmpMeta) + '</div>';
-			}
-			tmpHTML += '</a>';
-		}
-
-		if (tmpResults.length > tmpMaxResults)
-		{
-			let tmpEncodedQuery = encodeURIComponent(pQuery);
-			tmpHTML += '<a class="docuserve-sidebar-search-all" href="#/search/' + tmpEncodedQuery + '">See all ' + tmpResults.length + ' results</a>';
-		}
-
-		tmpResultsEl.innerHTML = tmpHTML;
+		let tmpHTML = this.pict.parseTemplateByHash('Docuserve-Sidebar-Search-ResultsBody-Template', {});
+		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-Search-Results', tmpHTML);
 	}
 
 	/**
@@ -588,31 +469,295 @@ class DocusserveSidebarView extends libPictView
 		}
 	}
 
-	/**
-	 * Clear the module-specific sub-navigation.
-	 */
-	clearModuleNav()
+	// ─────────────────────────────────────────────
+	//  Record builders (private — drive the {~TS:~} tags)
+	// ─────────────────────────────────────────────
+
+	_refreshSearchSlot()
 	{
-		this.pict.ContentAssignment.assignContent('#Docuserve-Sidebar-ModuleNav', '');
+		// Single-element-array trick: render the search box only when the
+		// keyword index has loaded.
+		this.pict.AppData.Docuserve.SidebarSearchSlot =
+			this.pict.AppData.Docuserve.KeywordIndexLoaded ? [{}] : [];
 	}
 
-	/**
-	 * Escape HTML special characters.
-	 *
-	 * @param {string} pText - The text to escape
-	 * @returns {string} The escaped text
-	 */
-	escapeHTML(pText)
+	_refreshFooterSlot()
 	{
-		if (!pText)
+		let tmpDocuserve = this.pict.AppData.Docuserve;
+		if (!tmpDocuserve.VersionLoaded || !tmpDocuserve.Version || !tmpDocuserve.Version.Version)
 		{
-			return '';
+			tmpDocuserve.FooterSlot = [];
+			return;
 		}
-		return pText
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;');
+
+		let tmpVersion = tmpDocuserve.Version;
+		let tmpRecord =
+		{
+			Version: tmpVersion.Version,
+			NameSlot: tmpVersion.Name ? [{ Name: tmpVersion.Name }] : [],
+			MetaSlot: []
+		};
+
+		let tmpMetaParts = [];
+		if (tmpVersion.GeneratedAt)
+		{
+			let tmpDate = String(tmpVersion.GeneratedAt).match(/^(\d{4}-\d{2}-\d{2})/);
+			if (tmpDate)
+			{
+				tmpMetaParts.push('built ' + tmpDate[1]);
+			}
+		}
+		if (tmpVersion.GitCommit)
+		{
+			tmpMetaParts.push(tmpVersion.GitCommit);
+		}
+		if (tmpMetaParts.length > 0)
+		{
+			tmpRecord.MetaSlot = [{ Meta: tmpMetaParts.join(' · ') }];
+		}
+
+		tmpDocuserve.FooterSlot = [tmpRecord];
+	}
+
+	_refreshSidebarGroupRecords()
+	{
+		let tmpGroups = this.pict.AppData.Docuserve.SidebarGroups || [];
+		let tmpCurrentGroup  = this.pict.AppData.Docuserve.CurrentGroup;
+		let tmpCurrentModule = this.pict.AppData.Docuserve.CurrentModule;
+		let tmpCurrentHash   = (typeof window !== 'undefined' && window.location) ? (window.location.hash || '') : '';
+
+		let tmpRecords = [];
+		for (let i = 0; i < tmpGroups.length; i++)
+		{
+			let tmpGroup = tmpGroups[i];
+
+			// Resolve the group's route: use the group's own route, or
+			// fall back to the first module with docs.
+			let tmpGroupRoute = tmpGroup.Route || '';
+			if (!tmpGroupRoute)
+			{
+				for (let k = 0; k < tmpGroup.Modules.length; k++)
+				{
+					if (tmpGroup.Modules[k].HasDocs && tmpGroup.Modules[k].Route)
+					{
+						tmpGroupRoute = tmpGroup.Modules[k].Route;
+						break;
+					}
+				}
+			}
+
+			let tmpGroupActive = (tmpCurrentGroup === tmpGroup.Key) || (tmpCurrentHash === tmpGroupRoute);
+			let tmpTitleLink = [];
+			let tmpTitlePlain = [];
+			if (tmpGroupRoute)
+			{
+				tmpTitleLink.push(
+				{
+					Name: tmpGroup.Name,
+					Route: tmpGroupRoute,
+					ActiveClass: tmpGroupActive ? ' active' : ''
+				});
+			}
+			else
+			{
+				tmpTitlePlain.push({ Name: tmpGroup.Name });
+			}
+
+			let tmpModuleRecords = [];
+			for (let j = 0; j < tmpGroup.Modules.length; j++)
+			{
+				let tmpModule = tmpGroup.Modules[j];
+				if (tmpModule.HasDocs)
+				{
+					let tmpModuleActive = (tmpCurrentGroup === tmpModule.Group && tmpCurrentModule === tmpModule.Name);
+					tmpModuleRecords.push(
+					{
+						LinkSlot: [{
+							Name: tmpModule.Name,
+							Route: tmpModule.Route,
+							ActiveClass: tmpModuleActive ? 'active' : ''
+						}],
+						NoDocSlot: []
+					});
+				}
+				else
+				{
+					tmpModuleRecords.push(
+					{
+						LinkSlot: [],
+						NoDocSlot: [{ Name: tmpModule.Name }]
+					});
+				}
+			}
+
+			tmpRecords.push(
+			{
+				TitleLink: tmpTitleLink,
+				TitlePlain: tmpTitlePlain,
+				Modules: tmpModuleRecords
+			});
+		}
+
+		this.pict.AppData.Docuserve.SidebarGroupRecords = tmpRecords;
+	}
+
+	_refreshModuleNavSections()
+	{
+		let tmpGroup  = this.pict.AppData.Docuserve.CurrentGroup;
+		let tmpModule = this.pict.AppData.Docuserve.CurrentModule;
+		if (!tmpGroup || !tmpModule)
+		{
+			this.pict.AppData.Docuserve.ModuleNavSections = [];
+			return;
+		}
+
+		let tmpDocProvider   = this.pict.providers['Docuserve-Documentation'];
+		let tmpDemosProvider = this.pict.providers['Docuserve-Demos'];
+
+		let tmpSidebar = tmpDocProvider ? tmpDocProvider.getModuleSidebar(tmpGroup, tmpModule) : null;
+		let tmpDemos   = tmpDemosProvider ? tmpDemosProvider.listByModule(tmpGroup, tmpModule) : [];
+
+		if ((!tmpSidebar || tmpSidebar.length < 1) && tmpDemos.length < 1)
+		{
+			this.pict.AppData.Docuserve.ModuleNavSections = [];
+			return;
+		}
+
+		let tmpRoutePrefix = '#/doc/' + tmpGroup + '/' + tmpModule + '/';
+		let tmpDemoPrefix  = '#/demo/' + tmpGroup + '/' + tmpModule + '/';
+		let tmpCurrentDemo = this.pict.AppData.Docuserve.CurrentDemo || '';
+
+		let tmpSections = [];
+
+		// Flattened sidebar entries into one section.  Entries with
+		// children become a titled sub-section; flat entries form an
+		// untitled run.  We preserve the original ordering by emitting a
+		// new section each time the title changes.
+		if (tmpSidebar && tmpSidebar.length > 0)
+		{
+			let tmpCurrentSection = null;
+			for (let i = 0; i < tmpSidebar.length; i++)
+			{
+				let tmpEntry = tmpSidebar[i];
+
+				if (tmpEntry.Children)
+				{
+					tmpCurrentSection =
+					{
+						TitleSlot: [{ Title: tmpEntry.Title }],
+						Items: []
+					};
+					tmpSections.push(tmpCurrentSection);
+					for (let j = 0; j < tmpEntry.Children.length; j++)
+					{
+						let tmpChild = tmpEntry.Children[j];
+						if (tmpChild.Path)
+						{
+							tmpCurrentSection.Items.push(
+							{
+								Title: tmpChild.Title,
+								Route: tmpRoutePrefix + tmpChild.Path,
+								ActiveClass: ''
+							});
+						}
+					}
+				}
+				else if (tmpEntry.Path)
+				{
+					if (!tmpCurrentSection || tmpCurrentSection.TitleSlot.length > 0)
+					{
+						tmpCurrentSection = { TitleSlot: [], Items: [] };
+						tmpSections.push(tmpCurrentSection);
+					}
+					tmpCurrentSection.Items.push(
+					{
+						Title: tmpEntry.Title,
+						Route: tmpRoutePrefix + tmpEntry.Path,
+						ActiveClass: ''
+					});
+				}
+			}
+		}
+
+		// Demos sub-section: titled, with active state mirroring the
+		// current demo route.
+		if (tmpDemos.length > 0)
+		{
+			let tmpDemoSection =
+			{
+				TitleSlot: [{ Title: 'Demos' }],
+				Items: []
+			};
+			for (let i = 0; i < tmpDemos.length; i++)
+			{
+				let tmpDemo = tmpDemos[i];
+				tmpDemoSection.Items.push(
+				{
+					Title: tmpDemo.Name || tmpDemo.Hash,
+					Route: tmpDemoPrefix + tmpDemo.Hash,
+					ActiveClass: (tmpDemo.Hash === tmpCurrentDemo) ? 'active' : ''
+				});
+			}
+			tmpSections.push(tmpDemoSection);
+		}
+
+		this.pict.AppData.Docuserve.ModuleNavSections = tmpSections;
+	}
+
+	_refreshSearchResults(pQuery)
+	{
+		let tmpDocuserve = this.pict.AppData.Docuserve;
+
+		if (!pQuery || !pQuery.trim())
+		{
+			tmpDocuserve.SidebarSearchResults  = [];
+			tmpDocuserve.SidebarSearchOverflow = [];
+			tmpDocuserve.SidebarSearchEmpty    = [];
+			return;
+		}
+
+		let tmpDocProvider = this.pict.providers['Docuserve-Documentation'];
+		let tmpResults     = tmpDocProvider.search(pQuery);
+
+		if (tmpResults.length === 0)
+		{
+			tmpDocuserve.SidebarSearchResults  = [];
+			tmpDocuserve.SidebarSearchOverflow = [];
+			tmpDocuserve.SidebarSearchEmpty    = [{}];
+			return;
+		}
+
+		let tmpMaxResults = 8;
+		let tmpDisplayResults = [];
+		for (let i = 0; i < tmpResults.length && i < tmpMaxResults; i++)
+		{
+			let tmpResult = tmpResults[i];
+			let tmpMeta = (tmpResult.Group && tmpResult.Module)
+				? tmpResult.Group + ' / ' + tmpResult.Module
+				: '';
+			tmpDisplayResults.push(
+			{
+				Title: tmpResult.Title,
+				Route: tmpResult.Route,
+				MetaSlot: tmpMeta ? [{ Meta: tmpMeta }] : []
+			});
+		}
+
+		tmpDocuserve.SidebarSearchResults = tmpDisplayResults;
+		tmpDocuserve.SidebarSearchEmpty   = [];
+
+		if (tmpResults.length > tmpMaxResults)
+		{
+			tmpDocuserve.SidebarSearchOverflow =
+			[{
+				EncodedQuery: encodeURIComponent(pQuery),
+				TotalCount:   tmpResults.length
+			}];
+		}
+		else
+		{
+			tmpDocuserve.SidebarSearchOverflow = [];
+		}
 	}
 }
 
