@@ -1,6 +1,8 @@
 const libPictView                 = require('pict-view');
 const libPictSectionCode          = require('pict-section-code');
 const libFableServiceProviderBase = require('fable-serviceproviderbase');
+const libPict                     = require('pict');
+const libPictSectionHistogram     = require('pict-section-histogram');
 
 // Note: we deliberately do NOT `require('fable')` here.  Fable is already
 // bundled into the host page's pict.min.js (via pict's own dep tree);
@@ -146,6 +148,12 @@ const _ViewConfiguration =
 		}
 		.docuserve-playground-pane-code   { border-right: 1px solid var(--theme-color-border-default, #DDD6CA); }
 		.docuserve-playground-pane-log    { background: var(--theme-color-background-secondary, #F6F3EE); }
+		/* DOM sandbox pane — third column, opt-in via _playground.json's
+		   "Sandbox": "dom" field.  Hidden by default so fable-family docs
+		   keep their familiar two-pane layout. */
+		.docuserve-playground-pane-dom    { display: none; border-left: 1px solid var(--theme-color-border-default, #DDD6CA); background: var(--theme-color-background-panel, #FFFFFF); }
+		.docuserve-playground-mode-dom .docuserve-playground-pane-dom { display: flex; }
+		.docuserve-playground-sandbox     { flex: 1 1 0; min-height: 0; overflow: auto; padding: 12px; }
 
 		/* Per-pane header — small uppercase label on the left, controls
 		   on the right.  Same row height as the doc page section
@@ -407,6 +415,17 @@ const _ViewConfiguration =
 			</div>
 			<pre class="docuserve-playground-log" id="Docuserve-Fable-Playground-Log">{~T:Docuserve-Fable-Playground-Log-Body-Template:AppData~}</pre>
 		</div>
+		<div class="docuserve-playground-pane docuserve-playground-pane-dom">
+			<div class="docuserve-playground-pane-header">
+				<span class="docuserve-playground-pane-title">DOM sandbox</span>
+				<div class="docuserve-playground-pane-controls">
+					<button type="button" class="docuserve-playground-iconbtn" title="Clear sandbox" aria-label="Clear sandbox" onclick="{~P~}.views['Docuserve-Fable-Playground'].clearSandbox()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+					</button>
+				</div>
+			</div>
+			<div class="docuserve-playground-sandbox" id="Docuserve-Fable-Playground-Sandbox"></div>
+		</div>
 	</div>
 </div>
 `
@@ -505,6 +524,42 @@ class DocuserveFablePlaygroundView extends libPictView
 		}
 		this._wireHelpTooltip();
 		this._mountCodeEditor();
+		// Toggle the DOM-sandbox pane visibility based on the loaded
+		// _playground.json config.  Safe to call repeatedly — it just
+		// adds/removes the mode class on the playground root.
+		this._applySandboxMode();
+	}
+
+	/**
+	 * Read the current `_playground.json` (already cached into AppData
+	 * by the application's route handler) and toggle the
+	 * `docuserve-playground-mode-dom` class on the playground root
+	 * accordingly.  Idempotent.  Called from `mountInto()` and on
+	 * every `run()` so a config that loads asynchronously still gets
+	 * picked up the moment the user interacts with the playground.
+	 */
+	_applySandboxMode()
+	{
+		let tmpRoot = document.querySelector('.docuserve-playground');
+		if (!tmpRoot) { return; }
+		let tmpConfig = this.pict.AppData.Docuserve
+			&& this.pict.AppData.Docuserve.Playground
+			&& this.pict.AppData.Docuserve.Playground.Config;
+		let tmpSandboxMode = (tmpConfig && tmpConfig.Sandbox === 'dom');
+		tmpRoot.classList.toggle('docuserve-playground-mode-dom', tmpSandboxMode);
+	}
+
+	/**
+	 * Empty the DOM sandbox.  Wired to the trash-icon button in the
+	 * sandbox pane header.  Doesn't touch the log pane.
+	 */
+	clearSandbox()
+	{
+		let tmpSandbox = document.getElementById('Docuserve-Fable-Playground-Sandbox');
+		if (tmpSandbox)
+		{
+			tmpSandbox.innerHTML = '';
+		}
 	}
 
 	/**
@@ -716,6 +771,17 @@ class DocuserveFablePlaygroundView extends libPictView
 		this._cancelAsyncRender();
 		this._cancelFinishBanner();
 
+		// Re-evaluate sandbox-pane visibility every run — covers the
+		// case where _playground.json finishes loading after the
+		// playground has already been mounted.
+		this._applySandboxMode();
+
+		// Reset the DOM sandbox so each Run starts on a clean canvas.
+		// Doing this BEFORE the user code runs (not after) means async
+		// renders that arrive on a later tick aren't wiped out.  Snippets
+		// in console-mode docs leave the sandbox empty and pay nothing.
+		this.clearSandbox();
+
 		let tmpCode = this._getCurrentCode();
 		this.pict.AppData.Docuserve.Playground.Code = tmpCode;
 
@@ -742,7 +808,17 @@ class DocuserveFablePlaygroundView extends libPictView
 		// (firing template-render traces) keep using the global
 		// console untouched — avoids the obvious feedback loop.
 
+		// Sandbox-mode flag determines whether we hand the user a fresh
+		// Pict (DOM-mode docs need view registrations isolated per run)
+		// or the docuserve app's pict (console-mode docs preserve today's
+		// behaviour exactly).
+		let tmpConfig = this.pict.AppData.Docuserve
+			&& this.pict.AppData.Docuserve.Playground
+			&& this.pict.AppData.Docuserve.Playground.Config;
+		let tmpSandboxMode = (tmpConfig && tmpConfig.Sandbox === 'dom');
+
 		let tmpFable;
+		let tmpUserPict = this.pict;
 		try
 		{
 			let tmpFableClass = this.fable && this.fable.constructor;
@@ -750,8 +826,25 @@ class DocuserveFablePlaygroundView extends libPictView
 			{
 				throw new Error('Fable constructor unavailable on this.fable');
 			}
-			tmpFable = new tmpFableClass({ Product: 'FablePlayground', LogStreams: [] });
-			tmpFable.log.addLogger(this._buildCaptureLogger(tmpRecords, tmpStart), 'trace');
+			if (tmpSandboxMode)
+			{
+				// DOM mode: fresh Pict (extends Fable) so user code's
+				// `pict.addView`, `pict.TemplateProvider`, etc. don't
+				// pollute the docuserve UI.  The Pict instance IS a
+				// Fable, so `fable === pict` here — same capture
+				// logger, single object.
+				tmpUserPict = new libPict({ Product: 'FablePlayground', LogStreams: [] });
+				tmpUserPict.log.addLogger(this._buildCaptureLogger(tmpRecords, tmpStart), 'trace');
+				tmpFable = tmpUserPict;
+			}
+			else
+			{
+				tmpFable = new tmpFableClass({ Product: 'FablePlayground', LogStreams: [] });
+				tmpFable.log.addLogger(this._buildCaptureLogger(tmpRecords, tmpStart), 'trace');
+				// Console-mode: `pict` param stays docuserve's pict
+				// for backwards compat with the fable-family docs.
+				tmpUserPict = this.pict;
+			}
 		}
 		catch (pError)
 		{
@@ -790,9 +883,10 @@ class DocuserveFablePlaygroundView extends libPictView
 				// into error-level records in the log pane.
 				let tmpRequire = this._buildRequireShim(tmpFable, tmpRecords, tmpStart);
 				let tmpConsole = this._buildCapturingConsole(tmpRecords, tmpStart);
-				let tmpFn = new Function('fable', 'pict', 'require', 'console',
+				let tmpSandboxEl = document.getElementById('Docuserve-Fable-Playground-Sandbox');
+				let tmpFn = new Function('fable', 'pict', 'require', 'console', 'sandbox',
 					'return (async () => { ' + tmpCode + '\n})();');
-				let tmpPromise = tmpFn(tmpFable, this.pict, tmpRequire, tmpConsole);
+				let tmpPromise = tmpFn(tmpFable, tmpUserPict, tmpRequire, tmpConsole, tmpSandboxEl);
 				if (tmpPromise && typeof tmpPromise.then === 'function')
 				{
 					let tmpSelf = this;
@@ -1180,7 +1274,8 @@ class DocuserveFablePlaygroundView extends libPictView
 		let tmpResolvers =
 		{
 			'fable':                     () => tmpAutoCapture ? PlaygroundFableWrapper : tmpFableClass,
-			'pict':                      () => tmpPict.constructor,
+			'pict':                      () => libPict,
+			'pict-section-histogram':    () => libPictSectionHistogram,
 			'fable-uuid':                () => pFableInstance.UUID && pFableInstance.UUID.constructor,
 			'fable-settings':            () => pFableInstance.SettingsManager && pFableInstance.SettingsManager.constructor,
 			'fable-log':                 () => tmpFableLogClass ? PlaygroundFableLogWrapper : null,

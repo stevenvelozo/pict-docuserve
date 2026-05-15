@@ -447,6 +447,14 @@ class DocuserveApplication extends libPictApplication
 					this.pict.AppData.Docuserve.Playground = {};
 				}
 				this.pict.AppData.Docuserve.Playground.Config = pConfig || null;
+				// Config controls DOM-sandbox pane visibility; let the
+				// playground view re-evaluate the moment it lands.  No-op
+				// if the view hasn't been mounted yet.
+				let tmpPlaygroundView = this.pict.views['Docuserve-Fable-Playground'];
+				if (tmpPlaygroundView && typeof tmpPlaygroundView._applySandboxMode === 'function')
+				{
+					tmpPlaygroundView._applySandboxMode();
+				}
 			});
 		}
 		else
@@ -454,6 +462,11 @@ class DocuserveApplication extends libPictApplication
 			if (this.pict.AppData.Docuserve.Playground)
 			{
 				this.pict.AppData.Docuserve.Playground.Config = null;
+			}
+			let tmpPlaygroundView = this.pict.views['Docuserve-Fable-Playground'];
+			if (tmpPlaygroundView && typeof tmpPlaygroundView._applySandboxMode === 'function')
+			{
+				tmpPlaygroundView._applySandboxMode();
 			}
 		}
 	}
